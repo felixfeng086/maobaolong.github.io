@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[hadoop 命令]]></title>
+    <url>%2F2017%2F05%2F05%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fhadoop%2F</url>
+    <content type="text"><![CDATA[hadoop cli 命令 显示log 1$ hadoop fs -cat /tmp/app-logs/prestotest/logs/application_1460457323828_0044/BJHC-Client-77104.hadoop.jd.local_50086 创建文件夹 1$ hadoop fs -mkdir /user/admin/aaron/newDir 上传文件 1$ hadoop fs –put /home/admin/newFile /user/admin/aaron/ 下载文件 1$ hadoop fs –get /user/admin/aaron/newFile /home/admin/newFile 显示所有job 123$ yarn application -list# or$ hadoop job -list 杀job 123456$ yarn application -kill job_1487128523266_0493# or$ hadoop job -kill job_1487128523266_0493# 杀死所有job$ for app in `yarn application -list|awk '$4 == "hadp" &#123; print $1 &#125;'`; do yarn application -kill "$app"; done 重启namenode 12$ hadoop-daemon.sh stop namenode$ hadoop-daemon.sh start namenode 设置副本数 1$ hdfs dfs -setrep -w 3 /user/maobaolong/2G/test000001.txt 查看文件块信息副本信息 1234567891011121314151617181920$ hdfs fsck /user/maobaolong/2G/test000001.txt -files -blocks/user/maobaolong/2G/test000001.txt 104857600 bytes, 1 block(s): OK0. BP-415593160-192.16.170.121-1479721822537:blk_1081644434_7913748 len=104857600 repl=10Status: HEALTHY Total size: 104857600 B Total dirs: 0 Total files: 1 Total symlinks: 0 Total blocks (validated): 1 (avg. block size 104857600 B) Minimally replicated blocks: 1 (100.0 %) Over-replicated blocks: 0 (0.0 %) Under-replicated blocks: 0 (0.0 %) Mis-replicated blocks: 0 (0.0 %) Default replication factor: 3 Average block replication: 10.0 Corrupt blocks: 0 Missing replicas: 0 (0.0 %) Number of data-nodes: 72 Number of racks: 1 查看文件的块所在位置 1234567891011121314151617181920$ hdfs fsck /user/maobaolong/2G/test000001.txt -files -blocks -locations/user/maobaolong/2G/test000001.txt 104857600 bytes, 1 block(s): OK0. BP-415593160-192.16.170.121-1479721822537:blk_1081644434_7913748 len=104857600 repl=10 [DatanodeInfoWithStorage[192.16.171.67:50010,DS-c310081e-c802-4816-8039-5a27607e486d,DISK], DatanodeInfoWithStorage[192.16.175.58:50010,DS-8070ae27-dc2f-42d1-ba52-d4326e26855f,DISK], DatanodeInfoWithStorage[192.16.175.56:50010,DS-3825274a-b7ef-4259-8c2b-6244c1931929,DISK], DatanodeInfoWithStorage[192.16.147.128:50010,DS-24d8c298-be68-4c90-8b69-0d27e36949db,DISK], DatanodeInfoWithStorage[192.16.171.65:50010,DS-14026585-34cc-4afb-a01b-92c89cb7daf4,DISK], DatanodeInfoWithStorage[192.16.171.69:50010,DS-168c200e-11f5-4b40-b330-1869631b918e,DISK], DatanodeInfoWithStorage[192.16.150.141:50010,DS-f3061e59-e42e-4e9d-848d-87c0954b44fd,DISK], DatanodeInfoWithStorage[192.16.147.126:50010,DS-5e431e24-be32-4f19-8b96-677b65958c7b,DISK], DatanodeInfoWithStorage[192.16.171.21:50010,DS-8314ca05-b52e-412b-bd20-697d7c4cc39a,DISK], DatanodeInfoWithStorage[192.16.171.47:50010,DS-6f8712cc-a283-4d02-b0c4-87d4028480f4,DISK]]Status: HEALTHY Total size: 104857600 B Total dirs: 0 Total files: 1 Total symlinks: 0 Total blocks (validated): 1 (avg. block size 104857600 B) Minimally replicated blocks: 1 (100.0 %) Over-replicated blocks: 0 (0.0 %) Under-replicated blocks: 0 (0.0 %) Mis-replicated blocks: 0 (0.0 %) Default replication factor: 3 Average block replication: 10.0 Corrupt blocks: 0 Missing replicas: 0 (0.0 %) Number of data-nodes: 72 Number of racks: 1 查看文件的块所在机架信息 1234567891011121314151617181920$ hdfs fsck /user/maobaolong/2G/test000001.txt -files -blocks -locations -racks/user/maobaolong/2G/test000001.txt 104857600 bytes, 1 block(s): OK0. BP-415593160-192.16.170.121-1479721822537:blk_1081644434_7913748 len=104857600 repl=10 [/rack/default/192.16.171.67:50010, /rack/default/192.16.175.58:50010, /rack/default/192.16.175.56:50010, /rack/default/192.16.147.128:50010, /rack/default/192.16.171.65:50010, /rack/default/192.16.171.69:50010, /rack/default/192.16.150.141:50010, /rack/default/192.16.147.126:50010, /rack/default/192.16.171.21:50010, /rack/default/192.16.171.47:50010]Status: HEALTHY Total size: 104857600 B Total dirs: 0 Total files: 1 Total symlinks: 0 Total blocks (validated): 1 (avg. block size 104857600 B) Minimally replicated blocks: 1 (100.0 %) Over-replicated blocks: 0 (0.0 %) Under-replicated blocks: 0 (0.0 %) Mis-replicated blocks: 0 (0.0 %) Default replication factor: 3 Average block replication: 10.0 Corrupt blocks: 0 Missing replicas: 0 (0.0 %) Number of data-nodes: 72 Number of racks: 1 检查并打印正在被打开执行写操作的文件（-openforwrite） 1$ hdfs fsck /hivedata/warehouse/liuxiaowen.db/lxw_product_names/ -openforwrite 打印拓扑，即机架与datenode的ip信息 1$ hdfs dfsadmin -printTopology 输出报告信息 12345678910111213141516$ hdfs dfsadmin -reportName: 192.16.150.100:50010 (hostname_mbl)Hostname: hostname_mblDecommission Status : NormalConfigured Capacity: 0 (0 B)DFS Used: 0 (0 B)Non DFS Used: 0 (0 B)DFS Remaining: 0 (0 B)DFS Used%: 100.00%DFS Remaining%: 0.00%Configured Cache Capacity: 0 (0 B)Cache Used: 0 (0 B)Cache Remaining: 0 (0 B)Cache Used%: 100.00%Cache Remaining%: 0.00%Xceivers: 0 格式化 journal 1$ hdfs namenode -initializeSharedEdits 让该结点重新读取配置文件，进行配置 bash1$ hdfs dfsadmin -reconfig datanode ip:50020 start 切active 的ns命令 1$ hdfs haadmin -ns ns1 -failover nn1 nn2 hadoop 常用配置说明 dfs.cluster.administrators 配置后，可以在页面ip:50070/logLevel或hadoop daemonlog -getlevel hostname:50070 org.apache.hadoop.hdfs.server.blockmanagement.AvailableSpaceBlockPlacementPolicy获取或修改某个类的log级别 ACL for the admins, this configuration is used to control who can access the default servlets in the namenode, etc. The value should be a comma separated list of users and groups. The user list comes first and is separated by a space followed by the group list, e.g. “user1,user2 group1,group2”. Both users and groups are optional, so “user1”, “ group1”, “”, “user1 group1”, “user1,user2 group1,group2” are all valid (note the leading space in “ group1”). ‘‘ grants access to all users and groups, e.g. ‘‘, ‘ ‘ and ‘ ‘ are all valid. 管理员访问控制，这个配置用来控制谁可以通过默认的servlets访问namenode，特别的*匹配所有用户。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[linux命令]]></title>
+    <url>%2F2017%2F05%2F05%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Flinux%2Flinux%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[#linux 常用命令 * history |grep scp * tail -f log/UGDAP.log * 只显示文件名： ls -l | grep ^[^d] | awk ‘{print $8}’只显示文件夹名：ls -l |grep ^d | awk ‘{print $8}’ 或者是 ls -d */ 恢复rm删除的文件显示所删除的文件所在的分区df -T /home 用debugFS查找被删除文件的inode号sudo debugfsdebugfs&gt;open /dev/sda5debugfs&gt;ls -d /home/mbl/study尖括号中的是inode 恢复inodeextundelete ${dev_describer} –restore-inode ${inode} 如果知道被删除文件的完整的路径，直接恢复extundelete ${deb_describer} –restore-file ${path} shell脚本常用变量$0: shell或shell脚本的名字$*:以一对双引号给出参数列表$@:将各个参数分别加双引号返回$#:参数的个数$_:代表上一个命令的最后一个参数$$:代表所在命令的PID$!:代表最后执行的后台命令的PID$?:代表上一个命令执行后的退出状态 curlcurl -x 172.22.91.78:80 http://172.16.172.95:19888/ws/v1/history/mapreduce/jobs/job_1470405196301_64273|python -m json.tool&gt;job_1470405196301_64273.json 显示当前操作系统信息12345cat /proc/versionuname -acat /etc/*release*lsb_release -a 显示iphostname -iifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6 | awk ‘{print $2}’ | tr -d “addr:”ifconfig enp0s25|grep inet|grep -v 127.0.0.1|grep -v inet6 | awk ‘{print $2}’ | tr -d “addr:” 测试端口是否通telnet 172.22.91.34 8087 查看端口是否被占用netstat -tunlp |grep 80lsof -i 80 /bin/bash^M: 解释器错误: 没有那个文件或目录sed -i ‘s/\r$//‘ check_tool.sh 后台启动进程，重定向输出到文件nohup command &gt; myout.file 2&gt;&amp;1 &amp; 杀进程ps -ef | grep tomcat | awk ‘{print $2}’ | xargs kill -9或kill ps -ef | grep [j]enkins.war | awk &#39;{ print $2 }&#39;虽然提示没有找到进程pid，但已经杀掉了 开机自动挂载分区用blkid列出分区uuid和typesudo blkid接下来修改自动挂载的配置文件：sudo vim /etc/fstab增加一行UUID=11263962-9715-473f-9421-0b604e895aaa /data ext4 defaults 0 1 zip解压中文乱码ubuntu下 unzip -O CP936 xxx.zip -d exdir 权限home目录不能有其它用户写权限/root .ssh 只能是 700 linux权限777 rwxrwxrwx （所有者，本组用户，其它用户）rwx=读，写，执行 ssh-copy-id设置root密码sudo passwd root 在任务栏显示网速sudo add-apt-repository ppa:nilarimogard/webupd8sudo apt-get updatesudo apt-get install indicator-netspeed 设置显示桌面快捷键sudo apt-get install compizconfig-settings-managerccsm KWPlayer 酷我音乐盒Iptux — 局域网聊天工具(飞鸽Linux版)sudo apt-get install iptux System Load Indicator ( 系统状态指示器）sudo add-apt-repository ppa:indicator-multiload/stable-dailysudo apt-get updatesudo apt-get install indicator-multiload XBMC（媒体中心）XBMC（媒体中心）sudo add-apt-repository ppa:team-xbmc/ppasudo apt-get updatesudo apt-get install xbmc VMware Workstation安装方法（包含下载、安装、激活、序列号）http://www.kashu.org/1024.html wiresharkhttp://ppa.launchpad.net/wireshark-dev/stable/ubuntu/pool/main/w/wireshark/ppa:wireshark-dev/stable .tar.gz 格式解压为 tar -zxvf xx.tar.gz -C targetDir.tar.bz2 格式解压为 tar -jxvf xx.tar.bz2 查看linux版本rpm -qa|grep kernel 中文Linux 常用的locale是zh_CN.gb2312，zh_CN.gbk，zh_CN.gb18030 和 zh_CN.UTF-8 。通过如下命令可以查询系统的locale：echo $LANG 挂载u盘123456fdisk -lmkdir /mnt/usbmount命令格式：mount [-参数] [设备名称] [挂载点] [其他参数]mount /dev/sdb1 /mnt/usbumount /dev/sdb1 改变用户组和用户123456789基本语法：chown [-R] 账号名称 文件或目录chown [-R] 账号名称:用户组名称 文件或目录参数：-R : 进行递归( recursive )的持续更改，即连同子目录下的所有文件、目录都更新成为这个用户组。常常用在更改某一目录的情况。示例1：[root@localhost home]# touch testfile //由 root 用户创建文件[root@localhost home]# ls testfile –l 查看文件夹下容量du -ah –max-depth=1 配置ssh 超时空闲时间服务器配置:123/etc/profile 中的配置，增加一个参数TMOUT=6000 //100分钟，应该够用了echo &quot;TMOUT=6000 &quot; &gt;&gt;/etc/profilesource /etc/profile //立即生效 客户端配置:方法很简单，只需在客户端电脑上编辑（需要root权限）/etc/ssh/ssh_config，并添加如下一行：ServerAliveInterval 60 服务器端设置: 如果有相应的权限，也可以在服务器端设置，即编辑/etc/ssh/sshd_config，并添加：ClientAliveInterval 60 重启SSH服务器后该项设置会生效。每一个连接到此服务器上的客户端都会受其影响。应注意启用该功能后，安全性会有一定下降（比如忘记登出时……） Linux常见问题解答–如何修复”tar：由于前一个错误导致于失败状态中退出”Exiting with failure status due to previous errors去掉v，只看错误流 百度网盘公开链接wget下载wget -c –referer=公开链接地址 -O 输出文件名 “直接下载地址” ，其中-c表示断点续传wget -c –referer=http://pan.baidu.com/s/1pL0IUxH -O a.zip “http://61.179.228.93/d1.baidupcs.com/file/4b43140bd6212b333237b391961932a4?bkt=p3-0000eea78a1d47d0402b131c2736fe70a488&amp;xcode=c0a39d5fa7dcff84c1a1bca47e82ddfb123eeb8f4d2e9e54ded0b7c77404c736&amp;fid=50867796-250528-751846568268583&amp;time=1481855378&amp;sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-mq8GWRwB7zY3FSpQOglOpVoSn8I%3D&amp;to=lc&amp;fm=Qin,B,U,nc&amp;sta_dx=137584648&amp;sta_cs=2496&amp;sta_ft=7z&amp;sta_ct=7&amp;sta_mt=7&amp;fm2=Qingdao,B,U,nc&amp;newver=1&amp;newfm=1&amp;secfm=1&amp;flow_ver=3&amp;pkey=14005e8f94567db20cb9f1c95efbd7a8a7b7c50dcb1a000008336008&amp;sl=75956300&amp;expires=8h&amp;rt=sh&amp;r=739923821&amp;mlogid=8127629174281954396&amp;vuk=-&amp;vbdid=2201694974&amp;fin=FIFA.2002.Green.Edition-ALI213.7z&amp;fn=FIFA.2002.Green.Edition-ALI213.7z&amp;slt=pm&amp;uta=0&amp;rtype=1&amp;iv=0&amp;isw=0&amp;dp-logid=8127629174281954396&amp;dp-callid=0.1.1&amp;csl=600&amp;csign=RJ%2BYoZ6FqCL1OLeGHSbtuImu3ys%3D&amp;wshc_tag=0&amp;wsts_tag=58535192&amp;wsid_tag=6fccf309&amp;wsiphost=ipdbm“ history:n copy line n to current input line xsel剪切板12#把当前目录放到剪切板pwd | xsel -b 获取线程信息ps -eLf|grep 线程号 查找命令12$ find . -name "*" | xargs grep "NullPointerException"./master.log.35:java.lang.NullPointerException: required 'blockId' parameter is missing ssh免密12ssh-keygen -t rsassh-copy-id -i ~/.ssh/id_rsa.pub remote 查看cpu内核信息12345678910111213141516171819202122232425262728cat /proc/cpuinfoprocessor : 0vendor_id : GenuineIntelcpu family : 6model : 61model name : Intel(R) Core(TM) i7-5500U CPU @ 2.40GHzstepping : 4microcode : 0x23cpu MHz : 2489.531cache size : 4096 KBphysical id : 0siblings : 4core id : 0cpu cores : 2apicid : 0initial apicid : 0fpu : yesfpu_exception : yescpuid level : 20wp : yesflags : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb intel_pt tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap xsaveopt dtherm ida arat pln ptsbugs :bogomips : 4788.96clflush size : 64cache_alignment : 64address sizes : 39 bits physical, 48 bits virtualpower management: sshpass1sshpass -p 'password' scp maobaolong@1.2.3.4:/home/maobaolong/a.txt ./ ssh 执行远程命令12ssh -l username hostname "ls /"ssh hostname "ls /" 查看端口使用情况1netstat -apn|grep 端口 查看操作系统信息1$ cat /etc/*release* crontab 定时任务12# 定时1分钟执行*/1 * * * * cd /data0/NameNode/;source ~/.bashrc;nohup /data0/NameNode/sliverun.sh &amp; watch 观察命令12# 1秒观察一次date$ watch -d -n 1 'date' 修改mac地址1sudo ifconfig enp0s25 hw ether 50:7b:9d:fb:fb:21 查看文件匹配行的后2行中包含at单词的行并排序合并计数1grep "on 8020" 44437_0.log -A 2 | grep "at" -w | sort | uniq -c cut命令分割字符串并取得第几项类似split1echo "a=2"|cut -d '=' -f 2 获得空白分割后的第n个1echo "a b c d"|awk &#123;'print $3'&#125; 批量替换某个目录下的所有文件中的指定内容12# 将当前目录下的所有文件中包含字符串slaves.sh的替换为slavetool.sh$ grep "slaves.sh" * -R | awk -F: '&#123;print $1&#125;' | sort | uniq | xargs sed -i 's/slaves.sh/slavetool.sh/g' 列出jar文件的所有内容1$ jar -vtf hadoop-hdfs-2.7.1.jar]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2F2017%2F05%2F05%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2FHadoop%20HA%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[hadoop-HA-cluster-build目前HBASE和spark还没有搭建 集群介绍Cluster Namepinball 描述搭建5个结点的测试集群，为了测试jdk1.8下hadoop的一些新特性 环境配置服务器A|192.168.1.156B|192.168.1.157C|192.168.1.158D|192.168.1.159E|192.168.1.160 软件环境 名称 版本 备注 操作系统 centos 7.1.1503 JDK 1.8u65以上 HADOOP 2.7.1 ZK 3.4.5 SPARK 2.5.1 角色分配 代号 hostname 角色 A 192.168.1.156 NN1/RM1 B 192.168.1.157 NN2/RM2/sparkhistory/MRJH/Metastore C 192.168.1.158 DN/NM/ZK/JN/HBASE D 192.168.1.159 DN/NM/ZK/JN/HBASE E 192.168.1.160 DN/NM/ZK/JN/HBASE 角色信息 角色 用户 相关位置 备注 zk hadp /data0/logs/zookeeper-logs,/data0/zookeeper-3.4.5 NN hadp /data0/hadoop-logs 同时启动DFSZKFailoverController进程 DN hadp /data0/hadoop-logs NM yarn /data1/yarn-logs JN hadp /data0/hadoop-logs RM yarn /data1/yarn-logs MRJH mapred /data0/hadoop-logs/ ApplicationHistoryServer yarn /data1/yarn-logs sparkHistory mapred 挂载硬盘 创建ext4分区并挂载到/data0和/data112345678910111213141516171819202122# 查看已有分区和挂载点df -Th# 查看硬盘设备ls /dev/sd*# (*)查看未分区使用的硬盘blkid# (*)格式化分区mkfs.ext4 -L data0 /dev/sdbmkfs.ext4 -L data1 /dev/sdc# (*)查看分区和uuidblkid# (*)编辑fstab文件vim /etc/fstab# (*)加入两行UUID=bc5261d1-27be-4569-90fe-1f67124d3bf6 /data0 ext4 defaults 1 2UUID=8f274d7d-09db-4df5-b286-c7a2742aa128 /data1 ext4 defaults 1 2# (*)创建/data0 /data1文件夹mkdir /data0 /data1# (*)挂载 fstab中的分区mount -a# (*)查看已有分区和挂载点df -Th 修改/etc/hosts12345192.168.1.156 HADOOP-1-156192.168.1.157 HADOOP-1-157192.168.1.158 HADOOP-1-158192.168.1.159 HADOOP-1-159192.168.1.160 HADOOP-1-160 脚本介绍 为了方便,先将root用户A到BCDE免密，然后使用工具脚本执行命令 slaves.sh 多结点执行命令 allcli.sh 交互多结点执行命令 createuser.sh 用户和免密 root用户A到BCDE免密 创建hadp,yarn,mapred用户 1$ slaves.sh --hosts allnode createuser.sh hadp@A 和 hadp@B 到C\D\E免密 12345678910$ ssh hadp@HADOOP-1-156$ ssh-copy-id HADOOP-1-156$ ssh-copy-id HADOOP-1-158$ ssh-copy-id HADOOP-1-159$ ssh-copy-id HADOOP-1-160$ ssh hadp@HADOOP-1-157$ ssh-copy-id HADOOP-1-157$ ssh-copy-id HADOOP-1-158$ ssh-copy-id HADOOP-1-159$ ssh-copy-id HADOOP-1-160 yarn@A 和 yarn@B 到C\D\E免密12345678910$ ssh yarn@HADOOP-1-156$ ssh-copy-id HADOOP-1-156$ ssh-copy-id HADOOP-1-158$ ssh-copy-id HADOOP-1-159$ ssh-copy-id HADOOP-1-160$ ssh yarn@HADOOP-1-157$ ssh-copy-id HADOOP-1-157$ ssh-copy-id HADOOP-1-158$ ssh-copy-id HADOOP-1-159$ ssh-copy-id HADOOP-1-160 配置JDK1.8.65搭建zookeeper在C D E上搭建zookeeper 分别配置conf/zoo.cfg 分别生成文件/data0/zookeeper-3.4.5/data/myid，内容在C D E 上分别为1、2、3 启动(在setup_all.sh脚本中启动)单独启动脚本如下1$ ./slaves.sh --hosts zknode 'su - hadp -c "/software/servers/zookeeper-3.4.5/bin/zkServer.sh start"' 搭建HDFS在A上以hdfs用户执行hdfs zkfc -formatZK，会在zk中创建结点/pinball-hadoop-ha/ns1 启动jn编辑/etc/hadoop/slaves 换行分割sbin/hadoop-daemons.sh --hosts jn_slaves start journalnode 复制需要的jar到对应的目录./hadoop/common/lib/hadoop-lzo-0.4.20.jar./hadoop/yarn/spark-1.4.0-SNAPSHOT-yarn-shuffle.jar 启动所有（zk、hdfs、yarn、目录权限）1$ ./setup_all.sh 卸载所有 (zk、hdfs、yarn、log、data)1$ ./uninstall_all.sh 检查是否成功1./check.sh]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2F2017%2F05%2F05%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fgo%2Fgo%2F</url>
+    <content type="text"><![CDATA[1go get github.com/astaxie/beego 12345678910111213141516171819package mainimport ( "github.com/astaxie/beego")type HomeController struct &#123; beego.Controller&#125;func (this *HomeController) Get() &#123; this.Ctx.WriteString("hello world! 你好，世界！")&#125;func main() &#123; beego.Router("/", &amp;HomeController&#123;&#125;) beego.Run()&#125;]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[hdfs safemode]]></title>
+    <url>%2F2017%2F04%2F26%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fhadoop_safemode%2F</url>
+    <content type="text"><![CDATA[HDFS 安全模式的理解安全模式是hadoop的一种保护机制，用于保证集群中的数据块的安全性。 当集群启动的时候，会首先进入安全模式。当系统处于安全模式时会检查数据块的完整性。假设我们设置的副本数（即参数dfs.replication）是5，那么在datanode上就应该有5个副本存在，假设只存在3个副本，那么比例就是3/5=0.6。在配置文件hdfs-default.xml中定义了一个最小的副本的副本率0.999，如图 我们的副本率0.6明显小于0.99，因此系统会自动的复制副本到其他的dataNode,使得副本率不小于0.999.如果系统中有8个副本，超过我们设定的5个副本，那么系统也会删除多余的3个副本。 这时，不允许客户端进行任何修改文件的操作,包括上传文件，删除文件，重命名，创建文件夹等操作。 通过命令查看控制安全模式12345678# 查看安全模式状态$ hdfs dfsadmin -safemode get # 进入安全模式状态$ hdfs dfsadmin -safemode enter# 离开安全模式$ hdfs dfsadmin -safemode leave]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hdfs fsimage replace]]></title>
+    <url>%2F2017%2F04%2F26%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fhdfs-fsimage-replace%2F</url>
+    <content type="text"><![CDATA[fsimage 和 editlogfsimage保存了最新的元数据检查点。 edits保存自最新检查点后的命名空间的变化。 从最新检查点后，hadoop将对每个文件的操作都保存在edits中，为避免edits不断增大，secondary namenode就会周期性合并fsimage和edits成新的fsimage，edits再记录新的变化。 这种机制有个问题：因edits存放在Namenode中，当Namenode挂掉，edits也会丢失，导致利用secondary namenode恢复Namenode时，会有部分数据丢失。 替换fsimage 将其他namenode的fsimage复制到目标集群的namenode(active/standby)中 1$ scp fsimage_xxxxxx fsimage_xxxxxx.md5 hostname:/data0/nn/current/ 修改seen_txid 1$ echo xxxxxx+1 &gt;&gt; /data0/nn/current/seen_txid 加载fsimage 停止集群namenode 1$ su - hadp -c "hadoop-daemons.sh --hosts nns stop namenode" 初始化journalnode 1$ hdfs namenode -initializeSharedEdits 启动namenode 1$ su - hadp -c "hadoop-daemons.sh --hosts nns start namenode" 启动过程中，在hdfs页面可以看到Startup Progress页中正在Loading fsimage 离开safe mode离开safemode，否则无法创建文件1$ hdfs dfsadmin -safemode leave]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Alluxio worker startup flow]]></title>
+    <url>%2F2017%2F03%2F29%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-worker-startup%2F</url>
+    <content type="text"><![CDATA[Worker java进程 流程首先，可以通过mount手动挂载内存盘。 1alluxio fs mount -readonly /ns2 hdfs://ns2/ 然后，执行alluxio-start.sh脚本启动worker，启动方式有以下几种： 在worker节点执行alluxio-startup.sh worker NoMount 单独启动worker 而不挂载内存盘 在master节点执行alluxio-startup.sh workers 只启动conf/workers文件中的worker列表中的worker，前提是master节点到worker节点已经免密 在master节点执行alluxio-startup.sh all NoMount启动master的同时，启动conf/workers文件中的worker列表中的worker，前提是master节点到worker节点已经免密 启动成功后，通过ps查看启动是否成功以及启动参数12$ ps -ef|grep alluxio.worker.AlluxioWorker/software/softwares/linux/jdks/jdk1.8.0_92/bin/java -cp /software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/::/software/projects/AllIdeaProjects/gits/prestoAlluxio/assembly/target/alluxio-assemblies-1.4.1-SNAPSHOT-jar-with-dependencies.jar -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5601 -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/dev/shm -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.logger.type=WORKER_LOGGER alluxio.worker.AlluxioWorker 也可以通过jps -mlv查看启动是否成功以及启动参数12$ jps -mlv|grep alluxio.worker.AlluxioWorkeralluxio.worker.AlluxioWorker -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5601 -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/` alluxio.worker.AlluxioWorker启动初始化过程入口类为alluxio.worker.AlluxioWorker 启动时必须不能传参数。 alluxio.master.hostname必须配置,可以在alluxio-site.properties中指定，或环境变量ALLUXIO_MASTER_HOSTNAME必须配置。也或者配置了alluxio.zookeeper.enabled为true，即启动了HA，并且配置了alluxio.zookeeper.address，则alluxio.master.hostname可以不配置。 构造服务AlluxioWorkerService，同时启动了data-server-boss-x线程NettyDataServer。用来回应块请求 启动服务AlluxioWorkerService AlluxioWorkerService启动过程NOTE: 启动不同服务的顺序是敏感的，如果你要修改，小心点。 启动Metrics监控，如果metrics.properties中配置了sink.[console|csv|jmx].class,则启动report线程，同时配置多个，则启动多个report线程。 将Servlet方式的Metrics加入webServer并启动webServer。 启动所有worker，这里的worker是worker里的概念包括（BlockWorker(目前只有DefaultBlockWorker)、FilesystemWorker（目前只有DefaultFileSystemWorker）和AdditionalWorkers），由于目前没有开启keyValue，mAdditionalWorkers没有内容。 阻塞的启动Thrift服务mThriftServer.serve()，至此主线程阻塞，所有启动初始化完成。 启动Metrics过程启动report线程，周期性report指标值 启动WebServer过程启动webServer，提供web服务 DefaultBlockWorker的启动过程 启动SpaceReserver，如果enable 启动BlockMasterSync 启动PinListSync 启动SessionCleaner 启动BlockLockWarnReporter，如果enable SpaceReserver以心跳间隔周期性检查空间是否达到高水位，如果达到，进行freespace，降低到低水位 BlockMasterSync向Master汇报信息。包括当前worker使用的容量，增加的块，删除的块。同时，执行master会回复命令。master回复的命令有Unknown(0),Nothing(1),Register(2),Free(3),Delete(4),Persist(5) PinListSync周期性的从master同步pinned inodes到worker，用在freespace时排除pinned块 SessionCleaner周期性检查是否有超时的僵尸会话，删除僵尸会话以及关联的数据 BlockLockWarnReporter周期性检查超时的锁，并警告输出。 DefaultFileSystemWorker的启动过程 启动FileWorkerMasterSyncExecutor， 周期性向master汇报persisted文件，执行master的同步persisted文件命令 启动SessionCleaner，负责清理超过超时值的僵尸session]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio session]]></title>
+    <url>%2F2017%2F03%2F26%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-session%2F</url>
+    <content type="text"><![CDATA[Session指不通角色间的RPC通信 一般session一般的sessionId为Long长度的随机非负数数，用以下函数获取 123public static synchronized long getRandomNonNegativeLong() &#123; return Math.abs(sRandom.nextLong()); &#125; 特殊session123456public static final int DATASERVER_SESSION_ID = -1;public static final int CHECKPOINT_SESSION_ID = -2;public static final int MIGRATE_DATA_SESSION_ID = -3;public static final int MASTER_COMMAND_SESSION_ID = -4;public static final int ACCESS_BLOCK_SESSION_ID = -5;public static final int KEYVALUE_SESSION_ID = -6;]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio exception]]></title>
+    <url>%2F2017%2F03%2F16%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-exceptions%2F</url>
+    <content type="text"><![CDATA[name description AlluxioException 一般的AlluxioException用在整个系统，它必须能序列化自己到RPC框架再转换回来，没有丢失任何必要的信息 AccessControlException 当权限检查失败时候抛出 BlockAlreadyExistsException 当一个块已经存在于Alluxio时抛出异常 BlockDoesNotExistException 当一个块不存在于Alluxio时抛出异常 BlockInfoException 当块出错了，比如一个输出文件不能创建或者块字节大小无效时抛出异常 ConnectionFailedException 连接失败异常，当网络连接失败发生时，例如网络连接超时，连接拒绝，主机拒绝 DependencyDoesNotExistException 当依赖不存在于Alluxio，抛出异常 DirectoryNotEmptyException 文件夹非空，当删除一个非空文件夹没有使用recursive参数时 FailedToCheckpointException 文件夹非空，当Alluxio创建检查点失败 FileAlreadyCompletedException 文件已经完成异常，当一个文件在Alluxio中已经完成]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[java unit test]]></title>
+    <url>%2F2017%2F03%2F08%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fjava%2FunitTest%2F</url>
+    <content type="text"><![CDATA[PowerMockitoPowerMock简介PowerMock是一个扩展了其它如EasyMock等mock框架的、功能更加强大的框架。PowerMock使用一个自定义类加载器和字节码操作来模拟静态方法，构造函数，final类和方法，私有方法，去除静态初始化器等等。通过使用自定义的类加载器，简化采用的IDE或持续集成服务器不需要做任何改变。熟悉PowerMock支持的mock框架的开发人员会发现PowerMock很容易使用，因为对于静态方法和构造器来说，整个的期望API是一样的。PowerMock旨在用少量的方法和注解扩展现有的API来实现额外的功能。目前PowerMock支持EasyMock和Mockito。 why在做单元测试的时候，我们会发现我们要测试的方法会引用很多外部依赖的对象，比如：（发送邮件，网络通讯，远程服务, 文件系统等等）。 而我们没法控制这些外部依赖的对象，为了解决这个问题，我们就需要用到Mock工具来模拟这些外部依赖的对象，来完成单元测试。 现如今比较流行的Mock工具如jMock 、EasyMock 、Mockito等都有一个共同的缺点：不能mock静态、final、私有方法等。而PowerMock能够完美的弥补以上三个Mock工具的不足。 用法 使用PowerMockito测试 123456789PowerMockito.mockStatic(ShellUtils.class);// 当测试调用到execCommand方法时，传入参数为username，则返回给定的字符串String shellResult = "group";PowerMockito.when( ShellUtils.execCommand(Mockito.eq(username))) .thenReturn(shellResult);// getUnixGroups方法会调用到execCommand方法List&lt;String&gt; groups = CommonUtils.getUnixGroups(userName);]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[presto使用]]></title>
+    <url>%2F2017%2F03%2F08%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fpresto%2Fpresto%2F</url>
+    <content type="text"><![CDATA[启动presto客户端12./presto-cli-0.132-SNAPSHOT-executable.jar --server serverIp:port --catalog jd_ad --schema adw]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio locations分析]]></title>
+    <url>%2F2017%2F03%2F08%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-locations%2F</url>
+    <content type="text"><![CDATA[负责view-file页面展示的jsp从以下代码可以分析到服务端会传参数fileBlocks,类型为(List&lt;UIFileBlockInfo&gt;，把UIFileBlockInfo类中类型为List&lt;String&gt;的属性mLocations显示到table列Locations中。 问题转向类UIFileBlockInfo如何构造mLocations。 1234567891011121314151617181920212223242526272829303132&lt;table class="table table-bordered table-striped"&gt; &lt;tr&gt; &lt;th&gt;ID&lt;/th&gt; &lt;th&gt;Size (Byte)&lt;/th&gt; &lt;th&gt;In &lt;%= request.getAttribute("highestTierAlias") %&gt;&lt;/th&gt; &lt;th&gt;Locations&lt;/th&gt; &lt;/tr&gt; &lt;% for (UIFileBlockInfo masterBlockInfo : ((List&lt;UIFileBlockInfo&gt;) request.getAttribute("fileBlocks"))) &#123; %&gt; &lt;tr&gt; &lt;td&gt;&lt;%= masterBlockInfo.getID() %&gt;&lt;/td&gt; &lt;td&gt;&lt;%= masterBlockInfo.getBlockLength() %&gt;&lt;/td&gt; &lt;td&gt; &lt;% if (masterBlockInfo.isInTier((String) request.getAttribute("highestTierAlias"))) &#123; %&gt; Yes &lt;% &#125; else &#123; %&gt; No &lt;% &#125; %&gt; &lt;/td&gt; &lt;td&gt; &lt;% Iterator&lt;String&gt; iterator = masterBlockInfo.getLocations().iterator(); %&gt; &lt;% while (iterator.hasNext()) &#123; %&gt; &lt;% String location = iterator.next(); %&gt; &lt;%= location %&gt; &lt;% if(iterator.hasNext()) &#123; %&gt; , &lt;% &#125; %&gt; &lt;% &#125; %&gt; &lt;/td&gt; &lt;/tr&gt; &lt;% &#125; %&gt; &lt;/table&gt; 类UIFileBlockInfo如何构造mLocationsUIFileBlockInfo 构造函数会调用 addLocations方法，传入参数为FileBlockInfo。 分析以下代码可知，addLocations方法会把fileBlockInfo的BlockInfo中的mLocations和fileBlockInfo的mUfsLocations全部加到Set&lt;String&gt;集合中，返回。由于是集合，所以重复的location会被合并。 12345678910111213private void addLocations(FileBlockInfo fileBlockInfo) &#123; Set&lt;String&gt; locations = new HashSet&lt;&gt;(); // add alluxio locations for (BlockLocation location : fileBlockInfo.getBlockInfo().getLocations()) &#123; locations.add(location.getWorkerAddress().getHost()); &#125; // add underFS locations for (String location : fileBlockInfo.getUfsLocations()) &#123; locations.add(HostAndPort.fromString(location).getHostText()); &#125; mLocations.addAll(locations);&#125; 文件不在内存中和load到内存后，locations信息的变化 不在内存时，fileBlockInfo.getBlockInfo().getLocations()的大小应该为0。fileBlockInfo.getUfsLocations()应该为在ufs中的位置。 Load到内存后，addLocations方法会把fileBlockInfo.getBlockInfo().getLocations()的返回结果返回。而fileBlockInfo.getUfsLocations()为空。 注：以上提到的FileBlockInfo 来自包alluxio.wire。 以下代码if分支处，在文件已经在内存中的情况下，fileBlockInfo.getBlockInfo().getLocations()不为空，则fileBlockInfo.getBlockInfo().getLocations().isEmpty()不成立，所以ufsLocations不会被赋值。 123456789101112131415161718192021222324252627282930313233// FileSystemMaster.javaprivate FileBlockInfo generateFileBlockInfo(LockedInodePath inodePath, BlockInfo blockInfo) throws InvalidPathException, FileDoesNotExistException &#123; InodeFile file = inodePath.getInodeFile(); FileBlockInfo fileBlockInfo = new FileBlockInfo(); fileBlockInfo.setBlockInfo(blockInfo); fileBlockInfo.setUfsLocations(new ArrayList&lt;String&gt;()); // The sequence number part of the block id is the block index. long offset = file.getBlockSizeBytes() * BlockId.getSequenceNumber(blockInfo.getBlockId()); fileBlockInfo.setOffset(offset); if (fileBlockInfo.getBlockInfo().getLocations().isEmpty() &amp;&amp; file.isPersisted()) &#123; // No alluxio locations, but there is a checkpoint in the under storage system. Add the // locations from the under storage system. MountTable.Resolution resolution = mMountTable.resolve(inodePath.getUri()); String ufsUri = resolution.getUri().toString(); UnderFileSystem ufs = resolution.getUfs(); List&lt;String&gt; locs; try &#123; locs = ufs.getFileLocations(ufsUri, FileLocationOptions.defaults().setOffset(fileBlockInfo.getOffset())); &#125; catch (IOException e) &#123; return fileBlockInfo; &#125; if (locs != null) &#123; for (String loc : locs) &#123; fileBlockInfo.getUfsLocations().add(loc); &#125; &#125; &#125; return fileBlockInfo; &#125; 所以得出结论：Load到内存后，locations为block在worker的host，而不再有ufsLocation了. Load时，如何构造locationsBlockMaster.commitBlock -&gt;BlockMasterWorkerServiceHandler.commitBlock -&gt; RetryHandlingBlockWorkerClient.cacheBlock -&gt;LocalBlockOutStream.mCurrentCacheStream.close -&gt;FileInStream.close -&gt;LoadCommand.runCommand -&gt;]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hadoop namenode repicationmonitor exception]]></title>
+    <url>%2F2017%2F03%2F08%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fhadoop-namenode-repicationmonitor-exception%2F</url>
+    <content type="text"><![CDATA[问题描述集群版本从2.4.1升级到2.7.1之后，出现了一个诡异的问题，虽然没有影响到线上正常读写服务，但是潜在的问题还是比较严重 监控显示UnderReplicatedBlocks和PendingDeletionBlocks持续堆积。 从NameNode的jstack获得信息ReplicationMonitor线程在长期执行chooseRandom函数。 123456789101112131415161718192021&quot;org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationMonitor@254e0df1&quot; daemon prio=10 tid=0x00007f59b4364800 nid=0xa7d9 runnable [0x00007f2baf40b000] java.lang.Thread.State: RUNNABLE at java.util.AbstractCollection.toArray(AbstractCollection.java:195) at java.lang.String.split(String.java:2311) at org.apache.hadoop.net.NetworkTopology$InnerNode.getLoc(NetworkTopology.java:282) at org.apache.hadoop.net.NetworkTopology$InnerNode.getLoc(NetworkTopology.java:292) at org.apache.hadoop.net.NetworkTopology$InnerNode.access$000(NetworkTopology.java:82) at org.apache.hadoop.net.NetworkTopology.getNode(NetworkTopology.java:539) at org.apache.hadoop.net.NetworkTopology.countNumOfAvailableNodes(NetworkTopology.java:775) at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseRandom(BlockPlacementPolicyDefault.java:707) at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:383) at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:432) at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:225) at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:120) at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationWork.chooseTargets(BlockManager.java:3783) at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationWork.access$200(BlockManager.java:3748) at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.computeReplicationWorkForBlocks(BlockManager.java:1408) at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.computeReplicationWork(BlockManager.java:1314) at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.computeDatanodeWork(BlockManager.java:3719) at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationMonitor.run(BlockManager.java:3671) at java.lang.Thread.run(Thread.java:745) 异常出现场景： 坏盘、DataNode Decommision或进程异常退出，但不能稳定复现； 外部环境无任何变化和异常，正常读写服务期偶发。 ReplicationMonitor线程运行异常，造成数据块的副本不能及时补充，如果异常长期存在，极有可能出现丢数据的情况，在没有其他信息辅助解决的情况下，唯一的办法就是重启NameNode 参考 http://hexiaoqiao.github.io/blog/2016/09/13/namenode-repicationmonitor-exception-trace/ https://issues.apache.org/jira/browse/HDFS-10453]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio profile]]></title>
+    <url>%2F2017%2F03%2F06%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-profile%2F</url>
+    <content type="text"><![CDATA[方法列出性能瓶颈可能存在的地方，并进行测试验证，最后优化。 性能瓶颈 内存替换 内存替换为了提升Alluxio性能，发现性能瓶颈，测试alluxio worker不满和满时LOAD数据对性能的影响，由于alluxio worker内存满后再有block进入时会申请释放空间，发生内存替换，通过测试，得出内存替换算法是否有优化的必要。 采用串行测试方式和并行测试方式进行测试。串行测试是一个文件一个文件的加载，测试开始时确保内存为空。而并行测试有两种情况，一种情况内存为空，LOAD 20个100M文件到内存中。另一种情况内存已满，LOAD 20个100M文件到内存中。 结论内存发生置换并没有造成性能下降。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio eviction strategy]]></title>
+    <url>%2F2017%2F03%2F06%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-eviction-strategy%2F</url>
+    <content type="text"><![CDATA[Worker内存满时Load文件的过程 读文件（ReadType.CACHE_PROMOTE） call stack description (BlockStoreEventListener)LRUEvictor.onRemoveBlockByWorker -&gt; |通知listener，包括evictor,blockHeartbeatReporter,BlockMetricsReporter|TieredBlockStore.freeSpaceInternal -&gt; |如果内存满|(BlockStore)TieredBlockStore.createBlockMeta -&gt; |创建临时块失败|(BlockWorker)DefaultBlockWorker.createBlock -&gt; |创建块|BlockWorkerClientServiceHandler.requestBlockLocation-&gt; |请求块路径|||client –&gt; thrift –&gt; worker |进入worker|||(BlockWorkerClientService)RetryHandlingBlockWorkerClient.requestBlockLocation -&gt; ||new LocalBlockOutStream -&gt; |RemoteBlockOutStream|StreamFactory.createLocalBlockOutStream -&gt; |createRemoteBlockOutStream|AlluxioBlockStore.getOutStream -&gt; ||FileInStream.updateCacheStream -&gt; ||FileInStream.updateStreams -&gt; ||FileInStream.read -&gt; |或api|LoadCommand.runCommand -&gt; |加载HDFS文件|AlluxioShell -&gt; || call stack description (BlockStoreEventListener)LRUEvictor.onRemoveBlockByWorker -&gt; |通知listener，包括evictor,blockHeartbeatReporter,BlockMetricsReporter|TieredBlockStore.freeSpaceInternal -&gt; |如果内存满|(BlockStore)TieredBlockStore.createBlockMeta -&gt; |创建临时块失败|(BlockWorker)DefaultBlockWorker.createBlock -&gt; |创建块|BlockWorkerClientServiceHandler.requestBlockLocation-&gt; |请求块路径|||client –&gt; thrift –&gt; worker |进入worker|||(BlockWorkerClientService)RetryHandlingBlockWorkerClient.requestBlockLocation -&gt; ||new LocalBlockOutStream -&gt; |RemoteBlockOutStream|StreamFactory.createLocalBlockOutStream -&gt; |createRemoteBlockOutStream|AlluxioBlockStore.getOutStream -&gt; ||FileInStream.updateCacheStream -&gt; ||FileInStream.updateStreams -&gt; ||FileInStream.close -&gt; |或api|LoadCommand.runCommand -&gt; |加载HDFS文件|AlluxioShell -&gt; || call stack description (BlockStoreEventListener)LRUEvictor.onRemoveBlockByWorker||TieredBlockStore.freeSpaceInternal||TieredBlockStore.requestSpace||DefaultBlockWorker.requestSpace||BlockWorkerClientServiceHandler.requestSpace -&gt; ||client –&gt; thrift –&gt; worker ||(BlockWorkerClientService)RetryHandlingBlockWorkerClient.requestSpace -&gt;||LocalBlockOutStream.unBufferedWrite -&gt; ||BufferedBlockOutStream.write -&gt; ||FileInStream.read -&gt; |或api|LoadCommand -&gt; |加载HDFS文件|AlluxioShell -&gt; || 块是否可剔除的前提取决于，不是Pinned，不是Locked，不是MarkedisBlockEvictable = (!isBlockPinned(blockId) &amp;&amp; !isBlockLocked(blockId) &amp;&amp; !isBlockMarked(blockId)); alluxio 有多个 StorageTier，1个StorageTier 有 多个 StorageDirBlockMeta结构 mBlockSize mBlockId mDir ：StorageDir worker端 requestSpacerequestSpace 会尝试WORKER_TIERED_STORE_RETRY次，进行freeSpaceInternal在TieredBlockStore的freeSpaceInternal方法中，由mEvictor根据请求空间的大小指定剔除计划，选出候选剔除的块以及移动到下层的块。计划执行，调用在TieredBlockStore的removeBlockInternal方法, Load client端流程master获取该文件的meta数据，包括文件大小，文件包含的块信息，文件在内存中的百分比。 打开文件，以ReadType.CACHE_PROMOTE方式读取文件所有内容。读过程中，updateStreams写mCurrentCacheStream，mCurrentCacheStream.write，当剩余空间mReservedBytes小于write的len，则向worker请求空间requestSpace。 根据定位策略mLocationPolicy找到合适的worker。 初始化，获取确保worker上有USER_FILE_BUFFER_BYTES配置的大小（默认1M），如果没有提前释放空间。 读文件时，写cache流，如果可用空间不足则通过RPC向worker申请空间，worker如果没有client申请的空间则释放空间。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778// LoadCommand.java// 只允许load不完全在内存中的文件，打开指定文件，并一次8M读取并存到worker中。private void load(AlluxioURI filePath) throws AlluxioException, IOException &#123; // master获取该文件的meta数据，包括文件大小，文件包含的块信息，文件在内存中的百分比。 URIStatus status = mFileSystem.getStatus(filePath); if (status.isFolder()) &#123; List&lt;URIStatus&gt; statuses = mFileSystem.listStatus(filePath); for (URIStatus uriStatus : statuses) &#123; AlluxioURI newPath = new AlluxioURI(uriStatus.getPath()); load(newPath); &#125; &#125; else &#123; if (status.getInMemoryPercentage() == 100) &#123; // The file has already been fully loaded into Alluxio memory. return; &#125; Closer closer = Closer.create(); try &#123; OpenFileOptions options = OpenFileOptions.defaults().setReadType(ReadType.CACHE_PROMOTE); // 打开文件，以ReadType.CACHE_PROMOTE方式读取文件所有内容。 FileInStream in = closer.register(mFileSystem.openFile(filePath, options)); // 8M一次读取并缓存文件内容。 byte[] buf = new byte[8 * Constants.MB]; while (in.read(buf) != -1) &#123; &#125; &#125; catch (Exception e) &#123; throw closer.rethrow(e); &#125; finally &#123; closer.close(); &#125; &#125; System.out.println(filePath + " loaded"); &#125;//FileInStream.javapublic int read(byte[] b, int off, int len) throws IOException &#123; Preconditions.checkArgument(b != null, PreconditionMessage.ERR_READ_BUFFER_NULL); Preconditions.checkArgument(off &gt;= 0 &amp;&amp; len &gt;= 0 &amp;&amp; len + off &lt;= b.length, PreconditionMessage.ERR_BUFFER_STATE.toString(), b.length, off, len); if (len == 0) &#123; return 0; &#125; else if (remaining() &lt;= 0) &#123; return -1; &#125; int currentOffset = off; int bytesLeftToRead = len; // 一次读取一个block，block大小默认是512M（可配置） while (bytesLeftToRead &gt; 0 &amp;&amp; remaining() &gt; 0) &#123; // 更新流updateBlockInStream，和updateCacheStream，根据定位策略定位worker（默认本地优先策略），并准备把块写入对应worker里。 // 只有mCurrentCacheStream为null时更新流，也就是同一块的第二次读进入while则不再更新流。也就是不再申请初始大小和块文件路径。 updateStreams(); Preconditions.checkNotNull(mCurrentBlockInStream, PreconditionMessage.ERR_UNEXPECTED_EOF); int bytesToRead = (int) Math.min(bytesLeftToRead, inStreamRemaining()); // 从UFS读取文件到b int bytesRead = mCurrentBlockInStream.read(b, currentOffset, bytesToRead); if (bytesRead &gt; 0) &#123; if (mCurrentCacheStream != null) &#123; try &#123; mCurrentCacheStream.write(b, currentOffset, bytesRead); &#125; catch (IOException e) &#123; handleCacheStreamIOException(e); &#125; &#125; mPos += bytesRead; bytesLeftToRead -= bytesRead; currentOffset += bytesRead; &#125; &#125; if (bytesLeftToRead == len &amp;&amp; inStreamRemaining() == 0) &#123; // Nothing was read, and the underlying stream is done. return -1; &#125; return len - bytesLeftToRead; &#125; 1234567891011121314151617181920212223242526272829// LocalBlockOutStream.java构造方法// 为指定的blockId的块准备输出流public LocalBlockOutStream(long blockId, long blockSize, WorkerNetAddress workerNetAddress, FileSystemContext context, OutStreamOptions options) throws IOException &#123; super(blockId, blockSize, context); if (!NetworkAddressUtils.getLocalHostName().equals(workerNetAddress.getHost())) &#123; throw new IOException(ExceptionMessage.NO_LOCAL_WORKER.getMessage(workerNetAddress)); &#125; mCloser = Closer.create(); try &#123; mBlockWorkerClient = mCloser.register(context.createBlockWorkerClient(workerNetAddress)); // 获取配置的初始文件缓冲区大小（默认1M） long initialSize = Configuration.getBytes(PropertyKey.USER_FILE_BUFFER_BYTES); // 请求当前块在worker上的路径，worker会判断是否有initialSize大小的空间，如果没有则释放已有块。 String blockPath = mBlockWorkerClient.requestBlockLocation(mBlockId, initialSize); // 可用大小为initialSize （mReservedBytes为初始值0，可以写作=赋值，不需要+=） mReservedBytes += initialSize; // 创建针对blockPath的LocalFileBlockWriter mWriter = new LocalFileBlockWriter(blockPath); mCloser.register(mWriter); &#125; catch (IOException e) &#123; mCloser.close(); throw e; &#125; &#125; Load文件时的流程: Load文件，块大小为默认512M。用户初始文件大小为默认1M 从master获取该文件的meta数据，包括文件大小，文件包含的块信息，文件在内存中的百分比。打开文件。 以8M一次读取文件(LoadCommand) 获取该文件的当前偏移量对应的blockId 通过RPC获取块路径(blockPath),额外地，如果空间不足初始大小1M，则释放块。 更新可用大小mReservedBytes，以备unBufferedWrite时判断。 执行从UFS读取8M，并写入worker的内存。如果可用大小mReservedBytes不足，则通过RPC调用requestSpace申请空间 文件读完关闭文件。 以下为特定场景下Load文件流程: 内存满，容量100/100M，存放100个1M文件时,从UFS读取20M大小的文件，块大小为默认512M。用户初始文件大小为默认1M 从master获取该文件的meta数据，文件大小为20M，包含1个块，完全不在内存。打开文件。 以8M一次读取文件(LoadCommand) 获取该文件的当前偏移量对应的blockId 通过RPC获取块路径(blockPath),由于空间不足初始大小1M，则发生释放块，释放1M。 更新可用大小mReservedBytes=1M，以备unBufferedWrite时判断。 执行从UFS读取8M，并写入worker的内存。由于mReservedBytes为1M&lt;8M，则通过RPC调用requestSpace申请8M空间，又释放出7M空间。mReservedBytes=8M，写入从UFS读取的8M内容到blockPath中。 文件读完关闭文件。 内存容量99/100M，存放99个1M文件时,从UFS读取20M大小的文件，块大小为默认512M。用户初始文件大小为默认1M 从master获取该文件的meta数据，文件大小为20M，包含1个块，完全不在内存。打开文件。 以8M一次读取文件(LoadCommand) 获取该文件的当前偏移量对应的blockId 通过RPC获取块路径(blockPath),由于空间满足初始大小1M，则不发生释放块。 更新可用大小mReservedBytes=1M，以备unBufferedWrite时判断。 执行从UFS读取8M，并写入worker的内存。由于mReservedBytes为1M&lt;8M，则通过RPC调用requestSpace申请8M空间，释放出7M空间。mReservedBytes=8M，写入从UFS读取的8M内容到blockPath中。 文件读完关闭文件。 内存容量92/100M，存放92个1M文件时,从UFS读取20M大小的文件，块大小为默认512M。用户初始文件大小为默认1M 从master获取该文件的meta数据，文件大小为20M，包含1个块，完全不在内存。打开文件。 以8M一次读取文件(LoadCommand) 获取该文件的当前偏移量对应的blockId 通过RPC获取块路径(blockPath),由于空间满足初始大小1M，则不发生释放块。 更新可用大小mReservedBytes=1M，以备unBufferedWrite时判断。 执行从UFS读取8M，并写入worker的内存。由于mReservedBytes为1M&lt;8M，则通过RPC调用requestSpace申请8M空间，worker空间92M，不必释放。mReservedBytes=8M，写入从UFS读取的8M内容到blockPath中。 文件读完关闭文件。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio faq]]></title>
+    <url>%2F2017%2F03%2F01%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-FAQ%2F</url>
+    <content type="text"><![CDATA[问题：与Redis，Memcached等分布式in-memory key-value缓存的的区别： 答：（1） Alluxio可以同时管理多个底层文件系统，将不同的文件系统统一在同一个名称空间下，让上层客户端可以自由访问统一名称空间内的不同路径，不同存储系统的数据。（2）Alluxio提供文件接口，并存储且维护文件的metadata（比如记录文件分成哪几个block， 每一个block在哪台server上）。并提供fault tolerance的metadata服务。而Redis/Memcached为Nosql的key-value分布式缓存，并不提供文件接口。 问题1：因为在传统计算引擎中，数据存储在同一个JVM中，而基于Alluxio的中间件将数据存到了不同的JVM中，跨JVM读写会不会影响性能？ 答：跨JVM读写会影响性能，在Alluxio中，使用了RamDisk来模拟本地文件系统的方式。 问题2：如果Alluxio crash，怎么保证数据安全？ 答：在Alluxio中，数据不是保存在JVM中，而是保存在RamDisk中，RamDisk为独立的进程，因此可以保证数据安全。 问题3：Alluxio是否可以支持随机读写？ 答：可以进行随机读，给定一个offset。新创立的文件一旦关闭，就会变成immutable 问题：HDFS中每个数据块会默认有多个备份， 从而在极端情况下会有更大的读取带宽。 在Alluxio中，由于数据存储在同一份内存中，如何处理多个Job同时读取同一份数据的情况。 答： Alluxio的数据在内存当中，本身可以提供更大的本地读取带宽。另外Alluxio也允许让用户绕过Alluxio直接从底层的持久化文件系统读取数据。 当数据大小超过内存容量，如何处理？ Alluxio不仅仅管理内存，同样可以管理SSD，HDD等系统资源。保证Alluxio可以正常运行。 Q: 百度案例为什么可以提供30x的性能提升？ A: 百度的一项业务采用计算和存储分离的架构：比如计算集群在一个城市，而数据存储集群在另一个城市。数据存储集群计算资源较少，而计算集群没有足够存储资源。百度将Alluxio部署到了计算集群中。从而将数据存储在了Alluxio中，从而使计算集群可以在本地完成读写。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[rpc]]></title>
+    <url>%2F2017%2F03%2F01%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fthrift%2F</url>
+    <content type="text"><![CDATA[生成thrift thrift生成java代码 1thrift -r --gen java -out ../main Hello.thrift 生成java代码中的成员设置为私有，生成文件头注解中不要包含日期1thrift -r --gen java:private-members,generated_annotations=undated -out ../main Hello.thrift]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>rpc</tag>
+        <tag>thrift</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[shell脚本]]></title>
+    <url>%2F2017%2F02%2F28%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Flinux%2Fshell%E8%84%9A%E6%9C%AC%2F</url>
+    <content type="text"><![CDATA[转到脚本目录1cd `dirname $0` 创建多个文件并写入不同内容1for i in $(seq 3); do name=$(printf test%02d.txt $i); echo "$name" &gt; $name; done 1for i in $(seq 120); do name=$(printf test%06d.txt $i); dd if=/dev/zero of=$name bs=1M count=1; done 两个括号$(())运行计算1sum=0;for i in $(seq 3); do sum=$(( $i+$sum)) ; done ;echo $sum]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[docker]]></title>
+    <url>%2F2017%2F02%2F13%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fdocker%2F</url>
+    <content type="text"><![CDATA[hello1234$ docker run ubuntu:15.10 /bin/echo "Hello world"# 交互式$ docker run -i -t ubuntu:15.10 /bin/bash 拉取docker并安装sshhttp://www.winseliu.com/blog/2014/09/30/docker-ssh-on-centos/ 上传文件1docker cp foo.txt LONG_CONTAINER_ID:/foo.txt 获取container ID 以及端口映射1234## 通过ps获取SHORT_CONTAINER_IDdocker ps## 通过inspect 获取 LONG_CONTAINER_IDdocker inspect -f '&#123;&#123;.Id&#125;&#125;' SHORT_CONTAINER_ID 结束docker container123docker stop SHORT_CONTAINER_IDordocker stop CONTAINER_NAME 运行docker容器并设置端口映射12# -p&lt;主机端口:docker端口&gt;docker run --name bdpops_ubuntu -d -p 1029:22 -p 80:8080 learn/tutorial /usr/sbin/sshd -D 查看端口映射1docker port SHORT_CONTAINER_ID 22 提交修改123docker commit SHORT_CONTAINER_ID learn/tutorialordocker commit CONTAINER_NAME learn/tutorial 容器导出123docker export SHORT_CONTAINER_ID &gt; ubuntu.tarordocker export CONTAINER_NAME &gt; ubuntu.tar 容器快照导入12## test/ubuntu:v1.0 test/ubuntu为名称 v1.0为版本不写默认为latestcat ubuntu.tar | sudo docker import - test/ubuntu:v1.0 查看docker的images1docker images docker修改仓库名1docker tag imageid name:tag 安装私有仓库 ubuntu 12sudo apt-get install -y build-essential python-dev libevent-dev python-pip liblzma-dev swigsudo pip install docker-registry centos 12sudo yum install -y python-devel libevent-devel python-pip gcc xz-devel swigsudo python-pip install docker-registry others12345sudo apt-get install build-essential python-dev libevent-dev python-pip libssl-dev liblzma-dev libffi-dev$ git clone https://github.com/docker/docker-registry.git$ cd docker-registry$ sudo python setup.py install 将本地映像推送到本地仓库中1234docker tag ba58 192.168.7.26:5000/ubuntu:1024docker push localhost:5000/ubuntu:1204curl http://localhost:5000/v2/ubuntu/tags/list curl http://192.168.7.26:5000/v1/search]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用jstack分析jvm线程]]></title>
+    <url>%2F2017%2F02%2F04%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fjava%2Fjstack%2F</url>
+    <content type="text"><![CDATA[简介jstack用于打印出给定的java进程ID或core file或远程调试服务的Java堆栈信息，如果是在64位机器上，需要指定选项”-J-d64”，Windows的jstack使用方式只支持以下的这种方式： 1jstack [-l][F] pid jstack Dump日志文件中的线程状态 死锁，Deadlock（重点关注） 执行中，Runnable 等待资源，Waiting on condition（重点关注） 等待获取监视器，Waiting on monitor entry（重点关注） 暂停，Suspended 对象等待中，Object.wait() 或 TIMED_WAITING 阻塞，Blocked（重点关注） 停止，Parked Dump文件中的线程状态含义及注意事项含义如下所示： Deadlock：死锁线程，一般指多个线程调用间，进入相互资源占用，导致一直等待无法释放的情况。 Runnable：一般指该线程正在执行状态中，该线程占用了资源，正在处理某个请求，有可能正在传递SQL到数据库执行，有可能在对某个文件操作，有可能进行数据类型等转换。 Waiting on condition：等待资源，或等待某个条件的发生。具体原因需结合 stacktrace来分析。 如果堆栈信息明确是应用代码，则证明该线程正在等待资源。一般是大量读取某资源，且该资源采用了资源锁的情况下，线程进入等待状态，等待资源的读取。 又或者，正在等待其他线程的执行等。 如果发现有大量的线程都在处在 Wait on condition，从线程 stack看，正等待网络读写，这可能是一个网络瓶颈的征兆。因为网络阻塞导致线程无法执行。 一种情况是网络非常忙，几乎消耗了所有的带宽，仍然有大量数据等待网络读写； 另一种情况也可能是网络空闲，但由于路由等问题，导致包无法正常的到达。 另外一种出现 Wait on condition的常见情况是该线程在 sleep，等待 sleep的时间到了时候，将被唤醒。 Blocked：线程阻塞，是指当前线程执行过程中，所需要的资源长时间等待却一直未能获取到，被容器的线程管理器标识为阻塞状态，可以理解为等待资源超时的线程。 Waiting for monitor entry 和 in Object.wait()：Monitor是 Java中用以实现线程之间的互斥与协作的主要手段，它可以看成是对象或者Class的锁。每一个对象都有，也仅有一个 monitor。从下图1中可以看出，每个 Monitor在某个时刻，只能被一个线程拥有，该线程就是 “Active Thread”，而其它线程都是 “Waiting Thread”，分别在两个队列 “ Entry Set”和 “Wait Set”里面等候。在 “Entry Set”中等待的线程状态是 “Waiting for monitor entry”，而在 “Wait Set”中等待的线程状态是 “in Object.wait()”。 thread dump文件分析Waiting to lock 和 Blocked12345678&quot;RMI TCP Connection(267865)-172.16.5.25&quot; daemon prio=10 tid=0x00007fd508371000 nid=0x55ae waiting for monitor entry [0x00007fd4f8684000] java.lang.Thread.State: BLOCKED (on object monitor)at org.apache.log4j.Category.callAppenders(Category.java:201)- waiting to lock &lt;0x00000000acf4d0c0&gt; (a org.apache.log4j.Logger)at org.apache.log4j.Category.forcedLog(Category.java:388)at org.apache.log4j.Category.log(Category.java:853)at org.apache.commons.logging.impl.Log4JLogger.warn(Log4JLogger.java:234)at com.tuan.core.common.lang.cache.remote.SpyMemcachedClient.get(SpyMemcachedClient.java:110) 说明： 线程状态是 Blocked，阻塞状态。说明线程等待资源超时！ “ waiting to lock ”指，线程在等待给这个 0x00000000acf4d0c0 地址上锁（英文可描述为：trying toobtain 0x00000000acf4d0c0 lock）。 在 dump 日志里查找字符串 0x00000000acf4d0c0，发现有大量线程都在等待给这个地址上锁。如果能在日志里找到谁获得了这个锁（如locked &lt;0x00000000acf4d0c0 &gt;），就可以顺藤摸瓜了。 “waiting for monitor entry”说明此线程通过 synchronized(obj) {……} 申请进入了临界区，从而进入了“Entry Set”队列，但该obj 对应的 monitor 被其他线程拥有，所以本线程在 Entry Set 队列中等待。 第一行里，”RMI TCP Connection(267865)-172.16.5.25”是 Thread Name 。tid指Java Threadid。nid指native线程的id。prio是线程优先级。[0x00007fd4f8684000]是线程栈起始地址。 Waiting on condition 和 TIMED_WAITING1234567891011&quot;RMI TCP Connection(idle)&quot; daemon prio=10 tid=0x00007fd50834e800 nid=0x56b2 waiting on condition [0x00007fd4f1a59000] java.lang.Thread.State: TIMED_WAITING (parking)at sun.misc.Unsafe.park(Native Method)- parking to wait for &lt;0x00000000acd84de8&gt; (a java.util.concurrent.SynchronousQueue$TransferStack)at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:945)at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)at java.lang.Thread.run(Thread.java:662) 说明： “TIMED_WAITING (parking)”中的 timed_waiting 指等待状态，但这里指定了时间，到达指定的时间后自动退出等待状态；parking指线程处于挂起中。 “waiting on condition”需要与堆栈中的“parking to wait for (a java.util.concurrent.SynchronousQueue$TransferStack)”结合来看。首先，本线程肯定是在等待某个条件的发生，来把自己唤醒。其次，SynchronousQueue 并不是一个队列，只是线程之间移交信息的机制，当我们把一个元素放入到 SynchronousQueue 中时必须有另一个线程正在等待接受移交的任务，因此这就是本线程在等待的条件。 in Obejct.wait() 和 TIMED_WAITING12345678&quot;RMI RenewClean-[172.16.5.19:28475]&quot; daemon prio=10 tid=0x0000000041428800 nid=0xb09 in Object.wait() [0x00007f34f4bd0000] java.lang.Thread.State: TIMED_WAITING (on object monitor)at java.lang.Object.wait(Native Method)- waiting on &lt;0x00000000aa672478&gt; (a java.lang.ref.ReferenceQueue$Lock)at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)- locked &lt;0x00000000aa672478&gt; (a java.lang.ref.ReferenceQueue$Lock)at sun.rmi.transport.DGCClient$EndpointEntry$RenewCleanThread.run(DGCClient.java:516)at java.lang.Thread.run(Thread.java:662) 说明： “TIMED_WAITING (on object monitor)”，对于本例而言，是因为本线程调用了 java.lang.Object.wait(long timeout) 而进入等待状态。 “Wait Set”中等待的线程状态就是“ in Object.wait() ”。当线程获得了 Monitor，进入了临界区之后，如果发现线程继续运行的条件没有满足，它则调用对象（一般就是被synchronized 的对象）的 wait() 方法，放弃了 Monitor，进入 “Wait Set”队列。只有当别的线程在该对象上调用了 notify() 或者 notifyAll() ，“ Wait Set”队列中线程才得到机会去竞争，但是只有一个线程获得对象的 Monitor，恢复到运行态。 RMI RenewClean 是 DGCClient 的一部分。DGC 指的是 Distributed GC，即分布式垃圾回收。 请注意，是先 locked ，后 waiting on ，之所以先锁再等同一个对象，线程的执行中，先用 synchronized 获得了这个对象的 Monitor（对应于 locked ）；当执行到 lock.wait(timeout);，线程就放弃了 Monitor 的所有权，进入“Wait Set”队列（对应于 waiting on ）。 从堆栈信息看，是正在清理 remote references to remote objects ，引用的租约到了，分布式垃圾回收在逐一清理呢。 线程状态 state description NEW 指线程刚创建, 尚未启动。 RUNNABLE 线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取cpu 的使用权。 BLOCKED 一个线程由于等待监视锁而阻塞的状态。处于这个状态是由于线程进入synchronized块或方法或者调用wait()再次进入synchronized块或方法。 WAITING 这个状态下是指线程拥有了某个锁之后, 调用了他的wait方法, 等待其他线程/锁拥有者调用 notify / notifyAll 一遍该线程可以继续下一步操作, 这里要区分 BLOCKED 和 WATING 的区别, 一个是在临界点外面等待进入, 一个是在理解点里面wait等待别人notify, 线程调用了join方法 join了另外的线程的时候, 也会进入WAITING状态, 等待被他join的线程执行结束 TIMED_WAITING 这个状态就是有限的(时间限制)的WAITING, 一般出现在调用wait(long), join(long)等情况下, 另外一个线程sleep后, 也会进入TIMED_WAITING状态 TERMINATED 这个状态下表示 该线程的run方法已经执行完毕了, 基本上就等于死亡了(当时如果线程被持久持有, 可能不会被回收) 状态示例RUNNABLE执行如下代码，使用jstack -l pid查看thread dump12345678910private static void RUNNABLE() &#123; Thread t = new Thread() &#123; public void run() &#123; for (int i = 0; i &lt; Integer.MAX_VALUE; i++) &#123; System.out.println(i); &#125; &#125; &#125;; t.start();&#125; thread dump，其中- locked &lt;0x1b8&gt; 是由于获取了同步块锁synchronized123456789101112131415161718&quot;Thread-0@434&quot; prio=5 tid=0xc nid=NA runnable java.lang.Thread.State: RUNNABLE at java.io.FileOutputStream.writeBytes(FileOutputStream.java:-1) at java.io.FileOutputStream.write(FileOutputStream.java:326) at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82) at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140) - locked &lt;0x1b6&gt; (a java.io.BufferedOutputStream) at java.io.PrintStream.write(PrintStream.java:482) - locked &lt;0x1b7&gt; (a java.io.PrintStream) at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221) at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291) at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104) - locked &lt;0x1b8&gt; (a java.io.OutputStreamWriter) at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185) at java.io.PrintStream.write(PrintStream.java:527) at java.io.PrintStream.print(PrintStream.java:597) at java.io.PrintStream.println(PrintStream.java:736) at net.mbl.demo.App$1.run(App.java:12) BLOCKED执行如下代码，使用jstack -l pid查看thread dump1234567891011121314151617181920private static void BLOCKED() &#123; final Object lock = new Object(); Runnable run = new Runnable() &#123; public void run() &#123; for (int i = 0; i &lt; Integer.MAX_VALUE; i++) &#123; synchronized (lock) &#123; System.out.println(i); &#125; &#125; &#125; &#125;; Thread t1 = new Thread(run); t1.setName( "t1"); Thread t2 = new Thread(run); t2.setName( "t2"); t1.start(); t2.start();&#125; thread dump，其中t2的状态为BLOCKED，- waiting to lock &lt;0x00000005a0190188&gt;表示t2等待锁0x00000005a0190188,而t1的状态为RUNNABLE,- locked &lt;0x00000005a0190188&gt;表示t1持有锁0x00000005a0190188. 123456789101112131415161718192021222324252627282930313233&quot;t2&quot; #22 prio=5 os_prio=0 tid=0x00007f6ab4128000 nid=0xc4f waiting for monitor entry [0x00007f6a451d0000] java.lang.Thread.State: BLOCKED (on object monitor) at net.mbl.demo.App$2.run(App.java:23) - waiting to lock &lt;0x00000005a0190188&gt; (a java.lang.Object) at java.lang.Thread.run(Thread.java:745) Locked ownable synchronizers: - None&quot;t1&quot; #21 prio=5 os_prio=0 tid=0x00007f6ab4126800 nid=0xc4e runnable [0x00007f6a452d1000] java.lang.Thread.State: RUNNABLE at java.io.FileOutputStream.writeBytes(Native Method) at java.io.FileOutputStream.write(FileOutputStream.java:326) at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82) at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140) - locked &lt;0x00000005a01b4540&gt; (a java.io.BufferedOutputStream) at java.io.PrintStream.write(PrintStream.java:482) - locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream) at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221) at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291) at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104) - locked &lt;0x00000005a0198460&gt; (a java.io.OutputStreamWriter) at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185) at java.io.PrintStream.newLine(PrintStream.java:546) - locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream) at java.io.PrintStream.println(PrintStream.java:737) - locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream) at net.mbl.demo.App$2.run(App.java:24) - locked &lt;0x00000005a0190188&gt; (a java.lang.Object) at java.lang.Thread.run(Thread.java:745) Locked ownable synchronizers: - None WAITING执行如下代码，使用jstack -l pid查看thread dump1234567891011121314151617181920212223242526272829303132333435363738private static void WAITING() &#123; final Object lock = new Object(); Thread t1 = new Thread()&#123; @Override public void run() &#123; int i = 0; while(true )&#123; synchronized (lock) &#123; try &#123; lock.wait(); &#125; catch (InterruptedException e) &#123; &#125; System. out.println(i++); &#125; &#125; &#125; &#125;; Thread t2 = new Thread()&#123; @Override public void run() &#123; while(true )&#123; synchronized (lock) &#123; for(int i = 0; i&lt; 10000000; i++)&#123; System. out.println(i); &#125; lock.notifyAll(); &#125; &#125; &#125; &#125;; t1.setName( "^^t1^^"); t2.setName( "^^t2^^"); t1.start(); t2.start();&#125; thread dump, ^^t1^^线程进入synchronized块后持有lock0x00000005a65500f8，当执行lock.wait()时,暂时放弃锁,进入WAITING状态，并重新等待lock的notify后收回锁.^^t2^^线程进入synchronized块后持有lock0x00000005a65500f8，直到循环结束后执行lock.notifyAll()时，^^t1^^才恢复执行. 另外看stack的输出,他叫WAITING(on object monitor) , 说明括号后面还有其他的情况, 比如sleep, 我们直接把^^t2^^的for循环改成sleep,^^t2^^的state则变成了 WAITING (sleeping). 另外, join操作也是进入 on object monitor. Concurrent包里的lock()会进入WAITING (parking). 12345678910111213141516171819202122232425262728293031323334&quot;^^t2^^&quot; prio=10 tid=0x00007fc5f4005000 nid=0x3c58 runnable [0x00007fc65ef9b000] java.lang.Thread.State: RUNNABLE at java.io.FileOutputStream.writeBytes(Native Method) at java.io.FileOutputStream.write(FileOutputStream.java:345) at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82) at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140) - locked &lt;0x00000005a655a9c0&gt; (a java.io.BufferedOutputStream) at java.io.PrintStream.write(PrintStream.java:482) - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream) at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221) at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291) at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104) - locked &lt;0x00000005a655aaf0&gt; (a java.io.OutputStreamWriter) at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185) at java.io.PrintStream.newLine(PrintStream.java:546) - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream) at java.io.PrintStream.println(PrintStream.java:737) - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream) at net.mbl.demo.App$4.run(App.java:62) - locked &lt;0x00000005a65500f8&gt; (a java.lang.Object) Locked ownable synchronizers: - None&quot;^^t1^^&quot; prio=10 tid=0x00007fc5f4003000 nid=0x3c57 in Object.wait() [0x00007fc65f09c000] java.lang.Thread.State: WAITING (on object monitor) at java.lang.Object.wait(Native Method) - waiting on &lt;0x00000005a65500f8&gt; (a java.lang.Object) at java.lang.Object.wait(Object.java:503) at net.mbl.demo.App$3.run(App.java:47) - locked &lt;0x00000005a65500f8&gt; (a java.lang.Object) Locked ownable synchronizers: - None TIMED_WAITING这个仅需要在WAITING的基础上, 在wait方法加上一个时间参数进行限制就OK了. 线程状态转换方法 sleep()方法 在指定时间内让当前正在执行的线程暂停执行，但不会释放“锁标志”。不推荐使用。 sleep()使当前线程进入阻塞状态，在指定时间内不会执行。 wait()方法 在其他线程调用对象的notify或notifyAll方法前，导致当前线程等待。线程会释放掉它所占有的“锁标志”，从而使别的线程有机会抢占该锁。当前线程必须拥有当前对象锁。如果当前线程不是此锁的拥有者，会抛出IllegalMonitorStateException异常。唤醒当前对象锁的等待线程使用notify或notifyAll方法，也必须拥有相同的对象锁，否则也会抛出IllegalMonitorStateException异常。wait()和notify()必须在synchronized函数或synchronized block中进行调用。如果在non-synchronized函数或non-synchronizedblock中进行调用，虽然能编译通过，但在运行时会发生IllegalMonitorStateException的异常。 yield方法 yield()方法是停止当前线程，让同等优先权以上的线程运行。如果没有同等优先权的线程，那么Yield()方法将不会起作用。 interrupt方法interrupt()中断线程。需要注意的是，InterruptedException是线程自己从内部抛出的，并不是interrupt()方法抛出的。对某一线程调用interrupt()时，如果该线程正在执行普通的代码，那么该线程根本就不会抛出InterruptedException。但是，一旦该线程进入到wait()/sleep()/join()后，就会立刻抛出InterruptedException。 join方法当前线程等待调用join方法的线程结束再继续执行。 排查线程问题的思路 如何跟踪一个线程?看到上面的stack输出没有, 第一行是内容是 threadName priority tid nid desc更过跟踪tid, nid 都可以唯一找到该线程. 发现有线程进入BLOCK, 而且持续好久, 这说明性能瓶颈存在于synchronized块中, 因为他一直block住, 进不去, 说明另一个线程一直没有处理好, 也就这个synchronized块中处理速度比较慢, 然后再深入查看. 当然也有可能同时block的线程太多, 排队太久造成. 发现有线程进入WAITING, 而且持续好久, 说明性能瓶颈存在于触发notify的那段逻辑. 当然还有就是同时WAITING的线程过多, 老是等不到释放. 线程进入TIME_WAITING 状态且持续好久的, 跟2的排查方式一样.]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>java</tag>
+        <tag>jvm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[python 笔记]]></title>
+    <url>%2F2017%2F02%2F01%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fpython%2Fpython%2F</url>
+    <content type="text"><![CDATA[开发工具Pycharm 2016.3.2 Hello World1234#!/usr/bin/python#coding:utf-8if __name__ == '__main__': print "hello" 使用正则表达式1234import researchObj = re.search(r'- parking to wait for &lt;(.*)&gt; .*', line, re.M | re.I)if searchObj: print searchObj.group(1) 调用其它进程并获取输出12345import oscommand = 'jstack -l '+ str(pid)r = os.popen(command)lines = r.readlines()print lines 读取文件内容1234text_file = open("/home/mbl/a.txt", "r")lines = text_file.readlines()text_file.close()print lines 使用类1234567891011121314151617181920class ThreadInfo: tName = "" daemon = "" prio = "0" tid = "0x0" nid = "0x0" cid = "0x0" line = "" lockId = "0x0" threadInfo = NonethreadInfo = ThreadInfo()threadInfo.tName = "tname"threadInfo.line = "line"threadInfo.daemon = "daemon"threadInfo.prio = "0x1234"threadInfo.tid = "0x5678"threadInfo.nid = "0x1236"threadInfo.cid = "0x6678" 使用List12345678waiterTheadList = []waiterTheadList.append("a")waiterTheadList.append("b")waiterTheadList.append("c")for index in range(len(waiterTheadList)): curWT = waiterTheadList[index] print curWT 使用Map(字典)12345678lockHolderMap = &#123;&#125;lockHolderMap["a"] = 1lockHolderMap["b"] = 2varA = "a"if varA in lockHolderMap: runCount = lockHolderMap[varA] runCount += 1 lockHolderMap[varA] = runCount 解析参数argparse1234567891011121314151617import argparseif __name__ == '__main__': parser = argparse.ArgumentParser(description="A tool to print jvm lock info.") parser.add_argument("-pid", type=int, required=True, help="specify a jvm process id which you want to print lock info. ") parser.add_argument("-lockid", type=str, help="specify a lockid to filter information. ") parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true") args = parser.parse_args() verbose = args.verbose print args print args.pid,args.lockid]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[元宝]]></title>
+    <url>%2F2017%2F02%2F01%2F%E8%82%B2%E5%84%BF%E7%BB%8F%2F%E5%85%83%E5%AE%9D%2F</url>
+    <content type="text"><![CDATA[出生信息日期: 2016-04-30 12:03重量: 3770g 3580g 3620g 3670g身长: 52cm 出牙 日期 相对日期 详情 2016-11-04 六个月 下门牙 2 颗 2017-01-22 八个半月 上门牙 2 颗 日期: 重要里程碑记录 日期 相对日期 里程碑 备注 NA 3个月 会翻身 2016-11-05 六个月 会坐 2016-01-05 八个月 会爬 不积极 TODO TODO 会站 几秒钟 身高体重记录 日期 身高 体重 2016-04-30 52 3.77 2016-05-01 52 3.58 2016-05-02 52 3.62 2016-05-03 52 3.67 2016-12-10 73 9.82 2017-02-05 75 10.79 生病信息 日期 描述 备注 2017-04-04 晚 - 2017-04-08 流鼻涕、发烧38-39.9、嗓子红 柴银小儿退热颗粒+消炎药+滴嗓子药]]></content>
+      <categories>
+        <category>育儿经</category>
+      </categories>
+      <tags>
+        <tag>育儿经</tag>
+        <tag>元宝</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[netty]]></title>
+    <url>%2F2017%2F01%2F30%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fnetty%2F</url>
+    <content type="text"><![CDATA[Group一个叫bossGroup(老板),一个叫workerGroup(工人),bossGroup用于接受请求的线程组,workerGroup用于处理IO操作线程组,bossGroup收到请求之后叫workerGroup去处理 ServerBootstrapServerBootstrap 是一个启动工具类,childHandler()方法用于往里面加入处理channel的操作类,并初始化它们. ChannelPipeline用于链式管理内部的channel处理类.]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>netty</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Proto Buffers]]></title>
+    <url>%2F2017%2F01%2F29%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fprotobuffers%2F</url>
+    <content type="text"><![CDATA[生成java1protoc --java_out=../../main/java/alluxio.proto.journal/ *.proto]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>protobuffers</tag>
+        <tag>rpc</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用hexo创建github博客使用yelee主题]]></title>
+    <url>%2F2017%2F01%2F20%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fgithub_blog%2F%E4%BD%BF%E7%94%A8hexo%E5%88%9B%E5%BB%BAgithub%E5%8D%9A%E5%AE%A2%E4%BD%BF%E7%94%A8yelee%E4%B8%BB%E9%A2%98%2F</url>
+    <content type="text"><![CDATA[安装插件npm install -S hexo-generator-json-content@1 –save]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Travis CI</tag>
+        <tag>持续集成</tag>
+        <tag>自动部署</tag>
+        <tag>github_blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Yilia源码目录结构及构建须知]]></title>
+    <url>%2F2017%2F01%2F20%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fgithub_blog%2FYilia%E6%BA%90%E7%A0%81%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%8F%8A%E6%9E%84%E5%BB%BA%E9%A1%BB%E7%9F%A5%2F</url>
+    <content type="text"><![CDATA[一、前言出于对Hexo本身一些限制的思考，Yilia于2016九月进行了源码目录结构整理。这些限制是我不太满意的地方，但既然世界观如此，我们只能在接受的基础上搞搞事情。 主要为： 1. 主题应该用npm管理而不是git npm作为比较成熟的包管理工具，是大势所趋，比git会更稳定和方便 2. 构建工作交给主题更合适 Hexo本身的构建虽然做了很多工作，但是无法适应所有开发者的要求比如我需要用ES6开发，压缩合并js等 二、目录结构 source - Hexo加载主题资源的主目录，需要编译生成 source-src - 源文件目录，编译到source目录 layout - 模板目录 languages - 语言配置目录 一般来说，如果你想修改页面的html，请到layout文件夹里直接修改；如想修改css，js，请到source-src文件夹里，并通过后面介绍的开发步骤，编译到source里。 三、开发环境你需要使用以下环境进行开发： node - 0.4.2以上 npm - 3.0.0以上 ejs - 前端模板 sass - css预编译 webpack - 构建工具 四、开发步骤 安装node+npm 安装依赖进入根目录，执行 npm install 开发执行npm run dev此时会用webpack打包，把文件编译到source文件里，但文件不会经过压缩 发布执行npm run dist最终确定版本，此时的编译会经过压缩。]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Travis CI</tag>
+        <tag>持续集成</tag>
+        <tag>自动部署</tag>
+        <tag>github_blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[手把手教你使用Travis CI自动部署你的Hexo博客到Github上]]></title>
+    <url>%2F2017%2F01%2F20%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fgithub_blog%2Fgithub_hexo_travis%2F</url>
+    <content type="text"><![CDATA[简介这年头要是没有个博客都不好意思给别人说你是程序员，我用XX笔记呀，不行吗？不行，这玩意儿要么不能公开分享，要么公开分享要会员，现在到处都是开源，自己学到了东西都不能分享给需要帮助的人，真是伤心呀。那么今天就来聊聊当你用Hexo搭建了博客，怎么自动更新呢，大家都知道Hexo是需要手动生成HTML静态网页的，虽然命令很少，但是每次写完博客先得推送到git然后在生成静态文件，再推送到服务器，想想我这个心也是醉了，不过看到知乎上还有人带着U盘，我只能呵呵了~，你们耐心真好~ 那我们今天就来说说怎么使用Travis CI来自动构建你的博客 什么是Travis CI Travis CI 是目前新兴的开源持续集成构建项目，它与jenkins，GO的很明显的特别在于采用yaml格式，同时他是在在线的服务，不像jenkins需要你本地打架服务器，简洁清新独树一帜。目前大多数的github项目都已经移入到Travis CI的构建队列中，据说Travis CI每天运行超过4000次完整构建。对于做开源项目或者github的使用者，如果你的项目还没有加入Travis CI构建队列，那么我真的想对你说out了。 我的博客架构也算是一个框架吧 首先我的博客是使用Hexo来搭建的，托管到Github提供的Gitpage服务上的 每次写完博客git push到github，然后Travis自动构建，构建完成后自动推送到Gitpage服务上 生成后的HTML文件和博客的源文件我是放到一个仓库的，只是使用了不同的分支 master：博客的静态文件，也就是hexo生成后的HTML文件，因为要使用Gitpage服务，所以他规定的网页文件必须是在master分支 blog-source：是博客的源代码 当然这样做有隐私问题，因为任何人都能哪的你的博客源码，当然既然是博客，所以就没有这些问题了 启用要构建的项目首先如果你要使用Travis CI，你必须要GIthub账号（好像Travis CI只支持构建github的项目）和一个项目 使用Github账号登录Travis CI官网 点击My Repositories旁边的+，意思是添加一个要自动构建的仓库. 可以看到这个界面会显示当前github账号的所以项目，如果没有显示，点击右上角的“Sync account”按钮，就可以同步过来了（ps：上次用windows电脑始终同步不过来项目，最后换成mac可以同步了，最后又换回windows也可以了，汗(⊙﹏⊙)b，不太懂，什么个情况） 居然仓库都同步过来了，那么下一步肯定是要开启你需要构建的仓库，可以看到我开启了yourname.github.io这个项目，当然这个也是我就是我的博客啦 开启后我们还需要进行一些配置，操作如下 点击红框的那个菜单按钮，就会出现这样的下拉菜单，我们选择设置，来到这个界面，我们按照如下勾选 Build only if .travis.yml is present：是只有在.travis.yml文件中配置的分支改变了才构建Build pushes：当推送完这个分支后开始构建 到这一步， 我们已经开启了要构建的仓库，但是还有个问题就是，构建完后，我们怎么将生成的文件推送到github上呢，如果不能推送那我们就不需要倒腾一番来使用Travis CI服务了，我们要的结果就是，我们只要想github一push，他就自动构建并push静态文件到gitpages呢，那么下面要解决的就是Travis CI怎么访问github了 在Travis CI配置Github的Access Token标题已经说得很明白了吧，我们需要在Travis上配置Access Token，这样我们就可以在他构建完后自动push到gitpgaes了，到这里肯定有人要问了，咋你把用户名密码直接写文件里呢，如果你真有这样的问题，那我只能说呵呵~，但我要告诉你的是写里面肯定是可以push成功的 在github上生成Access Token首先我们来到github的设置界面，点击到Personal access tokens页面，点击右上角的Generate new token按钮会重新生成一个，点击后他会叫你输入密码，然后来到如下界面，给他去一个名字，下面是勾选一些权限 生成完后，你需要拷贝下来，只有这时候他才显示，下载进来为了安全他就不会显示了，如果忘了只能重新生成一个了，拷贝完以后我们需要到Travis CI网站配置下 在Travis CI配置配置界面还是在项目的setting里面 至于为什么我们要在这里配置，我想大家肯定应该明白了，写在程序里不安全，配置到这里相当于一个环境变量，我们在构建的时候就可以引用他。到这里我已经配置了要构建的仓库和要访问的Token，但是问题来了，他知道怎么构建，怎么生成静态文件吗，怎么push的gitpages，又push到那个仓库吗，所以这里我们还需要在源代码的仓库里创建一个.travis.yml配置文件，放到源代码的根目录 其中内容如下： 123456789101112131415161718192021222324252627282930language: node_jsnode_js: stable# S: Build Lifecycleinstall: - npm install#before_script: # - npm install -g gulpscript: - hexo gafter_script: - cd ./public - git init - git config user.name &quot;yourname&quot; - git config user.email &quot;yourname@gmail.com&quot; - git add . - git commit -m &quot;Update docs&quot; - git push --force --quiet &quot;https://$&#123;GH_TOKEN&#125;@$&#123;GH_REF&#125;&quot; master:master# E: Build LifeCyclebranches: only: - blog-sourceenv: global: - GH_REF: github.com/yourname/yourname.github.io.git 其中给你需要更换的又git config后面的配置信息GH_REF的值更改为你的仓库地址 到这一步我们配置已经完成了，现在就是见证奇迹的时候了 Push文章到Github到这一步，我们可以写一篇文章，添加到你的博客的_posts目录下 然后commit并push到你的Github上 1git push origin blog-source:blog-source 如果不出意外，我们可以就可以在Travis CI网站看到他已经在构建了 构建完成。]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Travis CI</tag>
+        <tag>持续集成</tag>
+        <tag>自动部署</tag>
+        <tag>github_blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio 层次化存储简介(转)]]></title>
+    <url>%2F2017%2F01%2F18%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-%E5%B1%82%E6%AC%A1%E5%8C%96%E5%AD%98%E5%82%A8%E7%AE%80%E4%BB%8B%2F</url>
+    <content type="text"><![CDATA[分层存储种类 MEM (内存) SSD (固态硬盘) HDD (硬盘驱动器) 分层存储参数 alluxio.worker.tieredstore.levels，缺省值1Alluxio Worker多层存储中的最大存储级数。当前Alluxio支持1，2，3层。 alluxio.worker.tieredstore.level{x}.alias，缺省值MEM (for alluxio.worker.tieredstore.level0.alias)每个存储层的别名，x代表存储层序号(顶层为0)。当前有3个别名，MEM，SSD和HDD。 alluxio.worker.tieredstore.level{x}.dirs.path，缺省值/mnt/ramdisk (for alluxio.worker.tieredstore.level0.dirs.path)x存储层的底层存储目录路径，以逗号分割。x代表存储层序号(顶层为0)。建议SSD和HDD层每个硬盘设备有一个存储目录。 alluxio.worker.tieredstore.level{x}.dirs.quota，缺省值128MB (for alluxio.worker.tieredstore.level0.dirs.quota)x存储层所有存储目录的配额，以逗号分割。x代表存储层序号(从0开始)。对于特定的存储层，如果配额的列表长度比目录列表短，剩余目录的配额使用最后一个定义的配额。配额定义可使用这些后缀：KB，MB，GB，TB，PB。 alluxio.worker.tieredstore.level{x}.reserved.ratio，缺省值0.1值在0到1之间，设置了在x存储层预留空间的比例。如果预留空间大小不满足，空间预留器会移出数据块直到预留空间大小满足要求。 alluxio.worker.tieredstore.reserver.enabled，缺省值false开启空间预留器服务的标志。 alluxio.worker.tieredstore.reserver.interval.ms1000空间预留器检查所有存储层是否预留足够空间的时间间隔。 alluxio.worker.allocator.class，缺省值alluxio.worker.block.allocator.MaxFreeAllocatorAlluxio中新数据块分配策略的类名。 lluxio.worker.evictor.class，缺省值alluxio.worker.block.evictor.LRUEvictor当存储层空间用尽时块回收策略的类名。 分配策略：选择新数据块的写入位置 贪心分配策略分配新数据块到首个有足够空间的存储目录。 最大剩余空间分配策略分配数据块到有最大剩余空间的存储目录。 轮询调度分配策略分配数据块到有空间的最高存储层，存储目录通过轮询调度选出。 回收策略：决定当空间需要释放时，哪些数据块被移到低存储层。 贪心回收策略移出任意的块直到释放出所需大小的空间。 LRU回收策略移出最近最少使用的数据块直到释放出所需大小的空间。 LRFU回收策略基于权重分配的最近最少使用和最不经常使用策略移出数据块。如果权重完全偏向最近最少使用,LRFU回收策略退化为LRU回收策略。 部分LRU回收策略基于最近最少使用移出，但是选择有最大剩余空间的存储目录(StorageDir)，只从该目录移出数据块。 举例举例而言，如果想要配置Alluxio有两级存储–内存和硬盘–，可以使用如下配置：123456789alluxio.worker.tieredstore.levels=2alluxio.worker.tieredstore.level0.alias=MEMalluxio.worker.tieredstore.level0.dirs.path=/mnt/ramdiskalluxio.worker.tieredstore.level0.dirs.quota=100GBalluxio.worker.tieredstore.level0.reserved.ratio=0.2alluxio.worker.tieredstore.level1.alias=HDDalluxio.worker.tieredstore.level1.dirs.path=/mnt/hdd1,/mnt/hdd2,/mnt/hdd3alluxio.worker.tieredstore.level1.dirs.quota=2TB,5TB,500GBalluxio.worker.tieredstore.level1.reserved.ratio=0.1 相关配置说明如下：123456789alluxio.worker.tieredstore.levels=2 在Alluxio中配置了两级存储alluxio.worker.tieredstore.level0.alias=MEM配置了首层(顶层)是内存存储层alluxio.worker.tieredstore.level0.dirs.path=/mnt/ramdisk 定义了/mnt/ramdisk是首层的文件路径alluxio.worker.tieredstore.level0.dirs.quota=100GB设置了ramdisk的配额是100GBalluxio.worker.tieredstore.level0.reserved.ratio=0.2设置了顶层的预留空间比例是0.2alluxio.worker.tieredstore.level1.alias=HDD配置了第二层是硬盘驱动器层alluxio.worker.tieredstore.level1.dirs.path=/mnt/hdd1,/mnt/hdd2,/mnt/hdd3配置了第二层3个独立的文件路径alluxio.worker.tieredstore.level1.dirs.quota=2TB,5TB,500GB定义了第二层3个文件路径各自的配额alluxio.worker.tieredstore.level1.reserved.ratio=0.1设置了第二层的预留空间比例是0.1]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+        <tag>alluxio</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio Proto Buffers]]></title>
+    <url>%2F2017%2F01%2F18%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-protobuffers%2F</url>
+    <content type="text"><![CDATA[消息block BlockContainerIdGeneratorEntry BlockInfoEntry file StringPairEntry AddMountPointEntry AsyncPersistRequestEntry CompleteFileEntry DeleteFileEntry DeleteMountPointEntry InodeDirectoryEntry InodeDirectoryIdGeneratorEntry InodeFileEntry InodeLastModificationTimeEntry PersistDirectoryEntry PersistFileEntry ReinitializeFileEntry RenameEntry SetAttributeEntry journal JournalEntry key_value CompletePartitionEntry CompleteStoreEntry CreateStoreEntry DeleteStoreEntry RenameStoreEntry MergeStoreEntry lineage DeleteLineageEntry LineageEntry LineageIdGeneratorEntry protocol Exception Status ReadRequest WriteRequest Response VersionRequest VersionResponse]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>protobuffers</tag>
+        <tag>bigdata</tag>
+        <tag>alluxio</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio rpc analysis]]></title>
+    <url>%2F2017%2F01%2F18%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-rpc-en%2F</url>
+    <content type="text"><![CDATA[RPC communicationA class which extends parent class AbstractThriftClient will be a RPC client. They use the method retryRPC to invoke a PRC call, then ServiceHandler‘s method which override Service.Iface‘s abstract method will receive the calling. To catch the exception during the calling from RPC client uniformity, it is a better way to use method RpcUtils.call() and provide a instance implements the abstract method call which defined in interface RpcCallable to handle the callback. RPC callRPC client invoke a RPC call to RPC service which is implemented by serviceHandler through clientService. There are three role in Alluxio, the call direction could be Client-&gt;Master, Worker-&gt;Master, Client-&gt;Worker. The ServiceHandler implements ClientService.Iface which will called by RPC Client, usually ServiceHandler have a member to execute concrete operation on master or worker. The following table shows six kind RPC call in Alluxio. RPC Client ClientService(thrift) ServiceHandler Master/Worker call direction FileSystemMasterClient FileSystemMasterClientService FileSystemMasterClientServiceHandler FileSystemMaster Client-&gt;Master FileSystemMasterClient’ FileSystemMasterWorkerService FileSystemMasterWorkerServiceHandler FileSystemMaster Worker-&gt;Master RetryHandlingBlockMasterClient BlockMasterClientService BlockMasterClientServiceHandler BlockMaster Client-&gt;Master BlockMasterClient BlockMasterWorkerService BlockMasterWorkerServiceHandler BlockMaster Worker-&gt;Master FileSystemWorkerClient FileSystemWorkerClientService FileSystemWorkerClientServiceHandler FileSystemWorker Client-&gt;Worker RetryHandlingBlockWorkerClient BlockWorkerClientService BlockWorkerClientServiceHandler BlockWorker Client-&gt;Worker RPC methodmaster FileSystemMasterClientServiceHandler checkConsistency completeFile createDirectory createFile free getFileBlockInfoList getNewBlockIdForFile getStatus getStatusInternal getUfsAddress listStatus loadMetadata mount remove rename scheduleAsyncPersist setAttribute unmount FileSystemMasterWorkerServiceHandler getFileInfo getPinIdList heartbeat BlockMasterClientServiceHandler getWorkerInfoList getCapacityBytes getUsedBytes getBlockInfo BlockMasterWorkerServiceHandler getWorkerId registerWorker heartbeat commitBlock worker BlockWorkerClientServiceHandler accessBlock cacheBlock cancelBlock lockBlock promoteBlock removeBlock requestBlockLocation requestSpace unlockBlock sessionHeartbeat FileSystemWorkerClientServiceHandler cancelUfsFile closeUfsFile completeUfsFile createUfsFile openUfsFile sessionHeartbeat]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>thrift</tag>
+        <tag>bigdata</tag>
+        <tag>alluxio</tag>
+        <tag>en</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio 定位策略(转)]]></title>
+    <url>%2F2017%2F01%2F18%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-%E5%AE%9A%E4%BD%8D%E7%AD%96%E7%95%A5%2F</url>
+    <content type="text"><![CDATA[Alluxio提供定位策略，用于确定应该选择哪个Worker来存储文件数据块。用户可以在CreateFileOptions中设置该策略以用于写文件，也可在OpenFileOptions中设置该策略用于向Alluxio中读文件。Alluxio支持自定义定位策略，内置策略包括： LocalFirstPolicy首先返回本地主机，如果本地Worker没有足够的总容量(CapacityBytes)容纳一个数据块，那么就会从有效的Worker列表中随机选择一个Worker。这也是默认策略。 MostAvailableFirstPolicy返回拥有最多可用容量的Worker。 RoundRobinPolicy以循环的方式选取存储下一个数据块的Worker，如果该Worker没有足够的总容量(CapacityBytes)，就将其跳过。 SpecificHostPolicy返回指定主机名(hostname)的Worker。该策略不能被设置为默认策略。 LocalFirstPolicy123456789101112131415161718192021public WorkerNetAddress getWorkerForNextBlock(Iterable&lt;BlockWorkerInfo&gt; workerInfoList, long blockSizeBytes) &#123; // first try the local host for (BlockWorkerInfo workerInfo : workerInfoList) &#123; if (workerInfo.getNetAddress().getHost().equals(mLocalHostName) &amp;&amp; workerInfo.getCapacityBytes() &gt;= blockSizeBytes) &#123; return workerInfo.getNetAddress(); &#125; &#125; // otherwise randomly pick a worker that has enough availability List&lt;BlockWorkerInfo&gt; shuffledWorkers = Lists.newArrayList(workerInfoList); Collections.shuffle(shuffledWorkers); for (BlockWorkerInfo workerInfo : workerInfoList) &#123; if (workerInfo.getCapacityBytes() &gt;= blockSizeBytes) &#123; return workerInfo.getNetAddress(); &#125; &#125; return null; &#125; MostAvailableFirstPolicy12345678910111213public WorkerNetAddress getWorkerForNextBlock(Iterable&lt;BlockWorkerInfo&gt; workerInfoList, long blockSizeBytes) &#123; long mostAvailableBytes = -1; WorkerNetAddress result = null; for (BlockWorkerInfo workerInfo : workerInfoList) &#123; if (workerInfo.getCapacityBytes() - workerInfo.getUsedBytes() &gt; mostAvailableBytes) &#123; mostAvailableBytes = workerInfo.getCapacityBytes() - workerInfo.getUsedBytes(); result = workerInfo.getNetAddress(); &#125; &#125; return result; &#125; RoundRobinPolicy123456789101112131415161718192021public WorkerNetAddress getWorkerForNextBlock(Iterable&lt;BlockWorkerInfo&gt; workerInfoList, long blockSizeBytes) &#123; if (!mInitialized) &#123; mWorkerInfoList = Lists.newArrayList(workerInfoList); Collections.shuffle(mWorkerInfoList); mIndex = 0; mInitialized = true; &#125; // at most try all the workers for (int i = 0; i &lt; mWorkerInfoList.size(); i++) &#123; WorkerNetAddress candidate = mWorkerInfoList.get(mIndex).getNetAddress(); BlockWorkerInfo workerInfo = findBlockWorkerInfo(workerInfoList, candidate); mIndex = (mIndex + 1) % mWorkerInfoList.size(); if (workerInfo != null &amp;&amp; workerInfo.getCapacityBytes() &gt;= blockSizeBytes) &#123; return candidate; &#125; &#125; return null; &#125; SpecificHostPolicy1234567891011public WorkerNetAddress getWorkerForNextBlock(Iterable&lt;BlockWorkerInfo&gt; workerInfoList, long blockSizeBytes) &#123; // find the first worker matching the host name for (BlockWorkerInfo info : workerInfoList) &#123; if (info.getNetAddress().getHost().equals(mHostname)) &#123; return info.getNetAddress(); &#125; &#125; return null; &#125;]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+        <tag>alluxio</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio rpc 分析]]></title>
+    <url>%2F2017%2F01%2F18%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-rpc%2F</url>
+    <content type="text"><![CDATA[RPC 通信一个类扩展了 AbstractThriftClient 类将成为RPC客户端。使用方法 retryRPC 发起一个 PRC 调用， 然后实现接口Service.Iface的抽象方法的ServiceHandler将会收到调用。 用来统一捕获RPC调用过程中的异常, 比较好的方法是使用静态方法 RpcUtils.call()， 提供一个实例实现RpcCallable 接口的call方法来处理回调。 RPC 调用RPC 客户端通过 clientService发起一个RPC调用到实现RPC服务端接口的serviceHandler。 Alluxio中有三个角色，调用方向可以是 Client-&gt;Master、Worker-&gt;Master、 Client-&gt;Worker。 实现接口ClientService.Iface的ServiceHandler会被RPC客户端调用, 通常地，ServiceHandler有一个成员用来在master或worker上执行具体的操作。 下表展示Alluxio中的六类RPC调用。 RPC Client ClientService(thrift) ServiceHandler Master/Worker 调用方向 FileSystemMasterClient FileSystemMasterClientService FileSystemMasterClientServiceHandler FileSystemMaster Client-&gt;Master FileSystemMasterClient’ FileSystemMasterWorkerService FileSystemMasterWorkerServiceHandler FileSystemMaster Worker-&gt;Master RetryHandlingBlockMasterClient BlockMasterClientService BlockMasterClientServiceHandler BlockMaster Client-&gt;Master BlockMasterClient BlockMasterWorkerService BlockMasterWorkerServiceHandler BlockMaster Worker-&gt;Master FileSystemWorkerClient FileSystemWorkerClientService FileSystemWorkerClientServiceHandler FileSystemWorker Client-&gt;Worker RetryHandlingBlockWorkerClient BlockWorkerClientService BlockWorkerClientServiceHandler BlockWorker Client-&gt;Worker RPC 方法master FileSystemMasterClientServiceHandler checkConsistency completeFile createDirectory createFile free getFileBlockInfoList getNewBlockIdForFile getStatus getStatusInternal getUfsAddress listStatus loadMetadata mount remove rename scheduleAsyncPersist setAttribute unmount FileSystemMasterWorkerServiceHandler getFileInfo getPinIdList heartbeat BlockMasterClientServiceHandler getWorkerInfoList getCapacityBytes getUsedBytes getBlockInfo BlockMasterWorkerServiceHandler getWorkerId registerWorker heartbeat commitBlock worker BlockWorkerClientServiceHandler accessBlock cacheBlock cancelBlock lockBlock promoteBlock removeBlock requestBlockLocation requestSpace unlockBlock sessionHeartbeat FileSystemWorkerClientServiceHandler cancelUfsFile closeUfsFile completeUfsFile createUfsFile openUfsFile sessionHeartbeat]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>thrift</tag>
+        <tag>bigdata</tag>
+        <tag>alluxio</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio heartbeat分析]]></title>
+    <url>%2F2017%2F01%2F17%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-heartbeat%2F</url>
+    <content type="text"><![CDATA[心跳线程心跳线程，HeartbeatThread类作为心跳后台线程。线程主体是个可打断的循环，循环中，每一个滴答(tick)会心跳(heartbeat)一次。如果线程被打断，心跳线程结束。心跳线程由心跳定时器(mTimer)和心跳执行者(mExecutor)组成。心跳定时器要实现接口HeartbeatTimer，心跳执行者要实现接口HeartbeatExecutor。 心跳线程表： 线程名 线程启动类 心跳定时器 心跳执行者 默认时间间隔(ms) WORKER_SPACE_RESERVER DefaultBlockWorker SleepingTimer SpaceReserver 1000 WORKER_BLOCK_SYNC DefaultBlockWorker SleepingTimer BlockMasterSync 1000 WORKER_PIN_LIST_SYNC DefaultBlockWorker SleepingTimer PinListSync 1000 WORKER_FILESYSTEM_MASTER_SYNC DefaultFileSystemWorker SleepingTimer FileWorkerMasterSyncExecutor 1000 MASTER_LOST_WORKER_DETECTION BlockMaster SleepingTimer LostWorkerDetectionHeartbeatExecutor 1000 MASTER_TTL_CHECK FileSystemMaster SleepingTimer MasterInodeTtlCheckExecutor 3600000 MASTER_LOST_FILES_DETECTION FileSystemMaster SleepingTimer LostFilesDetectionHeartbeatExecutor 1000 MASTER_CHECKPOINT_SCHEDULING LineageMaster SleepingTimer CheckpointSchedulingExecutor 300000 MASTER_FILE_RECOMPUTATION LineageMaster SleepingTimer CheckpointSchedulingExecutor 300000 heartbeat-thread-test-thread-name DummyHeartbeatTestCallable ScheduledTimer DummyHeartbeatExecutor 调度 WORKER_SPACE_RESERVER SpaceReserverTest SleepingTimer SpaceReserver 0 心跳定时器心跳定时器需要实现接口HeartbeatTimer，目前有两个，分为别SleepingTimer和ScheduledTimer。 SleepingTimerSleepingTimer按指定的时间间隔执行滴答(tick),保证一个tick持续时间大于等于指定时间间隔。如果时间间隔大于给定时间间隔，在log中给出warning. ScheduledTimerScheduledTimer用于测试，tick函数的持续时间不是靠指定时间间隔，而是靠Condition的await和signal进行线程控制，从而控制tick的阻塞和执行。 心跳执行者心跳执行者是实现了HeartbeatExecutor接口的类，实现接口中的heartbeat()方法，实现具体的心跳到来时的功能。比如块同步、锁定列表同步、文件系统master同步、丢失worker探测、TTL检查、丢失文件探测、检查点调度等等功能。 BlockMasterSyncBlockMasterSync.heartbeat() -&gt; BlockMaster.workerHeartbeat()]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+        <tag>alluxio</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[saltstack-minion]]></title>
+    <url>%2F2016%2F12%2F16%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fsaltstack-minion%2F</url>
+    <content type="text"><![CDATA[salt命令列表saltsalt-apisalt-callsalt-cpsalt-keysalt-mastersalt-minionsalt-runsalt-sshsalt-unity 在minion上查看正在执行的任务，可以通过文件来查看ls /var/cache/salt/minion/procmaster的jobls /var/cache/salt/master/jobs/ master端的jobs，默认保存时间为24小时123root@salt-master:~# grep &quot;keep_jobs&quot; /etc/salt/master#keep_jobs: 24root@salt-master:~# 查看jobsalt-run jobs.active 查看历史jobsalt-run jobs.list_jobs | tail -n 16 查看某个任务的执行结果salt-run jobs.lookup_jid 20140625200258757661 某个结点执行命令salt ‘172.16.166.34’ cmd.run ‘ls ‘ 将本机的文件拷贝到 目标结点的/root/getIP.pysalt-cp ‘172.16.166.34’ ./getIP.py /root/getIP.py]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hive命令]]></title>
+    <url>%2F2016%2F12%2F16%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fspark%2Fspark%2F</url>
+    <content type="text"><![CDATA[spark SQLval sqlContext = new org.apache.spark.sql.SQLContext(sc) spark 中执行hiveSQL1234val sqlContext2 = new org.apache.spark.sql.hive.HiveContext(sc)sqlContext2.sql("use databases").collect;sqlContext2.sql("use default");sqlContext2.sql("select * from mbltest order by id desc").collect 读取文件内容123val textFile = sc.textFile("/usr/maobaolong/mbltest/mbltest.txt")textFile.first()textfile.count()]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+        <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hive命令]]></title>
+    <url>%2F2016%2F12%2F16%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhive%2Fhive%2F</url>
+    <content type="text"><![CDATA[建库1234CREATE DATABASE mbldb COMMENT &apos;just for mbl test&apos; LOCATION &apos;/user/maobaolong/mbltest.db/&apos; ; 建表 不带分区的 123456create table mbltest(id int,name string,age int,tel string)ROW FORMAT DELIMITEDFIELDS TERMINATED BY &apos;\t&apos;STORED AS TEXTFILELOCATION &apos;/user/maobaolong/mbltest1&apos;; 带分区的 123456789create table mbltest5(id int,name string,age int,tel string)partitioned by (date string,city string)ROW FORMAT DELIMITEDFIELDS TERMINATED BY &apos;\t&apos;STORED AS TEXTFILELOCATION &apos;/user/maobaolong/mbltest1&apos;; 创建外表 123456789create EXTERNAL table mbltest4(id int,name string,age int,tel string)partitioned by (date string,city string)ROW FORMAT DELIMITEDFIELDS TERMINATED BY &apos;\t&apos;STORED AS TEXTFILELOCATION &apos;/user/maobaolong/mbltest&apos;; 查看表 查看表结构 1desc formatted mbltest; 查看建表语句 1show create table 表名 分区操作12alter table mbltest3 add partition (date=&apos;20161213&apos;,city=&apos;bj&apos;);alter table mbltest3 drop partition (date=&apos;20161213&apos;,city=&apos;bj&apos;); 查看hdfs上的文件1dfs -cat hdfs://ns2/user/maobaolong/mbltest/mbltest.txt 加载数据到表中从本地加载数据1234load data local inpath &apos;/home/maobaolong/mbltest.txt&apos; overwrite into table mbltest;# 加载到指定分区load data local inpath &apos;/home/maobaolong/mbltest_shanghai.txt&apos; overwrite into table mbltest3 PARTITION(date=&apos;20170215&apos;,city=&apos;shanghai&apos;); 从hdfs上加载数据1load data inpath &apos;/user/maobaolong/add.txt&apos; into table wyp; 从其它表的查询结果插入表1234INSERT OVERWRITE TABLE mbltest_copy select id,name,age,tel,data,city from mbltest;# 带分区的INSERT OVERWRITE TABLE mbltest_copy PARTITION(date=&apos;20170215&apos;,city=&apos;shanghai&apos;)select id,name,age,tel from mbltest 增加字段1ALTER TABLE mbltest ADD COLUMNS (desc STRING); //在所有存在的列后面，但是在分区列之前添加一列 删除字段1ALTER TABLE mbltest REPLACE COLUMNS (id int,name string,age int); 注意和我们熟悉的关系型数据库不一样，Hive现在还不支持在insert语句里面直接给出一组记录的文字形式，也就是说，Hive并不支持INSERT INTO …. VALUES形式直接插入数据的语句。 生成job1select * from mbltest order by id desc;]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+        <tag>hive</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[大数据常用端口]]></title>
+    <url>%2F2016%2F12%2F16%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2F%E5%B8%B8%E7%94%A8%E7%AB%AF%E5%8F%A3%2F</url>
+    <content type="text"><![CDATA[常用端口汇总Hadoop集群的各部分一般都会使用到多个端口，有些是daemon之间进行交互之用，有些是用于RPC访问以及HTTP访问。而随着Hadoop周边组件的增多，完全记不住哪个端口对应哪个应用，特收集记录如此，以便查询。 这里包含我们使用到的组件：HDFS, YARN, HBase, Hive, ZooKeeper: 组件 节点 默认端口 配置 用途说明 HDFS DataNode 50010 dfs.datanode.address datanode服务端口，用于数据传输 HDFS DataNode 50075 dfs.datanode.http.address http服务的端口 HDFS DataNode 50475 dfs.datanode.https.address https服务的端口 HDFS DataNode 50020 dfs.datanode.ipc.address ipc服务的端口 HDFS NameNode 50070 dfs.namenode.http-address http服务的端口 HDFS NameNode 50470 dfs.namenode.https-address https服务的端口 HDFS NameNode 8020 fs.defaultFS 接收Client连接的RPC端口，用于获取文件系统metadata信息。 HDFS journalnode 8485 dfs.journalnode.rpc-address RPC服务 HDFS journalnode 8480 dfs.journalnode.http-address HTTP服务 HDFS ZKFC 8019 dfs.ha.zkfc.port ZooKeeper FailoverController，用于NN HA YARN ResourceManager 8032 yarn.resourcemanager.address RM的applications manager(ASM)端口 YARN ResourceManager 8030 yarn.resourcemanager.scheduler.address scheduler组件的IPC端口 YARN ResourceManager 8031 yarn.resourcemanager.resource-tracker.address IPC YARN ResourceManager 8033 yarn.resourcemanager.admin.address IPC YARN ResourceManager 8088 yarn.resourcemanager.webapp.address http服务端口 YARN NodeManager 8040 yarn.nodemanager.localizer.address localizer IPC YARN NodeManager 8042 yarn.nodemanager.webapp.address http服务端口 YARN NodeManager 8041 yarn.nodemanager.address NM中container manager的端口 YARN JobHistory Server 10020 mapreduce.jobhistory.address IPC YARN JobHistory Server 19888 mapreduce.jobhistory.webapp.address http服务端口 HBase Master 60000 hbase.master.port IPC HBase Master 60010 hbase.master.info.port http服务端口 HBase RegionServer 60020 hbase.regionserver.port IPC HBase RegionServer 60030 hbase.regionserver.info.port http服务端口 HBase HQuorumPeer 2181 hbase.zookeeper.property.clientPort HBase-managed ZK mode，使用独立的ZooKeeper集群则不会启用该端口。 HBase HQuorumPeer 2888 hbase.zookeeper.peerport HBase-managed ZK mode，使用独立的ZooKeeper集群则不会启用该端口。 HBase HQuorumPeer 3888 hbase.zookeeper.leaderport HBase-managed ZK mode，使用独立的ZooKeeper集群则不会启用该端口。 Hive Metastore 9083 /etc/default/hive-metastore中export PORT=来更新默认端口 Hive HiveServer 10000 /etc/hive/conf/hive-env.sh中export HIVE_SERVER2_THRIFT_PORT=来更新默认端口 ZooKeeper Server 2181 /etc/zookeeper/conf/zoo.cfg中clientPort= 对客户端提供服务的端口 ZooKeeper Server 2888 /etc/zookeeper/conf/zoo.cfg中server.x=[hostname]:nnnnn[:nnnnn]，标蓝部分 follower用来连接到leader，只在leader上监听该端口。 ZooKeeper Server 3888 /etc/zookeeper/conf/zoo.cfg中server.x=[hostname]:nnnnn[:nnnnn]，标蓝部分 用于leader选举的。只在electionAlg是1,2或3(默认)时需要。 说明所有端口协议均基于TCP。 对于存在Web UI（HTTP服务）的所有hadoop daemon，有如下url： /logs日志文件列表，用于下载和查看 /logLevel允许你设定log4j的日志记录级别，类似于hadoop daemonlog /stacks所有线程的stack trace，对于debug很有帮助 /jmx服务端的Metrics，以JSON格式输出。 /jmx?qry=Hadoop:*会返回所有hadoop相关指标。/jmx?get=MXBeanName::AttributeName 查询指定bean指定属性的值，例如/jmx?get=Hadoop:service=NameNode,name=NameNodeInfo::ClusterId会返回ClusterId。这个请求的处理类：org.apache.hadoop.jmx.JMXJsonServlet 而特定的Daemon又有特定的URL路径特定相应信息。 NameNode:http://:50070/ /dfshealth.jspHDFS信息页面，其中有链接可以查看文件系统 /dfsnodelist.jsp?whatNodes=(DEAD|LIVE)显示DEAD或LIVE状态的datanode /fsck运行fsck命令，不推荐在集群繁忙时使用！ DataNode:http://:50075/ /blockScannerReport每个datanode都会指定间隔验证块信息]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派接人体感应传感器]]></title>
+    <url>%2F2016%2F12%2F15%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%A0%91%E8%8E%93%E6%B4%BE%2F%E6%A0%91%E8%8E%93%E6%B4%BE%E6%8E%A5%E4%BA%BA%E4%BD%93%E6%84%9F%E5%BA%94%E4%BC%A0%E6%84%9F%E5%99%A8%2F</url>
+    <content type="text"><![CDATA[HC-SR501 感应模块简介 对照前面的参数以及电路图，找到下面的左右针脚正负极，中间的PIN为感应输出，感应到人体时，输出3.3V高电平，检测不到信号时输出0。同时还要求工作电压在4.5V-20V之间。恰好树莓派的P1编号中第2，4号PIN都是5V的电压，满足要求，所以这次我们要接5V的电压。 参数调节旋钮是用来扭动控制一些参数的。比如探测的延时时间，灵敏度等等。具体可以参看 HC -SR501的说明书。这里我们都使用默认值。 但是有一个关键的L H模式调节阀门要介绍一下，右上角有三个针脚，按照我实物照片，假定从上到下为123 。还有一个黄色的套接头，图中套接头接通了2 3号，代表了H模式，这个套接头是可以拔下来的，然后插到上面来，接通1 2号，代表了L模式。 L模式是不可重复触发，当探测到一次人体时，输出一次高电平，保持一段时间恢复低电平，在此期间如果还是检测到了人体也不再延长这个高电平的时间。等到低电平的封锁时间（前面默认是2.5S）过了以后才又开始检测。 H模式是可以重复触发，如果一直感应到人体时，会一直输出高电平，直到探测不到人体后保持小段时间然后恢复低电平。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio介绍与安装]]></title>
+    <url>%2F2016%2F12%2F13%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio%2F</url>
+    <content type="text"><![CDATA[介绍 概念：是一个开源的基于内存的分布式存储系统，现在成为开源社区中成长最快的大数据开源项目之一。 公司简介 由项目的创建者李浩源以及来自UC Berkeley, Google, CMU, Palantir, Stanford, Yahoo等不同公司和学校的项目核心开发者组成。 完成750万 dollars 的A轮融资，由Andreessen Horowitz投资（硅谷最著名的VC之一，主要成员为网景公司创始人之一）。 术语 Amazon AWS ：亚马逊AWS 云服务-中国领先的可扩展云计算平台 Amazon S3 ：是一种在Internet 上的云存储服务。 要上传数据（照片、视频、文档等），请首先在一个AWS 区域中创建存储桶。 然后，您可以将任何数量的对象上传到该存储桶。 安装 解压 12$ tar -xzf alluxio-1.3.0-bin.tar.gz$ cd alluxio-1.3.0 生成配置文件 1./bin/alluxio bootstrapConf localhost 格式化Alluxio我们格式化Alluxio为启动Alluxio做准备。如下命令会格式化Alluxio的日志和worker存储目录，以便接下来启动master和worker。1./bin/alluxio format 启动我们启动Alluxio！Alluxio默认配置成在localhost启动master和worker。我们可以用如下命令在localhost启动Alluxio：1./bin/alluxio-start.sh local 如果希望启动worker，则在配置文件workers中配置所有worker的hostname或ip，回车分割1./bin/alluxio-start.sh all 恭喜！Alluxio已经启动并运行了！你可以访问http://localhost:19999查看Alluxio master的运行状态，访问http://localhost:30000查看Alluxio worker的运行状态。 使用Alluxio Shell 列出文件 1./bin/alluxio fs ls / 上传文件 1./bin/alluxio fs copyFromLocal LICENSE /LICENSE 查看文件 1./bin/alluxio fs cat /LICENSE 关闭1./bin/alluxio-stop.sh all Alluxio后端存储（HDFS） 修改配置文件./conf/alluxio-env.sh 1234ALLUXIO_MASTER_HOSTNAME=$&#123;ALLUXIO_MASTER_HOSTNAME:-&quot;BJYFF3-Basketball-170132&quot;&#125;ALLUXIO_WORKER_MEMORY_SIZE=$&#123;ALLUXIO_WORKER_MEMORY_SIZE:-&quot;85688MB&quot;&#125;ALLUXIO_RAM_FOLDER=$&#123;ALLUXIO_RAM_FOLDER:-&quot;/mnt/ramdisk&quot;&#125;ALLUXIO_UNDERFS_ADDRESS=hdfs://ns2/user/maobaolong/mbl 修改配置文件./conf/alluxio-c 1alluxio.underfs.hdfs.configuration=/home/maobaolong/hadoop_conf/hdfs-site.xml 所有配置1.3版本所有配置 mount1234# 将本地目录/software/temp/test/挂到alluxio的/test目录下bin/alluxio fs mount -readonly /test /software/temp/test/# 将hdfs目录hdfs://ns2/挂到alluxio的/ns2下bin/alluxio fs mount -readonly /ns2 hdfs://ns2/ alluxio使用非root用户启动集群的问题分析mount -t ramfs -o size=100G ramfs /home/appadmin/ramdiskchown appadmin:appadmin /home/appadmin/ramdiskalluxio-start all NoMount sudo mount -t ramfs -o size=10G ramfs /mnt/ramdiskchown hadp:hadp /mnt/ramdiskalluxio-start.sh all NoMount /software/servers/alluxio-1.4.1/bin/alluxio fs mount -readonly /ns3 hdfs://ns3/ mvn installmvn clean install -Dhadoop.version=2.7.1 -Pyarn,spark -DskipTests -Dfindbugs.skip -Dmaven.javadoc.skip -Dcheckstyle.skip ReadType 读类型 CACHE_PROMOTE:如果读取的数据在Worker上时，该数据被移动到Worker的最高层。如果该数据不在本地Worker的Alluxio存储中，那么就将一个副本添加到本地Alluxio Worker中，用于每次完整地读取数据快。这是默认的读类型。 CACHE:如果该数据不在本地Worker的Alluxio存储中，那么就将一个副本添加到本地Alluxio Worker中，用于每次完整地读取数据快。 NO_CACHE:不会创建副本。 写类型 CACHE_THROUGH数据被同步地写入到Alluxio的Worker和底层存储系统。 MUST_CACHE数据被同步地写入到Alluxio的Worker。但不会被写入到底层存储系统。这是默认写类型。 THROUGH数据被同步地写入到底层存储系统。但不会被写入到Alluxio的Worker。 ASYNC_THROUGH数据被同步地写入到Alluxio的Worker，并异步地写入到底层存储系统。处于实验阶段。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[alluxio client 主要流程分析]]></title>
+    <url>%2F2016%2F12%2F13%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-client-flow%2F</url>
+    <content type="text"><![CDATA[读文件读文件过程，包括打开文件得到文件输入流，从流中读取文件内容，最后关闭输入流。 通过Alluxio的client读取Alluxio文件系统的文件，需要指定打开类型去打开文件，从master获取文件的元数据，从流中读取文件。 如果文件在本地worker中，则从本地worker中则直接读取，如果在其它worker中，则从其它worker的dataServer读取，如果都不在，则需要从UFS读取。又根据读类型不同，读文件同时会选择是否缓存。 打开文件 打开文件类型 CACHE_PROMOTE:如果读取的数据在Worker上时，该数据被移动到Worker的最高层。如果该数据不在本地Worker的Alluxio存储中，那么就将一个副本添加到本地Alluxio Worker中。如果alluxio.user.file.cache.partially.read.block设置为true,没有完全读取的数据块也会被全部存到Alluxio内。相反，一个数据块只有完全被读取时，才能被缓存。 CACHE:如果该数据不在本地Worker的Alluxio存储中，那么就将一个副本添加到本地Alluxio Worker中。如果alluxio.user.file.cache.partially.read.block设置为true,没有完全读取的数据块也会被全部存到Alluxio内。相反，一个数据块只有完全被读取时，才能被缓存。 NO_CACHE:仅读取数据，不在Alluxio中存储副本。 文件输入流的来源一个文件包含多个块，读取是按块来读的。根据blockid获取输入流，先检查当前块是否在alluxio存储里。如果没有，则从ufs读取块内容。根据alluxio.user.ufs.delegation.enabled配置项，决定是client直接读UFS还是用worker代理（优先使用本地worker），通过netty读取dataServer(worker)的数据。 读取文件内容通过当前块的输入流（当换块时，会新块对应的流），根据读类型选择是否把新块缓存到根据定位策略定位到的worker中。从ufs读时，缓冲区读完会从worker中读取数据到缓冲区中，如果缓冲区里有数据，则从缓冲区读取。通过alluxio.user.ufs.delegation.read.buffer.size.bytes可以设置缓冲区大小，默认8M。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Alluxio module introduction]]></title>
+    <url>%2F2016%2F12%2F13%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Falluxio%2Falluxio-modules%2F</url>
+    <content type="text"><![CDATA[Alluxio模块简介 alluxio-parent 父模块 underfs 底层文件系统 gcs glusterfs hdfs HDFS分布式文件系统 local 用于测试的本地文件系统 oss 阿里云 s3 s3a swift core Alluxio的核心模块，包含master、worker、proxy、client等功能模块 client Alluxio的客户端，shell和其它应用（例如presto）通过java API通过client模块与master和worker交互 common 用于core模块内部的通用实用共享模块 protobuf protobuf协议文件和生成的java代码以及protobuf相关的通用方法 server 核心服务模块，包含master、worker、proxy等功能模块 common 用于Alluxio核心服务模块的通用方法 master Alluxio master模块，包含master的web、RESTfulApi、block、filesystem proxy Alluxio 代理模块，用RESTfulApi通过client接口实现Alluxio文件系统操作。 worker Alluxio worker模块，worker模块负责存储块到Alluxio存储层。 keyvalue 键值库模块 client common server shell Alluxio的shell命令模块，通过client接口实现文件操作 examples 示例模块 tests 测试模块 integration 集成工具模块 fuse 用户空间文件系统（Filesystem in Userspace），是Linux 中用于挂载某些网络空间的 mesos 是Apache下的开源分布式资源管理框架 yarn Alluxio on yarn assembly 打包模块 minicluster 微集群模块，测试用]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>bigdata</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux下文件类型及表示颜色]]></title>
+    <url>%2F2016%2F12%2F01%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Flinux%2FLinux%E4%B8%8B%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E5%8F%8A%E8%A1%A8%E7%A4%BA%E9%A2%9C%E8%89%B2%2F</url>
+    <content type="text"><![CDATA[Linux下文件类型及表示颜色: 白色：普通文件 (用-表示) n 红色：压缩文件 n 蓝色：目录文件 (用d表示) n 青蓝色：链接文件 (用l表示) n 黄色：设备文件(/dev目录下)(用b或c表示) b表示的是物理设备;c表示的是字符终端设备. n 青绿色：可执行文件(/bin、/sbin目录下) n 粉红色：图片文件或是socket文件(用s表示) n 青黄色：管道文件 (用p表示) Linux下用字符表示的文件类型 -：普通文件 d：目录文件 l：链接文件 b：块设备文件 c：字符设备文件 p：管道文件 Linux文件系统配置文件 /proc—–内核提供的一个接口，主要用来存储系统统计信息; /etc/mtab——–随着/proc/mount的变化而变化，文件系统的安装和卸载都会在这个文件中反映出来; /etc/fstab——-列出当前系统在启动时自动安装的所有文件系统，也可以使用mount -a 这个命令来手动的安 装这个文件中列出的所有文件系统;另外也可以通过修改这个配置文件，使系统在启动时自动安装我们所需要 的其他的文件系统; /etc/mtools.conf———dos文件系统上的操作的配置文件 Linux系统管理配置文件 /etc/group———-列出有效的组名称以及组中的用户信息; /etc/passwd———帐号的密码文件; 帐号—-密码——用户号(UID)—–用户组号(GID)—-所属组—–用户主目录—用户所使用的shell类型 /etc/shadow——–包含加密后的帐号信息; /etc/shells——-包含系统的可以使用的shell的列表; /etc/motd———每日的信息，root管理员向系统中所有用户传达信息时使用 Linux系统命令配置文件 /etc/lilo.conf 包含系统的缺省引导命令行参数，还有启动时使用的不同映象。您在 LILO 引导提示的时候按 Tab 键就可以看到这个列表。 /etc/logrotate.conf 维护 /var/log 目录中的日志文件。 /etc/identd.conf identd是一个超级服务器，这个文件对于的是它的配置文件。 /etc/ld.so.conf “动态链接程序”(Dynamic Linker)的配置。 /etc/inittab 按年代来讲，这是 UNIX 中第一个配置文件。在一台 UNIX 机器打开之后启动的第一个程序是 init，它知道该启动什么，这是由于 inittab 的存在。在运行级别改变时，init 读取 inittab，然后控制主进程的启动 Linux主机配置文件 /etc/host.conf———告诉域名服务器如何查找主机名 /etc/hosts———网络中已发现的主机的名称列表，用于解析主机名 /etc/sysconfig/network 主机名和网关的信息 文件 Linux连网配置文件 /etc/gated.conf gated 的配置。只能被 gated 守护进程所使用。 /etc/networks 列举从机器所连接的网络可以访问的网络名和网络地址。通过路由命令使用。允许使用网络 名称。 /etc/protocols 列举当前可用的协议。 /etc/resolv.conf 在程序请求“解析”一个 IP 地址时告诉内核应该查询哪个名称服务器。 /etc/rpc 包含 RPC 指令/规则，这些指令/规则可以在 NFS 调用、远程文件系统安装等中使用。 /etc/exports 要导出的文件系统(NFS)和对它的权限。 /etc/services 将网络服务名转换为端口号/协议。由 inetd、telnet、tcpdump 和一些其它程序读取。有一些C访问例程。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[健康知识]]></title>
+    <url>%2F2016%2F11%2F25%2F%E8%82%B2%E5%84%BF%E7%BB%8F%2F%E5%81%A5%E5%BA%B7%E7%9F%A5%E8%AF%86%2F</url>
+    <content type="text"><![CDATA[常备药 美林(布洛芬悬浊液) 泰诺林(对乙酰氨基酚) 常见病 幼儿急疹,只发烧,持续发烧3-5天,吃退烧药,39°左右,起疹子后退烧.]]></content>
+      <categories>
+        <category>育儿经,幼儿健康</category>
+      </categories>
+      <tags>
+        <tag>育儿经</tag>
+        <tag>幼儿健康</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派上ownCloud的安装]]></title>
+    <url>%2F2016%2F11%2F25%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%A0%91%E8%8E%93%E6%B4%BE%2FownCloud%E5%AE%89%E8%A3%85%2F</url>
+    <content type="text"><![CDATA[树莓派上ownCloud的安装12sudo apt-get install apache2 php5 php5-gd php-xml-parser php5-intl php5-sqlite php5-mysql smbclient curl libcurl3 php5-curl mysql-server 安装apache1sudo apt-get install apache2 安装php安装mysql安装owncloud12$ tar xjf owncloud-4.5.6.tar.bz2$ cp -r -v owncloud/ /var/www/owncloud/ 安装ownCloud客户端sudo apt-get install owncloud-client /etc/init.d/apache2 restart]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[jquery中attr和prop的区别（转）]]></title>
+    <url>%2F2016%2F11%2F24%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fjquery%E4%B8%ADattr%E5%92%8Cprop%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[jquery中attr和prop的区别转自〖芈老头〗的技术空间在高版本的jquery引入prop方法后，什么时候该用prop？什么时候用attr？它们两个之间有什么区别？这些问题就出现了。 关于它们两个的区别，网上的答案很多。这里谈谈我的心得，我的心得很简单： 对于HTML元素本身就带有的固有属性，在处理时，使用prop方法。 对于HTML元素我们自己自定义的DOM属性，在处理时，使用attr方法。 上面的描述也许有点模糊，举几个例子就知道了。 这个例子里&lt;a&gt;元素的DOM属性有href、target和class，这些属性就是&lt;a&gt;元素本身就带有的属性，也是W3C标准里就包含有这几个属性，或者说在IDE里能够智能提示出的属性，这些就叫做固有属性。处理这些属性时，建议使用prop方法。 1&lt;a href=&quot;#&quot; id=&quot;link1&quot; action=&quot;delete&quot;&gt;删除&lt;/a&gt; 这个例子里&lt;a&gt;元素的DOM属性有“href、id和action”，很明显，前两个是固有属性，而后面一个“action”属性是我们自己自定义上去的，&lt;a&gt;元素本身是没有这个属性的。这种就是自定义的DOM属性。处理这些属性时，建议使用attr方法。使用prop方法取值和设置属性值时，都会返回undefined值。 1&lt;a href=&quot;http://www.baidu.com&quot; target=&quot;_self&quot; class=&quot;btn&quot;&gt;百度&lt;/a&gt; 再举一个例子： 12&lt;input id=&quot;chk1&quot; type=&quot;checkbox&quot; /&gt;是否可见&lt;input id=&quot;chk2&quot; type=&quot;checkbox&quot; checked=&quot;checked&quot; /&gt;是否可见 像checkbox，radio和select这样的元素，选中属性对应“checked”和“selected”，这些也属于固有属性，因此需要使用prop方法去操作才能获得正确的结果。 12$(&quot;#chk1&quot;).prop(&quot;checked&quot;) == false$(&quot;#chk2&quot;).prop(&quot;checked&quot;) == true 如果上面使用attr方法，则会出现： 12$(&quot;#chk1&quot;).attr(&quot;checked&quot;) == undefined$(&quot;#chk2&quot;).attr(&quot;checked&quot;) == &quot;checked&quot; 全文完。 以下是官方建议attr(),prop()的使用： Attribute/Property .attr() .prop() accesskey √ align √ async √ √ autofocus √ √ checked √ √ class √ contenteditable √ draggable √ href √ id √ label √ location ( i.e. window.location ) √ √ multiple √ √ readOnly √ √ rel √ selected √ √ src √ tabindex √ title √ type √ width ( if needed over .width() ) √ 转自myloveattribute和property都可以翻译为属性，为了以示区别，通常把这两个单词翻译为属性与特性。 1&lt;div id=&quot;test&quot;&gt;Click Here&lt;/div&gt; 上面这段HTML语句中有三个节点，分别是Element “div”、attribute “id”、Text “click here”，我们最常见的attribute正式指的attribute类型节点，在JavaScript有专门处理attribute的函数 .getAttribute(name) / setAttribute(name,value)。当然attribute不只是我们能够在HTML文档上看到的这几个，我们可以自定义attributed加到DOM节点中 123456&lt;div id=&quot;test&quot;&gt;123&lt;/div&gt; &lt;script type=&quot;text/javascript&quot;&gt; var t=document.getElementById(&apos;test&apos;); t.setAttribute(&apos;class&apos;,&apos;active&apos;); t.setAttribute(&apos;customizedAttr&apos;,&apos;customized&apos;); &lt;/script&gt; 这样可以div被修改为 1&lt;div id=&quot;test&quot; class=&quot;active&quot; customizedattr=&quot;customized&quot;&gt;123&lt;/div&gt; 通过方法 setAttribute设置的attribute最终都会反映到元素的attribute类型的节点中 property是DOM对象的字段，跟我们平常使用的一些对象一样，包含很多字段，这些字段就是property，取值或者设置值和普通字段一样通过”对象.字段“的方式。 看起来attribute和property应该没有什么关系才对，怎么会。。。attribute和property容易混倄是因为很多attribute节点还有一个相对应的property属性，比如上面div的”id“ attribute 同样可以用t.id取到（实际上绝大部分人都是这样获取的），通过property更改id后，用getAttibute获取的id是更新后的id。 12t.id=&apos;test1&apos;;console.log(t.getAttribute(&apos;id&apos;));//test1 同样我们也可以自定义property 1t.customizedProp=&apos;customized prop&apos;; ==区别== 于build-in属性，attribute和property共享数据，attribute更改了会对property造成影响，反之亦然，但是两者的自定义属性是独立的数据，即使name一样，也互不影响，看起来是下面这张图，但是IE6、7没有作区分，依然共享自定义属性数据 并不是所有的attribute与对应的property名字都一致，比如刚才使用的attribute 的class属性，使用property操作的时候应该是这样className 1&lt;input id=&quot;test3&quot; type=&quot;checkbox&quot;/&gt; 1234567891011var t=document.getElementById(&apos;test3&apos;); console.log(t.getAttribute(&apos;checked&apos;));//null console.log(t.checked);//false; t.setAttribute(&apos;checked&apos;,&apos;checked&apos;); console.log(t.getAttribute(&apos;checked&apos;));//checked console.log(t.checked);//true t.checked=false; console.log(t.getAttribute(&apos;checked&apos;));//checked console.log(t.checked);//false 对于一些和路径相关的属性，两者取得值也不尽相同，但是同样attribute取得是字面量，property取得是计算后的完整路径 1&lt;a id=&quot;test4&quot; href=&quot;#&quot;&gt;Click&lt;/a&gt; 123var t=document.getElementById(&apos;test4&apos;); console.log(t.getAttribute(&apos;href&apos;));//# console.log(t.href);//file:///C:/Users/bsun/Desktop/ss/anonymous.html# 关于浏览器（IE）造成的兼容性问题可以看看IE 混淆了 DOM 对象属性（property）及 HTML 标签属性（attribute），造成了对 setAttribute、getAttribute 的不正确实现 ==attr和prop==相信看完上面内容，大家就明白为什么jQuery要添加prop方法了，在jQuery API中也有专门解释Attributes VS. Properties在一些特殊的情况下，attributes和properties的区别非常大。在jQuery1.6之前，.attr()方法在获取一些attributes的时候使用了property值，这样会导致一些不一致的行为。在jQuery1.6中，.prop()方法提供了一中明确的获取property值得方式，这样.attr()方法仅返回attributes。 比如，selectedIndex, tagName, nodeName, nodeType, ownerDocument, defaultChecked, 和defaultSelected应该使用.prop()方法获取/设置值。 在jQuery1.6之前这些不属于attribute的property需要用.attr()方法获取。这几个并没有相应的attibute，只有property。 关于布尔类型 attributes，比如一个这样的HTML标签，它在JavaScript中变量名为elem 1&lt;input type=&quot;checkbox&quot; checked=&quot;checked&quot; /&gt; elem.checked true (Boolean) Will change with checkbox state $( elem ).prop( “checked” ) true (Boolean) Will change with checkbox state elem.getAttribute( “checked” ) “checked” (String) Initial state of the checkbox; does not change $( elem ).attr( “checked” ) (1.6) “checked” (String) Initial state of the checkbox; does not change $( elem ).attr( “checked” ) (1.6.1+) “checked” (String) Will change with checkbox state $( elem ).attr( “checked” ) (pre-1.6) true (Boolean) Changed with checkbox state 根据W3C forms specification，checked属性是一个布尔值，这就意味着只要checked属性在HTML中表现出来了，那么相应的property就应该是true，即使checked没有值，这点儿对其它布尔类型的属性一样适用。 然而关于checked 属性需要记住的最重要的一点是：它和checked property并不是一致的。实际上这个attribute和defaultChecked property一致，而且只应该用来设置checkbox的初始值。checked attribute并不随着checkedbox的状态而改变，但是checked property却跟着变。因此浏览器兼容的判断checkebox是否被选中应该使用property 123if ( elem.checked )if ( $( elem ).prop( &quot;checked&quot; ) )if ( $( elem ).is( &quot;:checked&quot; ) ) 这对其它一些类似于selected、value这样的动态attribute也适用。 在IE9之前版本中，如果property没有在DOM元素被移除之前删除，使用.prop()方法设置DOM元素property（简单类型除外：number、string、boolean）的值会导致内存泄露。为了安全的设置DOM对象的值，避免内存泄露，可以使用.data()方法。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>jquery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[pycharm]]></title>
+    <url>%2F2016%2F11%2F21%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fpycharm%2F</url>
+    <content type="text"><![CDATA[破解2016.2.3 143B4A73YYJ-eyJsaWNlbnNlSWQiOiI0M0I0QTczWVlKIiwibGljZW5zZWVOYW1lIjoibGFuIHl1IiwiYXNzaWduZWVOYW1lIjoiIiwiYXNzaWduZWVFbWFpbCI6IiIsImxpY2Vuc2VSZXN0cmljdGlvbiI6IkZvciBlZHVjYXRpb25hbCB1c2Ugb25seSIsImNoZWNrQ29uY3VycmVudFVzZSI6ZmFsc2UsInByb2R1Y3RzIjpbeyJjb2RlIjoiSUkiLCJwYWlkVXBUbyI6IjIwMTctMDItMjUifSx7ImNvZGUiOiJBQyIsInBhaWRVcFRvIjoiMjAxNy0wMi0yNSJ9LHsiY29kZSI6IkRQTiIsInBhaWRVcFRvIjoiMjAxNy0wMi0yNSJ9LHsiY29kZSI6IlBTIiwicGFpZFVwVG8iOiIyMDE3LTAyLTI1In0seyJjb2RlIjoiRE0iLCJwYWlkVXBUbyI6IjIwMTctMDItMjUifSx7ImNvZGUiOiJDTCIsInBhaWRVcFRvIjoiMjAxNy0wMi0yNSJ9LHsiY29kZSI6IlJTMCIsInBhaWRVcFRvIjoiMjAxNy0wMi0yNSJ9LHsiY29kZSI6IlJDIiwicGFpZFVwVG8iOiIyMDE3LTAyLTI1In0seyJjb2RlIjoiUEMiLCJwYWlkVXBUbyI6IjIwMTctMDItMjUifSx7ImNvZGUiOiJSTSIsInBhaWRVcFRvIjoiMjAxNy0wMi0yNSJ9LHsiY29kZSI6IldTIiwicGFpZFVwVG8iOiIyMDE3LTAyLTI1In0seyJjb2RlIjoiREIiLCJwYWlkVXBUbyI6IjIwMTctMDItMjUifSx7ImNvZGUiOiJEQyIsInBhaWRVcFRvIjoiMjAxNy0wMi0yNSJ9XSwiaGFzaCI6IjMzOTgyOTkvMCIsImdyYWNlUGVyaW9kRGF5cyI6MCwiYXV0b1Byb2xvbmdhdGVkIjpmYWxzZSwiaXNBdXRvUHJvbG9uZ2F0ZWQiOmZhbHNlfQ==-keaxIkRgXPKE4BR/ZTs7s7UkP92LBxRe57HvWamu1EHVXTcV1B4f/KNQIrpOpN6dgpjig5eMVMPmo7yMPl+bmwQ8pTZaCGFuLqCHD1ngo6ywHKIQy0nR249sAUVaCl2wGJwaO4JeOh1opUx8chzSBVRZBMz0/MGyygi7duYAff9JQqfH3p/BhDTNM8eKl6z5tnneZ8ZG5bG1XvqFTqWk4FhGsEWdK7B+He44hPjBxKQl2gmZAodb6g9YxfTHhVRKQY5hQ7KPXNvh3ikerHkoaL5apgsVBZJOTDE2KdYTnGLmqxghFx6L0ofqKI6hMr48ergMyflDk6wLNGWJvYHLWw==-MIIEPjCCAiagAwIBAgIBBTANBgkqhkiG9w0BAQsFADAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMB4XDTE1MTEwMjA4MjE0OFoXDTE4MTEwMTA4MjE0OFowETEPMA0GA1UEAwwGcHJvZDN5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxcQkq+zdxlR2mmRYBPzGbUNdMN6OaXiXzxIWtMEkrJMO/5oUfQJbLLuMSMK0QHFmaI37WShyxZcfRCidwXjot4zmNBKnlyHodDij/78TmVqFl8nOeD5+07B8VEaIu7c3E1N+e1doC6wht4I4+IEmtsPAdoaj5WCQVQbrI8KeT8M9VcBIWX7fD0fhexfg3ZRt0xqwMcXGNp3DdJHiO0rCdU+Itv7EmtnSVq9jBG1usMSFvMowR25mju2JcPFp1+I4ZI+FqgR8gyG8oiNDyNEoAbsR3lOpI7grUYSvkB/xVy/VoklPCK2h0f0GJxFjnye8NT1PAywoyl7RmiAVRE/EKwIDAQABo4GZMIGWMAkGA1UdEwQCMAAwHQYDVR0OBBYEFGEpG9oZGcfLMGNBkY7SgHiMGgTcMEgGA1UdIwRBMD+AFKOetkhnQhI2Qb1t4Lm0oFKLl/GzoRykGjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBggkA0myxg7KDeeEwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0PBAQDAgWgMA0GCSqGSIb3DQEBCwUAA4ICAQC9WZuYgQedSuOc5TOUSrRigMw4/+wuC5EtZBfvdl4HT/8vzMW/oUlIP4YCvA0XKyBaCJ2iX+ZCDKoPfiYXiaSiH+HxAPV6J79vvouxKrWg2XV6ShFtPLP+0gPdGq3x9R3+kJbmAm8w+FOdlWqAfJrLvpzMGNeDU14YGXiZ9bVzmIQbwrBA+c/F4tlK/DV07dsNExihqFoibnqDiVNTGombaU2dDup2gwKdL81ua8EIcGNExHe82kjF4zwfadHk3bQVvbfdAwxcDy4xBjs3L4raPLU3yenSzr/OEur1+jfOxnQSmEcMXKXgrAQ9U55gwjcOFKrgOxEdek/Sk1VfOjvS+nuM4eyEruFMfaZHzoQiuw4IqgGc45ohFH0UUyjYcuFxxDSU9lMCv8qdHKm+wnPRb0l9l5vXsCBDuhAGYD6ss+Ga+aDY6f/qXZuUCEUOH3QUNbbCUlviSz6+GiRnt1kA9N2Qachl+2yBfaqUqr8h7Z2gsx5LcIf5kYNsqJ0GavXTVyWh7PYiKX4bs354ZQLUwwa/cG++2+wNWP+HtBhVxMRNTdVhSm38AknZlD+PTAsWGu9GyLmhti2EnVwGybSD2Dxmhxk3IPCkhKAK+pl0eWYGZWG3tJ9mZ7SowcXLWDFAk0lRJnKGFMTggrWjV8GYpw5bq23VmIqqDLgkNzuoog== 2BIG3CLIK6F-eyJsaWNlbnNlSWQiOiJCSUczQ0xJSzZGIiwibGljZW5zZWVOYW1lIjoibGFuIHl1IiwiYXNzaWduZWVOYW1lIjoiIiwiYXNzaWduZWVFbWFpbCI6IiIsImxpY2Vuc2VSZXN0cmljdGlvbiI6IkZvciBlZHVjYXRpb25hbCB1c2Ugb25seSIsImNoZWNrQ29uY3VycmVudFVzZSI6ZmFsc2UsInByb2R1Y3RzIjpbeyJjb2RlIjoiQUMiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJETSIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9LHsiY29kZSI6IklJIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiUlMwIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiV1MiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJEUE4iLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJSQyIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9LHsiY29kZSI6IlBTIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiREMiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJEQiIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9LHsiY29kZSI6IlJNIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiUEMiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJDTCIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9XSwiaGFzaCI6IjQ3NzU1MTcvMCIsImdyYWNlUGVyaW9kRGF5cyI6MCwiYXV0b1Byb2xvbmdhdGVkIjpmYWxzZSwiaXNBdXRvUHJvbG9uZ2F0ZWQiOmZhbHNlfQ==-iygsIMXTVeSyYkUxAqpHmymrgwN5InkOfeRhhPIPa88FO9FRuZosIBTY18tflChACznk3qferT7iMGKm7pumDTR4FbVVlK/3n1ER0eMKu2NcaXb7m10xT6kLW1Xb3LtuZEnuis5pYuEwT1zR7GskeNWdYZ0dAJpNDLFrqPyAPo5s1KLDHKpw+VfVd4uf7RMjOIzuJhAAYAG+amyivQt61I9aYiwpHQvUphvTwi0X0qL/oDJHAQbIv4Qwscyo4aYZJBKutYioZH9rgOP6Yw/sCltpoPWlJtDOcw/iEWYiCVG1pH9AWjCYXZ9AbbEBOWV71IQr5VWrsqFZ7cg7hLEJ3A==-MIIEPjCCAiagAwIBAgIBBTANBgkqhkiG9w0BAQsFADAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMB4XDTE1MTEwMjA4MjE0OFoXDTE4MTEwMTA4MjE0OFowETEPMA0GA1UEAwwGcHJvZDN5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxcQkq+zdxlR2mmRYBPzGbUNdMN6OaXiXzxIWtMEkrJMO/5oUfQJbLLuMSMK0QHFmaI37WShyxZcfRCidwXjot4zmNBKnlyHodDij/78TmVqFl8nOeD5+07B8VEaIu7c3E1N+e1doC6wht4I4+IEmtsPAdoaj5WCQVQbrI8KeT8M9VcBIWX7fD0fhexfg3ZRt0xqwMcXGNp3DdJHiO0rCdU+Itv7EmtnSVq9jBG1usMSFvMowR25mju2JcPFp1+I4ZI+FqgR8gyG8oiNDyNEoAbsR3lOpI7grUYSvkB/xVy/VoklPCK2h0f0GJxFjnye8NT1PAywoyl7RmiAVRE/EKwIDAQABo4GZMIGWMAkGA1UdEwQCMAAwHQYDVR0OBBYEFGEpG9oZGcfLMGNBkY7SgHiMGgTcMEgGA1UdIwRBMD+AFKOetkhnQhI2Qb1t4Lm0oFKLl/GzoRykGjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBggkA0myxg7KDeeEwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0PBAQDAgWgMA0GCSqGSIb3DQEBCwUAA4ICAQC9WZuYgQedSuOc5TOUSrRigMw4/+wuC5EtZBfvdl4HT/8vzMW/oUlIP4YCvA0XKyBaCJ2iX+ZCDKoPfiYXiaSiH+HxAPV6J79vvouxKrWg2XV6ShFtPLP+0gPdGq3x9R3+kJbmAm8w+FOdlWqAfJrLvpzMGNeDU14YGXiZ9bVzmIQbwrBA+c/F4tlK/DV07dsNExihqFoibnqDiVNTGombaU2dDup2gwKdL81ua8EIcGNExHe82kjF4zwfadHk3bQVvbfdAwxcDy4xBjs3L4raPLU3yenSzr/OEur1+jfOxnQSmEcMXKXgrAQ9U55gwjcOFKrgOxEdek/Sk1VfOjvS+nuM4eyEruFMfaZHzoQiuw4IqgGc45ohFH0UUyjYcuFxxDSU9lMCv8qdHKm+wnPRb0l9l5vXsCBDuhAGYD6ss+Ga+aDY6f/qXZuUCEUOH3QUNbbCUlviSz6+GiRnt1kA9N2Qachl+2yBfaqUqr8h7Z2gsx5LcIf5kYNsqJ0GavXTVyWh7PYiKX4bs354ZQLUwwa/cG++2+wNWP+HtBhVxMRNTdVhSm38AknZlD+PTAsWGu9GyLmhti2EnVwGybSD2Dxmhxk3IPCkhKAK+pl0eWYGZWG3tJ9mZ7SowcXLWDFAk0lRJnKGFMTggrWjV8GYpw5bq23VmIqqDLgkNzuoog==]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>pycharm</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[idea]]></title>
+    <url>%2F2016%2F11%2F21%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fidea%2F</url>
+    <content type="text"><![CDATA[maven helpermaven依赖冲突解决利器 破解BIG3CLIK6F-eyJsaWNlbnNlSWQiOiJCSUczQ0xJSzZGIiwibGljZW5zZWVOYW1lIjoibGFuIHl1IiwiYXNzaWduZWVOYW1lIjoiIiwiYXNzaWduZWVFbWFpbCI6IiIsImxpY2Vuc2VSZXN0cmljdGlvbiI6IkZvciBlZHVjYXRpb25hbCB1c2Ugb25seSIsImNoZWNrQ29uY3VycmVudFVzZSI6ZmFsc2UsInByb2R1Y3RzIjpbeyJjb2RlIjoiQUMiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJETSIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9LHsiY29kZSI6IklJIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiUlMwIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiV1MiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJEUE4iLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJSQyIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9LHsiY29kZSI6IlBTIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiREMiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJEQiIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9LHsiY29kZSI6IlJNIiwicGFpZFVwVG8iOiIyMDE3LTExLTIzIn0seyJjb2RlIjoiUEMiLCJwYWlkVXBUbyI6IjIwMTctMTEtMjMifSx7ImNvZGUiOiJDTCIsInBhaWRVcFRvIjoiMjAxNy0xMS0yMyJ9XSwiaGFzaCI6IjQ3NzU1MTcvMCIsImdyYWNlUGVyaW9kRGF5cyI6MCwiYXV0b1Byb2xvbmdhdGVkIjpmYWxzZSwiaXNBdXRvUHJvbG9uZ2F0ZWQiOmZhbHNlfQ==-iygsIMXTVeSyYkUxAqpHmymrgwN5InkOfeRhhPIPa88FO9FRuZosIBTY18tflChACznk3qferT7iMGKm7pumDTR4FbVVlK/3n1ER0eMKu2NcaXb7m10xT6kLW1Xb3LtuZEnuis5pYuEwT1zR7GskeNWdYZ0dAJpNDLFrqPyAPo5s1KLDHKpw+VfVd4uf7RMjOIzuJhAAYAG+amyivQt61I9aYiwpHQvUphvTwi0X0qL/oDJHAQbIv4Qwscyo4aYZJBKutYioZH9rgOP6Yw/sCltpoPWlJtDOcw/iEWYiCVG1pH9AWjCYXZ9AbbEBOWV71IQr5VWrsqFZ7cg7hLEJ3A==-MIIEPjCCAiagAwIBAgIBBTANBgkqhkiG9w0BAQsFADAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMB4XDTE1MTEwMjA4MjE0OFoXDTE4MTEwMTA4MjE0OFowETEPMA0GA1UEAwwGcHJvZDN5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxcQkq+zdxlR2mmRYBPzGbUNdMN6OaXiXzxIWtMEkrJMO/5oUfQJbLLuMSMK0QHFmaI37WShyxZcfRCidwXjot4zmNBKnlyHodDij/78TmVqFl8nOeD5+07B8VEaIu7c3E1N+e1doC6wht4I4+IEmtsPAdoaj5WCQVQbrI8KeT8M9VcBIWX7fD0fhexfg3ZRt0xqwMcXGNp3DdJHiO0rCdU+Itv7EmtnSVq9jBG1usMSFvMowR25mju2JcPFp1+I4ZI+FqgR8gyG8oiNDyNEoAbsR3lOpI7grUYSvkB/xVy/VoklPCK2h0f0GJxFjnye8NT1PAywoyl7RmiAVRE/EKwIDAQABo4GZMIGWMAkGA1UdEwQCMAAwHQYDVR0OBBYEFGEpG9oZGcfLMGNBkY7SgHiMGgTcMEgGA1UdIwRBMD+AFKOetkhnQhI2Qb1t4Lm0oFKLl/GzoRykGjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBggkA0myxg7KDeeEwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0PBAQDAgWgMA0GCSqGSIb3DQEBCwUAA4ICAQC9WZuYgQedSuOc5TOUSrRigMw4/+wuC5EtZBfvdl4HT/8vzMW/oUlIP4YCvA0XKyBaCJ2iX+ZCDKoPfiYXiaSiH+HxAPV6J79vvouxKrWg2XV6ShFtPLP+0gPdGq3x9R3+kJbmAm8w+FOdlWqAfJrLvpzMGNeDU14YGXiZ9bVzmIQbwrBA+c/F4tlK/DV07dsNExihqFoibnqDiVNTGombaU2dDup2gwKdL81ua8EIcGNExHe82kjF4zwfadHk3bQVvbfdAwxcDy4xBjs3L4raPLU3yenSzr/OEur1+jfOxnQSmEcMXKXgrAQ9U55gwjcOFKrgOxEdek/Sk1VfOjvS+nuM4eyEruFMfaZHzoQiuw4IqgGc45ohFH0UUyjYcuFxxDSU9lMCv8qdHKm+wnPRb0l9l5vXsCBDuhAGYD6ss+Ga+aDY6f/qXZuUCEUOH3QUNbbCUlviSz6+GiRnt1kA9N2Qachl+2yBfaqUqr8h7Z2gsx5LcIf5kYNsqJ0GavXTVyWh7PYiKX4bs354ZQLUwwa/cG++2+wNWP+HtBhVxMRNTdVhSm38AknZlD+PTAsWGu9GyLmhti2EnVwGybSD2Dxmhxk3IPCkhKAK+pl0eWYGZWG3tJ9mZ7SowcXLWDFAk0lRJnKGFMTggrWjV8GYpw5bq23VmIqqDLgkNzuoog== 注册JetBrains 授权服务器(License Server URL):http://idea.imsxm.com/]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>idea</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[maven]]></title>
+    <url>%2F2016%2F11%2F16%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fmaven%2F</url>
+    <content type="text"><![CDATA[maven 安装本地库mvn install:install-file -DgroupId=com.facebook.presto -DartifactId=presto-jdbc -Dversion=0.132-SNAPSHOT -Dpackaging=jar -Dfile=presto-jdbc-0.132-SNAPSHOT.jar 打包jar依赖包独立存在12345678910111213141516pom中加入&lt;plugin&gt; &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt; &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt; &lt;configuration&gt; &lt;archive&gt; &lt;manifest&gt; &lt;addClasspath&gt;true&lt;/addClasspath&gt; &lt;mainClass&gt;youmainclasspath&lt;/mainClass&gt; &lt;/manifest&gt; &lt;/archive&gt; &lt;/configuration&gt; &lt;/plugin&gt;执行 mvn dependency:copy-dependencies -DoutputDirectory=lib package然后把lib里的所有jar放到你工程的jar包所在的目录运行java -jar youjar.jar Maven中-DskipTests和-Dmaven.test.skip=true的区别在使用mvn package进行编译、打包时，Maven会执行src/test/java中的JUnit测试用例，有时为了跳过测试，会使用参数-DskipTests和-Dmaven.test.skip=true，这两个参数的主要区别是： -DskipTests，不执行测试用例，但编译测试用例类生成相应的class文件至target/test-classes下。 -Dmaven.test.skip=true，不执行测试用例，也不编译测试用例类。 执行Main类mvn exec:java -Dexec.mainClass=”com.vineetmanohar.module.Main” 构建指定多个模块mvn -pl core/server,assembly install -Dhadoop.version=2.7.1 -Pyarn,spark -DskipTests -Dfindbugs.skip -Dmaven.javadoc.skip -Dcheckstyle.skip]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派安装后需要做的几件事]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%A0%91%E8%8E%93%E6%B4%BE%2F%E5%AE%89%E8%A3%85%E5%90%8E%2F</url>
+    <content type="text"><![CDATA[安装后ssh登录查看路由器dhcp列表，获取ip，使用scrt登录修改/etc/apt/sources.list12deb http://mirrors.aliyun.com/raspbian/raspbian/ jessie main non-free contrib rpideb-src http://mirrors.aliyun.com/raspbian/raspbian/ jessie main non-free contrib rpi 远程桌面安装远程桌面，ubuntu下需要使用xrdesktop连接 ，比windows远程桌面慢12sudo apt-get install xrdpsudo apt-get install vnc4server tightvncserver 安装字体sudo apt-get install ttf-wqy-zenhei 安装输入法sudo apt-get install fcitx fcitx-googlepinyin fcitx-module-cloudpinyin fcitx-sunpinyin]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[树莓派常用命令]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%A0%91%E8%8E%93%E6%B4%BE%2F%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[树莓派常用命令以某个用户身份运行程序1runuser -l pi -c &quot;command&quot;]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>树莓派</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[kafka]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fkafka%2F</url>
+    <content type="text"><![CDATA[启动zookeeper1bin/zookeeper-server-start.sh config/zookeeper.properties &amp; 启动KAFKA1bin/kafka-server-start.sh config/server.properties &amp; 模拟consumer1bin/kafka-console-consumer.sh --zookeeper 127.0.0.1:2181 --from-beginning --topic self_healing]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>kafka</tag>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[etcd]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fetcd%2F</url>
+    <content type="text"><![CDATA[介绍etcd是一个高可用的键值存储系统，主要用于共享配置和服务发现。etcd是由CoreOS开发并维护的，灵感来自于 ZooKeeper 和 Doozer，它使用Go语言编写，并通过Raft一致性算法处理日志复制以保证强一致性。Raft是一个来自Stanford的新的一致性算法，适用于分布式系统的日志复制，Raft通过选举的方式来实现一致性，在Raft中，任何一个节点都可能成为Leader。Google的容器集群管理系统Kubernetes、开源PaaS平台Cloud Foundry和CoreOS的Fleet都广泛使用了etcd。 etcd 集群的工作原理基于 raft 共识算法 (The Raft Consensus Algorithm)。etcd 在 0.5.0 版本中重新实现了 raft 算法，而非像之前那样依赖于第三方库 go-raft 。raft 共识算法的优点在于可以在高效的解决分布式系统中各个节点日志内容一致性问题的同时，也使得集群具备一定的容错能力。即使集群中出现部分节点故障、网络故障等问题，仍可保证其余大多数节点正确的步进。甚至当更多的节点（一般来说超过集群节点总数的一半）出现故障而导致集群不可用时，依然可以保证节点中的数据不会出现错误的结果。 设置值，允许目录不存在curl -x 172.22.91.78:80 -X PUT http://172.22.77.107:2379/v2/keys/presto/clustertest/y2/worker2/bbb -d value=”sss”|python -m json.tool 删除空目录 curl -X DELETE -x 172.22.91.78:80 http://172.22.77.109:2379/v2/keys/presto/clustertest/66?dir=true|python -m json.tool 删除目录所有内容 curl -X DELETE -x 172.22.91.78:80 http://172.22.77.109:2379/v2/keys/presto/clustertest/66?recursive=true|python -m json.tool 获取成员curl -x 172.22.91.78:80 -H “Content-type: application/json” http://172.22.77.109:2379/v2/members|python -m json.tool 查看是否leadercurl -x 172.22.91.78:80 -H “Content-type: application/json” http://172.22.77.108:2379/v2/stats/self |python -m json.toolcurl -x 172.22.91.78:80 -H “Content-type: application/json” http://172.22.77.107:2379/v2/stats/leader|python -m json.tool 查看是否健康curl -x 172.22.91.78:80 -H “Content-type: application/json” http://172.22.77.107:2379/health|python -m json.tool]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>分布式</tag>
+        <tag>etcd</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[git]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fgit%2F</url>
+    <content type="text"><![CDATA[git push origin master报错fatal: could not read Username for ‘https://github.com‘: No such file or directo原因使用https方式的时候 在git remote add origin 的https url 里面没有用户名和密码修改为如下：git remote add origin https://{username}:{password}@github.com/{username}/project.githttps://github.com/kemayo/sublime-text-git/issues/176或者直接修改 .git/config 隐藏文件 为git remote add origin https://{username}:{password}@github.com/{username}/project.git 格式 显示当前分支git branch 显示远程信息git remote -v 强制回退到master分支取回远程主机某个分支的更新，再与本地的指定分支合并git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;git pull origin master:master -f 显示git状态git status git branch * master 将master分支合并到当前分支git merge master 将远程master的修改合并到本地mbl分支。git pull origin master:master -fgit add . git commit -m “test”git pull origin master:master -fgit branch * mastergit checkout mblgit pullgit merge master git push 取消commit 和 pullgit reset –hard git push origin HEAD –force git 更换仓库 从原地址克隆一份裸版本库，比如原本托管于 GitHubgit clone –bare git://github.com/username/project.git 然后到新的 Git 服务器上创建一个新项目，比如 GitCafe。 以镜像推送的方式上传代码到 GitCafe 服务器上。 12cd project.gitgit push --mirror git@gitcafe.com/username/newproject.git 先查看remote的名字 1git branch -r 假设你的remote是origin，用git remote set_url 更换地址 1git remote set-url origin remote_git_address 提交代码1git commit -am &quot;提交说明&quot; 追踪远端更新 为了将远程的Alluxio源码改动更新到你本地的副本中，你需要创建一个指向远程Alluxio源代码库的源。在刚拷贝的副本的目录下，运行： 1git remote add upstream https://github.com/Alluxio/alluxio.git 显示所有分之，并比较本地和远端分之版本 1git branch -av 把远端的仓库upstream抓取过来，git remote -v 列表中的远端仓库名 1git fetch upstream 合并远程分支 12git checkout mastergit merge upstream/master 切换到分支 1git checkout --track remotes/upstream/branch-1.4 revert file,such as pom.xml 12git checkout -- pom.xmlgit push origin branch-1.4 merge master branch 12345git checkout mastergit merge upstream/mastergit branch -avgit statusgit push create a sub branch of an assigned branch 12345#切换到分支git checkout branch1#基于该分支创建子分支git checkout -b branch2_based_on_b1 branch1 为推送当前分支并建立与远程上游的跟踪 1git push --set-upstream origin mbl-baseon-JDAlluxio-1.3.0 ##1234# checkout时和提交时都用已有的换行符，不做替换$ git config --global core.autocrlf false# checkout时不转换，提交的时候自动转换为LF$ git config --global core.autocrlf input 一个项目向多个远程仓库推送123456# 查看当前远程有哪些git remote -v# 添加远程仓库bitjdgit remote add bitjd http://bit.jd.com/maobaolong/pyjvmtools.git# 把本地仓库推送到bitjd远程仓库中，推送成功后默认远程仓库修改为bitjd，下次git push默认推送到bitjdgit push -u bitjd git 初次使用配置(邮箱 记住密码)123git config --global user.name maobaolonggit config --global user.email maobaolong@139.comgit config --global credential.helper store git add 和 git rm –cachedgit add 增加暂存文件，为git commit准备文件git rm –cached 删除暂存文件但不删除本地文件git status查看要提交的文件 stash12345678910# 把当前修改未提交的文件储藏为stash。message便于取回修改git stash save "message"# 列出所有储藏的stash，每一个stash有一个indexgit stash list# stash@&#123;0&#125;: On master: test2# stash@&#123;1&#125;: WIP on master: ef33200 新建 oschina.txt# stash@&#123;2&#125;: On master: test# 恢复git stash apply --index stash@&#123;2&#125; 常用.gitignore1234567891011121314151617181920212223242526272829303132 # Android generatedbin/gen/classes/gen-external-apklibs/# Antlocal.properties# Maventarget/release.properties# Eclipse.classpath.project.externalToolBuilders/.metadata.settings# IntelliJ*.iml*.ipr*.iws.idea/out/# Mac.DS_Store# gitignore.gitignore]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[nginx]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fnginx%2F</url>
+    <content type="text"><![CDATA[启动nginx 重启nginx -s reload 关闭nginx -s stop 修改端口/etc/nginx/conf/nginx.conf 查看端口占用lsof -i tcp:80lsof -i tcp:8999 检测配置文件是否正确，可以查看配置文件位置sudo nginx -t 查看版本sudo nginx -V 配置文件说明server_namn : 域名;]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[java 远程调试]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fjava%2Fjava%2F</url>
+    <content type="text"><![CDATA[远程调试1java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=2345 Main 运行jar中的包含main函数的类-cp app.jar a.b.C 1//其中C是类位于a.b包,C类中包含main]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[velocity]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fvelocity%2F</url>
+    <content type="text"><![CDATA[JAVA中的map传到vm中12345678910One option along the lines of what you already have should be to add the attributes to the model as a map. So in javamap = new HashMap(); map.put(&quot;id&quot;, &quot;solikang&quot;)map.put(&quot;pwd&quot;, &quot;1234&quot;)map.put(&quot;email&quot;, &quot;something@example.com&quot;);model.addAttribute(&quot;data&quot;, map);Then in velocity#foreach ($key in $data.keySet()) &lt;input type=&quot;hidden&quot; name=&quot;$key&quot; value=&quot;$data.get($key)&quot;&gt;#end]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>velocity</tag>
+        <tag>模板引擎</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[zookeeper]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fzookeeper%2F</url>
+    <content type="text"><![CDATA[zkCli.sh -server IP:port ls(查看当前节点数据),ls2(查看当前节点数据并能看到更新次数等数据) ,create(创建一个节点) ,get(得到一个节点，包含数据和更新次数等数据),set(修改节点)delete(删除一个节点) 四字命令，nc 服务器地址 端口号nc 192.168.193.84 2181 ZooKeeper 四字命令 功能描述 conf 输出相关服务配置的详细信息。 cons 列出所有连接到服务器的客户端的完全的连接 / 会话的详细信息。包括“接受 / 发送”的包数量、会话 id 、操作延迟、最后的操作执行等等信息。 dump 列出未经处理的会话和临时节点。 envi 输出关于服务环境的详细信息（区别于 conf 命令）。 reqs 列出未经处理的请求 ruok 测试服务是否处于正确状态。如果确实如此，那么服务返回“ imok”，否则不做任何相应。 stat 输出关于性能和连接的客户端的列表。 wchs 列出服务器 watch 的详细信息。 wchc 通过 session 列出服务器 watch 的详细信息，它的输出是一个与watch 相关的会话的列表。 wchp 通过路径列出服务器 watch 的详细信息。它输出一个与 session 相关的路径。 mntr 显示zk信息 获取当前zk服务器的serverIdecho conf|nc 192.168.193.83 2181 获取当前zk服务器的角色，如果为leader，则可以获得follower个数echo mntr|nc 192.168.193.85 2181]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>分布式</tag>
+        <tag>zookeeper</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[正则表达式]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%2F</url>
+    <content type="text"><![CDATA[常见用法(?: pattern)是非捕获型括号 匹配pattern，但不捕获匹配结果。(pattern )是捕获型括号。 匹配pattern，匹配pattern并捕获结果,自动获取组号(? pattern ) 匹配pattern， 匹配pattern并捕获结果，设置name为组名 使用小括号指定一个子表达式后，匹配这个子表达式的文本(也就是此分组捕获的内容)可以在表达式或其它程序中作进一步的处理。默认情况下，每个捕获组会自动拥有一个组号，规则是：从左向右，以分组的左括号为标志，第一个出现的分组的组号为1，第二个为2，以此类推。 如果正则表达式中同时存在普通捕获组和命名捕获组，那么捕获组的编号就要特别注意，编号的规则是先对普通捕获组进行编号，再对命名捕获组进行编号。 为了避免括号太多使编号混乱，也为了避免无用的捕获提高效率，在不需要捕获只需要指定分组的地方就可以使用非捕获型括号。问题里的非捕获型括号就是为此使用的。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>正则表达式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CENTOS笔记]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Flinux%2Fcentos%2F</url>
+    <content type="text"><![CDATA[CENTOS笔记[TOC] ##连接无线网 ip addr找到自己的无线网接口 （ps:本人的是wlp5s0） ip link set wlp5s0 up打开无线网的驱动 ip link show wlp5s0查看该网络接口的状态 连接无线网wpa_supplicant -B -i wlp5s0 -c &lt;(wpa_passphrase “ssid” “psk”) (连接无线网ssid，密码psk) dhcp分配ipdhclient wlp5s0(为wlp5s0分配ip地址) 软件源下载源wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repowget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.sohu.com/help/CentOS-Base-sohu.repowget -O /etc/yum.repos.d/CentOS-Base.repo http://centos.ustc.edu.cn/CentOS-Base.repo 安装源yum clean allyum makecache ssh修改端口号step1 修改/etc/ssh/sshd_configvi /etc/ssh/sshd_config12#Port 22 //这行去掉#号Port 20000 //下面添加这一行 step2 修改SELinuxyum -y install policycoreutils-python 使用以下命令查看当前SElinux 允许的ssh端口：semanage port -l | grep ssh 添加20000端口到 SELinuxsemanage port -a -t ssh_port_t -p tcp 20000 然后确认一下是否添加进去semanage port -l | grep ssh如果成功会输出ssh_port_t tcp 20000, 22 step3 重启sshsystemctl restart sshd.service]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>centos</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[jenkins]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fjenkins%2F</url>
+    <content type="text"><![CDATA[jenkins[TOC] 启动jenkins指定端口java -jar jenkins.war –httpPort=9010 后台启动的方法 nohup command &gt; myout.file 2&gt;&amp;1 &amp;1kill `ps -ef | grep [j]enkins.war | awk &apos;&#123; print $2 &#125;&apos;` jenkins中通过execute shell启动的进程会被杀死的问题[摘要：正在jenkins中设置装备摆设主动更新安排项目时，若是采用用execute shell启动/封闭tomcat，会发明能够举行封闭tomcat，然则没法启动tomcat，固然构建会表现履行乐成，然则检察过程，tomcat是出有启动的]在jenkins中配置自动更新部署项目时，如果采取用execute shell启动/关闭tomcat，会发现可以进行关闭tomcat，但是无法启动tomcat，虽然构建会显示执行成功，但是查看进程，tomcat是没有启动的。这是因为Jenkins默认会在Build结束后Kill掉所有的衍生进程。需要进行以下配置，才能避免此类情况发生: 重设环境变量build_id在execute shell输入框中加入BUILD_ID=DONTKILLME,即可防止jenkins杀死启动的tomcat进程 在启动jenkins 的时候禁止jenkins杀死衍生进程 修改/etc/sysconfig/jenkins配置，在JENKINS_JAVA_OPTIONS中加入-Dhudson.util.ProcessTree.disable=true。需要重启jenkins生效 此方法配置一次后，所有的job都无需设置BUILD_ID，就能够防止jenkins杀死启动的tomcat进程]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>jenkins</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[scrt 破解和使用]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fscrt%2F</url>
+    <content type="text"><![CDATA[scrtlinux下破解1$ sudo perl securecrt_linux_crack.pl /usr/bin/SecureCRT 12345Name: xiaobo_lCompany:www.boll.meSerial Number:03-61-166978License Key:ABC89D UFDU94 C94CBU 7V17SU ABTUS5 QXX9E5 PF12H6 R62SHCIssue Date:12-22-2013 ~/.vandyke/SecureCRT/Config/SecureCRT.lic12345678910Is Eval License: NCompany: www.boll.meSerial Number: 03-15-097355Expiration:Issue Date: 08-16-2015Name: xiaobo_l__Pid__: 03,07Version: 7.2.3 (build 500)__Vid__: 72Key: AC81ET 9RKAWY 6WP69G 8EQ1JB ABCM3D K4E85M D3WG57 RGFWT2 设置反空闲会话选项 –&gt; 终端 –&gt; 反空闲 –&gt; 发送字符串 可以设置，比如发送 \n 、null或其他信息过去，后面可以设置每隔多少秒发送，比如可以3000秒一次，这样可以保证不会掉线 全局会话设置如果想应用于所有会话的话，选择全局选项-&gt;默认会话-&gt;编辑默认设置.做上述修改修改就可以全局使用了.]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>scrt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[ubuntu]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Flinux%2Fubuntu%2F</url>
+    <content type="text"><![CDATA[删除无用软件 删除libreoffice 1sudo apt-get remove libreoffice-common 删除Amazon的链接 1sudo apt-get remove unity-webapps-common 删掉基本不用的自带软件 12sudo apt-get remove thunderbird totem rhythmbox empathy brasero simple-scan gnome-mahjongg aisleriot gnome-mines cheese transmission-common gnome-orca webbrowser-app gnome-sudoku landscape-client-ui-installsudo apt-get remove onboard deja-dup 常用软件 名称 说明 ssh 客户端 openssh-server 服务端 mysql-server mysql-client wine gdebi virtualbox 虚拟机 chrome sougou wps idea hadoop 中文字体 安装字体 12345678sudo apt-get install ttf-mscorefonts-installer #微软字体 sudo apt-get install xfonts-wqy #文泉驿-点阵宋体 cd ~ wget http://www.stchman.com/tools/MS_fonts/tahoma.zip #Tahoma 字体 sudo unzip -d /usr/share/fonts/truetype/msttcorefonts ~/tahoma.zip sudo fc-cache -f -v rm -f ~/tahoma.zip sudo fc-cache -f -s -v #刷新字体缓存 另一种方法，复制windows字体 在Linux创建一个目录用来存放Windows字体： 1$ sudo mkdir /usr/share/fonts/WindowsFonts Windows的字体文件位于目录 C: 盘 Windows/Fonts，把字体文件拷贝到/usr/share/fonts/WindowsFonts目录。 更改字体文件的权限： 1$ sudo chmod 755 /usr/share/fonts/WindowsFonts/* 更新字体缓存： 1$ sudo fc-cache 解压配置常见问题root下无法输入中文/etc/profile中 export XMODIFIERS=@im=fcitx GTK_IM_MODULE=xim WPS下搜狗输入法不能输入中文原因：环境变量未正确设置$ vi /usr/bin/wps在第一行 #!/bin/bash 下添加：export XMODIFIERS=”@im=fcitx”export QT_IM_MODULE=”fcitx” ppt、excel部分和word一样的方法添加环境变量，只是编辑的文件各不同：$ vi /usr/bin/wpp$ vi /usr/bin/et idea root无法输入中文在IDEA的bin目录下的idea.sh文件的前面加上：export XMODIFIERS=@im=fcitx export QT_IM_MODULE=fcitx 无法打开系统设置sudo apt-get install unity-control-center Ubuntu上方边栏不显示时间，有三中可能原因及相应的解决方法：1. 原因：系统设置为了不显示时间。 解决方法：右上角小齿轮-&gt;系统设置-&gt;时间和日期-&gt;时钟-&gt;勾选“在菜单栏显示时钟” 2. 原因：显示时间的进程出错了。 3. 解决方法：重新登录，或重启电脑，或使用下述命令： sudo restart lighddm警告：该命令会使所有用户退出登录。 4. 原因：indicator-datetime 被误删了。 解决方法：重新安装indicator-datetime。 首先，在确认indicator-datetime确实被误删之后，使用命令sudo apt-get install indicator-datetime 安装。其次，配置日期时间：sudo dpkg-reconfigure –frontend noninteractive tzdata 。最后，重启unity：sudo killall unity-panel-service 。 设置分辨率 xrandr1sudo xrandr -s 1360x768_60 修改文件管理器上的书签修改文件~/.config/gtk-3.0/bookmarks]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>linux</tag>
+        <tag>ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[seafile]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fseafile%2F</url>
+    <content type="text"><![CDATA[seafile启动停止服务/opt/seafile/seafile-server-6.0.5/seafile.sh stop/opt/seafile/seafile-server-6.0.5/seahub.sh stop /opt/seafile/seafile-server-6.0.5/seafile.sh start/opt/seafile/seafile-server-6.0.5/seahub.sh start 8123]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>seafile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[html]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fhtml%2F</url>
+    <content type="text"><![CDATA[事件相应两次的问题12345678910111213141516171819202122232425&lt;html&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;title&gt;菜鸟教程(runoob.com)&lt;/title&gt;&lt;script src=&quot;http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&quot;&gt;&lt;/script&gt;&lt;/head&gt;&lt;body&gt; &lt;label id=&quot;mylabel&quot; &gt; &lt;input type=&quot;checkbox&quot; value=&quot;&quot; level=&quot;$!category.level&quot; data-id=&quot;$!category.id&quot; data-parentId=&quot;$!categoryInfo.id&quot; data-type=&quot;categoryInfoType&quot;&gt;$!category.name&lt;/label&gt;&lt;div id=&quot;test&quot;&gt; &lt;input type=&quot;checkbox&quot; name=&quot;abc&quot; id=&quot;abc&quot;/&gt; &lt;label for=&quot;abc&quot;&gt;3423432432432432&lt;/label&gt;&lt;/div&gt;&lt;script type=&quot;text/javascript&quot;&gt; $(&quot;#test&quot;).click(function(ev) &#123; console.log(ev.target); &#125;); $(&quot;#mylabel&quot;).click(function(event) &#123;console.log(event.target);&#125;);&lt;/script&gt;&lt;/body&gt;&lt;/html&gt; 设置textArea 允许拖动方向1&lt;textarea style=&quot;resize:vertical;&quot;&gt;&lt;/textarea&gt; resize的值，可以为： both vertical horizontal none]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>html</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[jquery]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fjquery%2F</url>
+    <content type="text"><![CDATA[jquery$(“#id”)$(“.样式”)$(“标签名[属性名=属性值][属性名2=属性值2][属性名3!=属性值3]”) $(“input[data-type=group_checkbox]”)$(this)$(#id).find(“input”) 查找后代input元素 $(“#addQueueDiv”).show();$(“#addQueueDiv”).hide(); $(“#addQueueDiv”)[0].style.visibility=”visible”$(“#addQueueDiv”)[0].style.visibility=”hidden” tab切换事件$(document).on(‘shown.bs.tab’, ‘a[data-toggle=”tab”]’, function(e) { console.log(e.target) // activated tab});]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>jquery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[tomcat]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Ftomcat%2F</url>
+    <content type="text"><![CDATA[远程调试Linxu系统: apach/bin/startup.sh开始处中增加如下内容： 1. declare -x CATALINA_OPTS=&quot;-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8788&quot; .Windows系统: apach/bin/startup.bat开始处中增加如下内容： 1. SET CATALINA_OPTS=-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8788 tomcat 配置域名到多个工程目录配置tomcat server.xml host appbase]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>tomcat</tag>
+        <tag>容器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[haproxy]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fhaproxy%2F</url>
+    <content type="text"><![CDATA[编译1uname -a 查看linux版本vim -R README ，查找 ?linux ，N查找下一个，找到linux版本对应targetmake TARGET=linux2628 ubuntu apt-get install haproxy安装即可centos 用yum安装即可yum haproxy -yhaproxy x86_64 1.5.14-3.el7 base 833 k]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>haproxy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hadoop metrics]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fhadoop-matrics-intro%2F</url>
+    <content type="text"><![CDATA[Block Pool Used由于datanode共享，所以datanode的数据盘中的dfs目录会有多个ns的块池，Block Pool Used表示当前ns的块池]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[playframework]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fplayframework%2F</url>
+    <content type="text"><![CDATA[目录结构123456789101112131415161718192021222324252627282930313233343536373839web_app 根目录 | sbt SBT Unix 批处理脚本用于启动sbt-launch.jar | sbt.bat SBT Windows 批处理脚本用于启动sbt-launch.jar | sbt-launch.jar SBT 启动的Java可执行类库|+---app Play Web 应用全部代码所在目录| || +---models 模型代码所在目录| | Message.scala 留言板例程模型代码| || +---controllers 控制器代码所在目录| | Application.scala 默认控制器代码| || \---views 视图（Play Scala HTML模板） 代码所在目录| main.scala.html 主模板文件| index.scala.html 首页模板文件| msgboard.scala.html 留言板例程模板文件|+---conf Play 配置文件所在目录| application.conf 应用配置文件| routes 应用入口路由文件，所有的HTTP请求将通过该文件转发到指定的Scala对象处理|+---logs 日志目录| application.log 应用运行日志|+---project SBT工程文件| build.properties 保存所需的SBT版本信息，通常无需更改| Build.scala 主要的工程配置文件| plugins.sbt 告知SBT本工程所需要的插件以及下载位置|+---public 存储一切直接发送给浏览器的资源文件| || +---images 图像文件，如JPEG、PNG、GIF等| || +---javascripts JavaScript脚本文件| || \---stylesheets CSS样式表文件|\---target 存放编译后的可执行代码和编译时的中间代码 执行play,进入play命令行后，执行:idea with-sources=yes 或者 eclipse with-source=true.生成对应的工程文件，之后，可以用eclipse或idea导入工程；]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>playframework</tag>
+        <tag>框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[springMVC]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2FspringMVC%2F</url>
+    <content type="text"><![CDATA[基于注解的Spring AOP的配置和使用AOP是OOP的延续，是Aspect Oriented Programming的缩写，意思是面向切面编程。可以通过预编译方式和运行期动态代理实现在不修改源代码的情况下给程序动态统一添加功能的一种技术。AOP实际是GoF设计模式的延续，设计模式孜孜不倦追求的是调用者和被调用者之间的解耦，AOP可以说也是这种目标的一种实现。 切面（Aspect）：官方的抽象定义为“一个关注点的模块化，这个关注点可能会横切多个对象”，在本例中，“切面”就是类TestAspect所关注的具体行为，例如，AServiceImpl.barA()的调用就是切面TestAspect所关注的行为之一。“切面”在ApplicationContext中来配置。 连接点（Joinpoint） ：程序执行过程中的某一行为，例如，UserService.get的调用或者UserService.delete抛出异常等行为。 通知（Advice） ：“切面”对于某个“连接点”所产生的动作，例如，TestAspect中对com.spring.service包下所有类的方法进行日志记录的动作就是一个Advice。其中，一个“切面”可以包含多个“Advice”，例如ServiceAspect。 切入点（Pointcut） ：匹配连接点的断言，在AOP中通知和一个切入点表达式关联。例如，TestAspect中的所有通知所关注的连接点，都由切入点表达式execution( com.spring.service..*(..))来决定。 目标对象（Target Object） ：被一个或者多个切面所通知的对象。例如，AServcieImpl和BServiceImpl，当然在实际运行时，Spring AOP采用代理实现，实际AOP操作的是TargetObject的代理对象。 AOP代理（AOP Proxy） ：在Spring AOP中有两种代理方式，JDK动态代理和CGLIB代理。默认情况下，TargetObject实现了接口时，则采用JDK动态代理，例如，AServiceImpl；反之，采用CGLIB代理，例如，BServiceImpl。强制使用CGLIB代理需要将 的 proxy-target-class属性设为true。 通知（Advice）类型： 前置通知（Before advice）：在某连接点（JoinPoint）之前执行的通知，但这个通知不能阻止连接点前的执行。ApplicationContext中在里面使用元素进行声明。例如，TestAspect中的doBefore方法。 后置通知（After advice）：当某连接点退出的时候执行的通知（不论是正常返回还是异常退出）。ApplicationContext中在里面使用元素进行声明。例如，ServiceAspect中的returnAfter方法，所以Teser中调用UserService.delete抛出异常时，returnAfter方法仍然执行。 返回后通知（After return advice）：在某连接点正常完成后执行的通知，不包括抛出异常的情况。ApplicationContext中在里面使用元素进行声明。 环绕通知（Around advice）：包围一个连接点的通知，类似Web中Servlet规范中的Filter的doFilter方法。可以在方法的调用前后完成自定义的行为，也可以选择不执行。ApplicationContext中在里面使用元素进行声明。例如，ServiceAspect中的around方法。 抛出异常后通知（After throwing advice）：在方法抛出异常退出时执行的通知。ApplicationContext中在里面使用元素进行声明。例如，ServiceAspect中的returnThrow方法。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>java</tag>
+        <tag>框架</tag>
+        <tag>springMVC</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[velocity]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fvelocity%2F</url>
+    <content type="text"><![CDATA[velocity 设置模板1#set($layout = &quot;/layout/layout2.vm&quot;)]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>velocity</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hadoop_rest]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fhadoop_rest%2F</url>
+    <content type="text"><![CDATA[curl -x 172.22.91.78:80 -X GET -H “Accept:application/xml” http://172.16.172.95:19888/ws/v1/history/mapreduce/jobs/job_1470405196301_64396 curl -x 172.22.91.78:80 -X GET -H “Accept:application/json” http://172.16.172.95:19888/ws/v1/history/mapreduce/jobs/job_1470405196301_64396|python -m json.tool]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[xss攻击]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fweb%2Fxss%E6%94%BB%E5%87%BB_%E8%B7%A8%E5%9F%9F%E6%94%BB%E5%87%BB%2F</url>
+    <content type="text"><![CDATA[xss攻击]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>web</tag>
+        <tag>xss</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mongodb]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%95%B0%E6%8D%AE%E5%BA%93%2Fmongodb%2F</url>
+    <content type="text"><![CDATA[启动mongodb./mongod –dbpath ../dbpath/ –logpath ../logs/mongodb.log –logappend &amp; –fork show dbs 使用数据库mydbuse mydb 显示表show collections 查看表foo下的记录db.foo.find()]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>数据库</tag>
+        <tag>mongodb</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mysql sql语法]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%95%B0%E6%8D%AE%E5%BA%93%2Fmysql%20%E8%AF%AD%E6%B3%95%2F</url>
+    <content type="text"><![CDATA[mysql 语句返回players表中town列所有数据项打集合以’,’分割的集合SELECT group_concat(town) FROM players group by town 获取符合条件的记录个数，表头为countselect count(*) as count from t_cluster_config_xml where cluster_name = ‘alto’ 如果存在则不插入insert into t_cluster_config_xml(a,b)select a,b from DUAL WHERE NOT EXISTS(SELECT a FROM t_cluster_config_xml WHERE a = ‘a’); 建表字符格式及长度 CHAR(M) [BINARY]一个定长字符串，当存储时，总是是用空格填满右边到指定的长度。M的范围是1 ～ 255个字符。当值被检索时，空格尾部被删除。CHAR值根据缺省字符集以大小写不区分的方式排序和比较，除非给出BINARY关键词。NATIONAL CHAR（短形式NCHAR)是ANSI SQL的方式来定义CHAR列应该使用缺省字符集。这是MySQL的缺省。CHAR是CHARACTER的一个缩写。 TINYBLOB TINYTEXT一个BLOB或TEXT列，最大长度为255(2^8-1)个字符。 BLOB TEXT一个BLOB或TEXT列，最大长度为65535(2^16-1)个字符。 MEDIUMBLOB MEDIUMTEXT一个BLOB或TEXT列，最大长度为16777215(2^24-1)个字符。 LONGBLOB LONGTEXT一个BLOB或TEXT列，最大长度为4294967295(2^32-1)个字符。 数值类型长度(M)的含义原文m 不是表示的数据长度，而是表示数据在显示时显示的最小长度。当字符长度超过(m)时，相当于啥都没发生；当字符长度小于(m)时，就需要指定拿某个字符来填充，比如zerofill（表示用0填充），设置tinyint(2) zerofill 你插入1时他会显示01；设置tinyint(4) zerofill 你插入1时他会显示0001。所以，没有zerofill，(m)就是无用的。 真相在这里 类型 长度 范围 名称 TINYINT 1字节 (-128，127) (0，255) 小整数值 SMALLINT 2 字节 ( -2^15 ：-32 768，2^15 - 1：32 767) (0，65 535) 大整数值 MEDIUMINT 3 字节 (-8 388 608，8 388 607) (0，16 777 215) 大整数值 INT或INTEGER 4 字节 (-2^31， 2^31 - 1) (0，4 294 967 295) 大整数值 BIGINT 8 字节 (-2^63，2^63-1) (0，18 446 744 073 709 551 615) 极大整数值]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>数据库</tag>
+        <tag>mysql</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mysql]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2F%E6%95%B0%E6%8D%AE%E5%BA%93%2Fmysql%2F</url>
+    <content type="text"><![CDATA[[TOC] mysql启动服务启动mysql：方式一：sudo /etc/init.d/mysql start方式二：sudo start mysql方式三：sudo service mysql start 停止mysql：方式一：sudo /etc/init.d/mysql stop方式二：sudo stop mysql方式san：sudo service mysql stop 重启mysql：方式一：sudo/etc/init.d/mysql restart方式二：sudo restart mysql方式三：sudo service mysql restart * 以root用户登入 mysql -u root -p 创建普通用户create user ‘salt’@’localhost’;set password for ‘salt’@’localhost’ = password(‘salt’); 创建数据库create database UGDAP; 显示所有数据库show databases; 为用户salt授予数据库UGDAP下所有表打所有权限grant all privileges on UGDAP.* to salt@localhost identified by ‘salt’;flush privileges; 以salt用户登入（远程登入）mysql -u salt -psaltmysql -h 192.168.200.213 -P 3306 -usalt -psalt 使用指定数据库use UGDAP; 查看所有表show tables; 删除库和表drop database 库名;drop table 表名； 将表中记录清空delete from 表名; 创建表create table tb_emp1( id INT(11), name VARCHAR(25), deptid INT (11), salary FLOAT); 显示表结构describe tb_emp1; 导入sql/执行sql脚本（shell中以及mysql中）mysql db_name &lt; text_filemysql db_name -u username -p &lt; text_file mysql&gt; source file_namemysql&gt; . file_name 导出数据库mysqldump -h 192.168.200.213 -P 3306 -usalt -psalt –default-character-set=utf8 UGDAP&gt;./UGDAP.sql 卸载mysql1234567891011121314151617181920sudo rm /var/lib/mysql/ -R//删除mysql的数据文件sudo rm /etc/mysql/ -R//删除mqsql的配置文件sudo apt-get autoremove mysql* --purgesudo apt-get remove apparmorsudo apt-get autoremove1 sudo apt-get autoremove --purge mysql-server-5.02 sudo apt-get remove mysql-server3 sudo apt-get autoremove mysql-server4 sudo apt-get remove mysql-common (非常重要)dpkg -l |grep ^rc|awk &apos;&#123;print $2&#125;&apos; |sudo xargs dpkg -P * 安装 mysql 1 sudo apt-get install mysql-server2 sudo apt-get install mysql-client3 sudo apt-get install php5-mysql(安装php5-mysql 是将php和mysql连接起来 ) 一旦安装完成，MySQL 服务器应该自动启动。您可以在终端提示符后运行以下命令来检查 MySQL 服务器是否正在运行：1 sudo netstat -tap | grep mysql 当您运行该命令时，您可以看到类似下面的行：tcp 0 0 localhost.localdomain:mysql : LISTEN -如果服务器不能正常运行，您可以通过下列命令启动它： 1 sudo /etc/init.d/mysql restart 修改root用户密码###第一步：修改Mysql配置文件[root@liama01 ~]# vi /etc/my.cnf在mysqld下，加入12skip-grant-tablesskip-networking ###第二步：重启Mysql后使用mysql -uroot -p 命令登入Mysql并修改密码123456service mysqld restartmysql -uroot -p 回车mysql&gt; use mysqlmysql&gt; update user set password=PASSWORD(&apos;root&apos;) WHERE user=&quot;root&quot;;mysql&gt; flush privileges; ###第三步：去掉跳过，并重启服务 123vi /etc/my.cnf去掉skip-grant-tables和skip-networkingservice mysqld restart ###第四步：重置密码如果不重置会报错 ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.执行重新设置密码mysql&gt; ALTER USER ‘root’@’localhost’ IDENTIFIED BY ‘**‘ 一条命令登录mysql 执行sql语句，然后退出mysql -h ip -uuser -ppwd -e”select * from bdpops.t_static_data limit 1”]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>数据库</tag>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[vim]]></title>
+    <url>%2F2016%2F11%2F09%2F%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%2Fvim%2F</url>
+    <content type="text"><![CDATA[vim设置粘贴可以500行 1. :set viminfo=&apos;1000,&lt;500 整体下移：ctrl + e整体上移 : ctrl + y 显示行号：set nu vim配置文件：/etc/vim/vimrc 查找字符串 ?内容 N下一个 n上一个 配置文件位置vim /etc/vimrc 设置粘贴模式 粘贴模式可以不带缩进粘贴 set paste set nopaste 也可以在.vimrc中设置切换的快捷键，比如设置F9，则可以在.vimrc中加入： set pastetoggle=&lt;F9&gt; 解决home end不可用的问题1set term=xterm 启用语法解析1syntax on]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[fair-scheduler]]></title>
+    <url>%2F2016%2F11%2F09%2F%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0%2Fbigdata%2Fhadoop%2Fyarn%2Ffair-scheduler%2F</url>
+    <content type="text"><![CDATA[fair-scheduler.xml的配置在一个公司内部的Hadoop Yarn集群，肯定会被多个业务、多个用户同时使用，共享Yarn的资源，如果不做资源的管理与规划，那么整个Yarn的资源很容易被某一个用户提交的Application占满，其它任务只能等待，这种当然很不合理，我们希望每个业务都有属于自己的特定资源来运行MapReduce任务，Hadoop中提供的公平调度器–Fair Scheduler，就可以满足这种需求。 Fair Scheduler将整个Yarn的可用资源划分成多个资源池，每个资源池中可以配置最小和最大的可用资源（内存和CPU）、最大可同时运行Application数量、权重、以及可以提交和管理Application的用户等。 根据用户名分配资源池 如图所示，假设整个Yarn集群的可用资源为100vCPU，100GB内存，现在为3个业务各自规划一个资源池，另外，规划一个default资源池，用于运行其他用户和业务提交的任务。如果没有在任务中指定资源池（通过参数mapreduce.job.queuename），那么可以配置使用用户名作为资源池名称来提交任务，即用户businessA提交的任务被分配到资源池businessA中，用户businessC提交的任务被分配到资源池businessC中。除了配置的固定用户，其他用户提交的任务将会被分配到资源池default中。 这里的用户名，就是提交Application所使用的Linux/Unix用户名。 另外，每个资源池可以配置允许提交任务的用户名，比如，在资源池businessA中配置了允许用户businessA和用户lxw1234提交任务，如果使用用户lxw1234提交任务，并且在任务中指定了资源池为businessA，那么也可以正常提交到资源池businessA中。 根据权重获得额外的空闲资源在每个资源池的配置项中，有个weight属性（默认为1），标记了资源池的权重，当资源池中有任务等待，并且集群中有空闲资源时候，每个资源池可以根据权重获得不同比例的集群空闲资源。 比如，资源池businessA和businessB的权重分别为2和1，这两个资源池中的资源都已经跑满了，并且还有任务在排队，此时集群中有30个Container的空闲资源，那么，businessA将会额外获得20个Container的资源，businessB会额外获得10个Container的资源。 最小资源保证在每个资源池中，允许配置该资源池的最小资源，这是为了防止把空闲资源共享出去还未回收的时候，该资源池有任务需要运行时候的资源保证。 比如，资源池businessA中配置了最小资源为（5vCPU，5GB），那么即使没有任务运行，Yarn也会为资源池businessA预留出最小资源，一旦有任务需要运行，而集群中已经没有其他空闲资源的时候，这个最小资源也可以保证资源池businessA中的任务可以先运行起来，随后再从集群中获取资源。 动态更新资源配额Fair Scheduler除了需要在yarn-site.xml文件中启用和配置之外，还需要一个XML文件来配置资源池以及配额，而该XML中每个资源池的配额可以动态更新，之后使用命令：yarn rmadmin –refreshQueues 来使得其生效即可，不用重启Yarn集群。 需要注意的是：动态更新只支持修改资源池配额，如果是新增或减少资源池，则需要重启Yarn集群。 1. 配置文件yarn-site.xml （1） yarn.scheduler.fair.allocation.file ：自定义XML配置文件所在位置，该文件主要用于描述各个队列的属性，比如资源量、权重等，具体配置格式将在后面介绍。 （2） yarn.scheduler.fair.user-as-default-queue：当应用程序未指定队列名时，是否指定用户名作为应用程序所在的队列名。如果设置为false或者未设置，所有未知队列的应用程序将被提交到default队列中，默认值为true。 （3） yarn.scheduler.fair.preemption：是否启用抢占机制，默认值是false。 （4） yarn.scheduler.fair.sizebasedweight：在一个队列内部分配资源时，默认情况下，采用公平轮询的方法将资源分配各各个应用程序，而该参数则提供了另外一种资源分配方式：按照应用程序资源需求数目分配资源，即需求资源数量越多，分配的资源越多。默认情况下，该参数值为false。 （5） yarn.scheduler.assignmultiple：是否启动批量分配功能。当一个节点出现大量资源时，可以一次分配完成，也可以多次分配完成。默认情况下，该参数值为false。 （6） yarn.scheduler.fair.max.assign：如果开启批量分配功能，可指定一次分配的container数目。默认情况下，该参数值为-1，表示不限制。 （7） yarn.scheduler.fair.locality.threshold.node：当应用程序请求某个节点上资源时，它可以接受的可跳过的最大资源调度机会。当按照分配策略，可将一个节点上的资源分配给某个应用程序时，如果该节点不是应用程序期望的节点，可选择跳过该分配机会暂时将资源分配给其他应用程序，直到出现满足该应用程序需的节点资源出现。通常而言，一次心跳代表一次调度机会，而该参数则表示跳过调度机会占节点总数的比例，默认情况下，该值为-1.0，表示不跳过任何调度机会。 （8） yarn.scheduler.fair.locality.threshold.rack：当应用程序请求某个机架上资源时，它可以接受的可跳过的最大资源调度机会。 （9） yarn.scheduler.increment-allocation-mb：内存规整化单位，默认是1024，这意味着，如果一个Container请求资源是1.5GB，则将被调度器规整化为ceiling(1.5 GB / 1GB) * 1G=2GB。 （10） yarn.scheduler.increment-allocation-vcores：虚拟CPU规整化单位，默认是1，含义与内存规整化单位类似。 2. 自定义配置文件 Fair Scheduler允许用户将队列信息专门放到一个配置文件（默认是fair-scheduler.xml），对于每个队列，管理员可配置以下几个选项： （1） minResources ：最少资源保证量，设置格式为“X mb, Y vcores”，当一个队列的最少资源保证量未满足时，它将优先于其他同级队列获得资源，对于不同的调度策略（后面会详细介绍），最少资源保证量的含义不同，对于fair策略，则只考虑内存资源，即如果一个队列使用的内存资源超过了它的最少资源量，则认为它已得到了满足；对于drf策略，则考虑主资源使用的资源量，即如果一个队列的主资源量超过它的最少资源量，则认为它已得到了满足。 （2） maxResources：最多可以使用的资源量，fair scheduler会保证每个队列使用的资源量不会超过该队列的最多可使用资源量。 （3） maxRunningApps：最多同时运行的应用程序数目。通过限制该数目，可防止超量Map Task同时运行时产生的中间输出结果撑爆磁盘。 （4） minSharePreemptionTimeout：最小共享量抢占时间。如果一个资源池在该时间内使用的资源量一直低于最小资源量，则开始抢占资源。 （5） schedulingMode/schedulingPolicy：队列采用的调度模式，可以是fifo、fair或者drf。 （6） aclSubmitApps：可向队列中提交应用程序的Linux用户或用户组列表，默认情况下为“*”，表示任何用户均可以向该队列提交应用程序。需要注意的是，该属性具有继承性，即子队列的列表会继承父队列的列表。配置该属性时，用户之间或用户组之间用“，”分割，用户和用户组之间用空格分割，比如“user1, user2 group1,group2”。 （7） aclAdministerApps：该队列的管理员列表。一个队列的管理员可管理该队列中的资源和应用程序，比如可杀死任意应用程序。 管理员也可为单个用户添加maxRunningJobs属性限制其最多同时运行的应用程序数目。此外，管理员也可通过以下参数设置以上属性的默认值： （1） userMaxJobsDefault：用户的maxRunningJobs属性的默认值。 （2） defaultMinSharePreemptionTimeout ：队列的minSharePreemptionTimeout属性的默认值。 （3） defaultPoolSchedulingMode：队列的schedulingMode属性的默认值。 （4） fairSharePreemptionTimeout：公平共享量抢占时间。如果一个资源池在该时间内使用资源量一直低于公平共享量的一半，则开始抢占资源。]]></content>
+      <categories>
+        <category>技术学习</category>
+      </categories>
+      <tags>
+        <tag>技术学习</tag>
+        <tag>hadoop</tag>
+        <tag>yarn</tag>
+      </tags>
+  </entry>
+</search>

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="maobaolong" />
+<meta name="renderer" content="webkit">
+<meta name="google" value="notranslate">
+
+
+
+<meta name="description" content="alluxio介绍与安装">
+<meta name="keywords" content="技术学习,bigdata,alluxio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="alluxio介绍与安装">
+<meta property="og:url" content="/2016/12/13/技术学习/bigdata/alluxio/alluxio/index.html">
+<meta property="og:site_name" content="maobaolong">
+<meta property="og:description" content="alluxio介绍与安装">
+<meta property="og:updated_time" content="2017-05-05T09:11:18.774Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="alluxio介绍与安装">
+<meta name="twitter:description" content="alluxio介绍与安装">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternative" href="/atom.xml" title="maobaolong" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/resources/avatar.jpg">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>alluxio介绍与安装 | maobaolong</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?a4938c90e05043bd9774ff12368e45aa";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/resources/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">maobaolong</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">神龙</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">留言板</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/maobaolong@139.com" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" href="//weibo.com/maobaolong" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" href="//github.com/maobaolong" title="GitHub"></a>
+                            
+                                <a class="fa QQ" href="/307499405" title="QQ"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/maobaolong" title="CSDN"></a>
+                            
+                                <a class="fa hacpai" href="https://hacpai.com/member/maobaolong" title="hacpai"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Travis-CI/">Travis CI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/alluxio/">alluxio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bigdata/">bigdata</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/en/">en</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-blog/">github_blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/">html</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jquery/">jquery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playframework/">playframework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/protobuffers/">protobuffers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pycharm/">pycharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrt/">scrt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seafile/">seafile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springMVC/">springMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thrift/">thrift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/velocity/">velocity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yarn/">yarn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/元宝/">元宝</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/容器/">容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具使用/">工具使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/幼儿健康/">幼儿健康</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术学习/">技术学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/框架/">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板引擎/">模板引擎</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则表达式/">正则表达式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/育儿经/">育儿经</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动部署/">自动部署</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net/seafile">seafile</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net:9999">home</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.gicp.net:9999">herHome</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net/blog">个人博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/maobaolong">CSDN博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hacpai.com/member/maobaolong">黑客派</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">多学多记&lt;br&gt;&lt;br&gt;多分享&lt;br&gt;谢谢大家</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">maobaolong</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/resources/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">maobaolong</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">神龙</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">留言板</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/maobaolong@139.com" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" target="_blank" href="//weibo.com/maobaolong" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="//github.com/maobaolong" title="GitHub"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/307499405" title="QQ"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/maobaolong" title="CSDN"></a>
+                            
+                                <a class="fa hacpai" target="_blank" href="https://hacpai.com/member/maobaolong" title="hacpai"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-技术学习/bigdata/alluxio/alluxio" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/" class="article-date">
+      <time datetime="2016-12-13T09:23:00.000Z" itemprop="datePublished">2016-12-13</time>
+</a>
+
+ 
+    <a href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+            <span class="ds-thread-count" "></span>
+        
+        
+    </a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      alluxio介绍与安装
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术学习/">技术学习</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bigdata/">bigdata</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术学习/">技术学习</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+          
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><ul>
+<li>概念：是一个开源的基于内存的分布式存储系统，现在成为开源社区中成长最快的大数据开源项目之一。</li>
+</ul>
+<h2 id="公司简介"><a href="#公司简介" class="headerlink" title="公司简介"></a>公司简介</h2><ul>
+<li>由项目的创建者李浩源以及来自UC Berkeley, Google, CMU, Palantir, Stanford, Yahoo等不同公司和学校的项目核心开发者组成。</li>
+<li>完成750万 dollars 的A轮融资，由Andreessen Horowitz投资（硅谷最著名的VC之一，主要成员为网景公司创始人之一）。</li>
+</ul>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><ul>
+<li>Amazon AWS ：亚马逊AWS 云服务-中国领先的可扩展云计算平台</li>
+<li>Amazon S3 ：是一种在Internet 上的云存储服务。 要上传数据（照片、视频、文档等），请首先在一个AWS 区域中创建存储桶。 然后，您可以将任何数量的对象上传到该存储桶。</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li><p>解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ tar -xzf alluxio-1.3.0-bin.tar.gz</div><div class="line">$ <span class="built_in">cd</span> alluxio-1.3.0</div></pre></td></tr></table></figure>
+</li>
+<li><p>生成配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio bootstrapConf localhost</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="格式化Alluxio"><a href="#格式化Alluxio" class="headerlink" title="格式化Alluxio"></a>格式化Alluxio</h2><p>我们格式化Alluxio为启动Alluxio做准备。如下命令会格式化Alluxio的日志和worker存储目录，以便接下来启动master和worker。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio format</div></pre></td></tr></table></figure></p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>我们启动Alluxio！Alluxio默认配置成在localhost启动master和worker。我们可以用如下命令在localhost启动Alluxio：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio-start.sh <span class="built_in">local</span></div></pre></td></tr></table></figure></p>
+<p>如果希望启动worker，则在配置文件workers中配置所有worker的hostname或ip，回车分割<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio-start.sh all</div></pre></td></tr></table></figure></p>
+<p>恭喜！Alluxio已经启动并运行了！你可以访问<a href="http://localhost:19999查看Alluxio" target="_blank" rel="external">http://localhost:19999查看Alluxio</a> master的运行状态，访问<a href="http://localhost:30000查看Alluxio" target="_blank" rel="external">http://localhost:30000查看Alluxio</a> worker的运行状态。</p>
+<h2 id="使用Alluxio-Shell"><a href="#使用Alluxio-Shell" class="headerlink" title="使用Alluxio Shell"></a>使用Alluxio Shell</h2><ul>
+<li><p>列出文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio fs ls /</div></pre></td></tr></table></figure>
+</li>
+<li><p>上传文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio fs copyFromLocal LICENSE /LICENSE</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio fs cat /LICENSE</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./bin/alluxio-stop.sh all</div></pre></td></tr></table></figure>
+<h2 id="Alluxio后端存储（HDFS）"><a href="#Alluxio后端存储（HDFS）" class="headerlink" title="Alluxio后端存储（HDFS）"></a>Alluxio后端存储（HDFS）</h2><ul>
+<li><p>修改配置文件./conf/alluxio-env.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ALLUXIO_MASTER_HOSTNAME=$&#123;ALLUXIO_MASTER_HOSTNAME:-&quot;BJYFF3-Basketball-170132&quot;&#125;</div><div class="line">ALLUXIO_WORKER_MEMORY_SIZE=$&#123;ALLUXIO_WORKER_MEMORY_SIZE:-&quot;85688MB&quot;&#125;</div><div class="line">ALLUXIO_RAM_FOLDER=$&#123;ALLUXIO_RAM_FOLDER:-&quot;/mnt/ramdisk&quot;&#125;</div><div class="line">ALLUXIO_UNDERFS_ADDRESS=hdfs://ns2/user/maobaolong/mbl</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件./conf/alluxio-c</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alluxio.underfs.hdfs.configuration=/home/maobaolong/hadoop_conf/hdfs-site.xml</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="所有配置"><a href="#所有配置" class="headerlink" title="所有配置"></a>所有配置</h2><p><a href="http://www.alluxio.org/docs/1.3/cn/Configuration-Settings.html" target="_blank" rel="external">1.3版本所有配置</a></p>
+<h2 id="mount"><a href="#mount" class="headerlink" title="mount"></a>mount</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 将本地目录/software/temp/test/挂到alluxio的/test目录下</span></div><div class="line">bin/alluxio fs mount -readonly /<span class="built_in">test</span> /software/temp/<span class="built_in">test</span>/</div><div class="line"><span class="comment"># 将hdfs目录hdfs://ns2/挂到alluxio的/ns2下</span></div><div class="line">bin/alluxio fs mount -readonly /ns2 hdfs://ns2/</div></pre></td></tr></table></figure>
+<h2 id="alluxio使用非root用户启动集群的问题分析"><a href="#alluxio使用非root用户启动集群的问题分析" class="headerlink" title="alluxio使用非root用户启动集群的问题分析"></a>alluxio使用非root用户启动集群的问题分析</h2><p>mount -t ramfs -o size=100G ramfs /home/appadmin/ramdisk<br>chown appadmin:appadmin /home/appadmin/ramdisk<br>alluxio-start all NoMount</p>
+<p>sudo mount -t ramfs -o size=10G ramfs /mnt/ramdisk<br>chown hadp:hadp /mnt/ramdisk<br>alluxio-start.sh all NoMount</p>
+<p>/software/servers/alluxio-1.4.1/bin/alluxio fs mount -readonly /ns3 hdfs://ns3/</p>
+<h2 id="mvn-install"><a href="#mvn-install" class="headerlink" title="mvn install"></a>mvn install</h2><p>mvn clean install -Dhadoop.version=2.7.1 -Pyarn,spark -DskipTests -Dfindbugs.skip -Dmaven.javadoc.skip -Dcheckstyle.skip</p>
+<h2 id="ReadType"><a href="#ReadType" class="headerlink" title="ReadType"></a>ReadType</h2><ul>
+<li><p>读类型</p>
+<ul>
+<li>CACHE_PROMOTE:<br>如果读取的数据在Worker上时，该数据被移动到Worker的最高层。如果该数据不在本地Worker的Alluxio存储中，那么就将一个副本添加到本地Alluxio Worker中，用于每次完整地读取数据快。这是默认的读类型。</li>
+<li>CACHE:<br>如果该数据不在本地Worker的Alluxio存储中，那么就将一个副本添加到本地Alluxio Worker中，用于每次完整地读取数据快。</li>
+<li>NO_CACHE:<br>不会创建副本。</li>
+</ul>
+</li>
+<li><p>写类型</p>
+<ul>
+<li>CACHE_THROUGH<br>数据被同步地写入到Alluxio的Worker和底层存储系统。</li>
+<li>MUST_CACHE<br>数据被同步地写入到Alluxio的Worker。但不会被写入到底层存储系统。这是默认写类型。</li>
+<li>THROUGH<br>数据被同步地写入到底层存储系统。但不会被写入到Alluxio的Worker。</li>
+<li>ASYNC_THROUGH<br>数据被同步地写入到Alluxio的Worker，并异步地写入到底层存储系统。处于实验阶段。</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/">alluxio介绍与安装</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 maobaolong 的个人博客">maobaolong</a></p>
+        <p><span>发布时间:</span>2016-12-13, 09:23</p>
+        <p><span>最后更新:</span>2017-05-05, 09:11</p>
+        
+            <p>
+                <span>更新历史:</span><i class="fa fa-github"></i>
+                <a href="https://github.com/MOxFIVE/Markdown-Archives-Backup/blame/master/_posts/2016-12-13.技术学习/bigdata/alluxio/alluxio.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/MOxFIVE/Markdown-Archives-Backup/commits/master/_posts/2016-12-13.技术学习/bigdata/alluxio/alluxio.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/MOxFIVE/Markdown-Archives-Backup/master/_posts/2016-12-13.技术学习/bigdata/alluxio/alluxio.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+            </p>
+        
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/" title="alluxio介绍与安装">/2016/12/13/技术学习/bigdata/alluxio/alluxio/</a>
+            <span class="copy-path" data-clipboard-text="原文: /2016/12/13/技术学习/bigdata/alluxio/alluxio/　　作者: maobaolong" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+    
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/15/技术学习/树莓派/树莓派接人体感应传感器/">
+                    树莓派接人体感应传感器
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-client-flow/">
+                    alluxio client 主要流程分析
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+
+
+
+
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公司简介"><span class="toc-number">2.</span> <span class="toc-text">公司简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#术语"><span class="toc-number">3.</span> <span class="toc-text">术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">4.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#格式化Alluxio"><span class="toc-number">5.</span> <span class="toc-text">格式化Alluxio</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动"><span class="toc-number">6.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Alluxio-Shell"><span class="toc-number">7.</span> <span class="toc-text">使用Alluxio Shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关闭"><span class="toc-number">8.</span> <span class="toc-text">关闭</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Alluxio后端存储（HDFS）"><span class="toc-number">9.</span> <span class="toc-text">Alluxio后端存储（HDFS）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#所有配置"><span class="toc-number">10.</span> <span class="toc-text">所有配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mount"><span class="toc-number">11.</span> <span class="toc-text">mount</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#alluxio使用非root用户启动集群的问题分析"><span class="toc-number">12.</span> <span class="toc-text">alluxio使用非root用户启动集群的问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mvn-install"><span class="toc-number">13.</span> <span class="toc-text">mvn install</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReadType"><span class="toc-number">14.</span> <span class="toc-text">ReadType</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+
+
+
+    
+    <div class="share">
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"alluxio介绍与安装　| maobaolong　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    </div>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/12/13/技术学习/bigdata/alluxio/alluxio/" data-title="alluxio介绍与安装" data-url="/2016/12/13/技术学习/bigdata/alluxio/alluxio/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"maobaolong"};
+        function loadComment() {
+            var d = document, s = d.createElement('script');
+            s.src = '//moxfive.xyz/resources/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        $(function() { 
+            var jsonUrl = "http://api.duoshuo.com/threads/counts.jsonp?short_name=maobaolong&threads=2016/12/13/技术学习/bigdata/alluxio/alluxio/&callback=?";
+            $.getJSON(jsonUrl, function(result) {
+                $.each(result.response, function(i, field) {
+                    var value = field.comments;
+                    if (value > 0) {
+                        $(".count-comment").text(value);
+                        return;
+                    }
+                })
+
+            })
+        });
+    </script>
+    
+    <aside class="comment-bar">
+        <a href="javascript:void(0);">
+            <i class="fa fa-commenting-o animated infinite pulse"></i>
+            <i class="fa fa-spinner fa-pulse"></i>
+            <span class="count-comment"></span>
+        </a>
+    </aside>
+
+    <script>
+        var $commentBar = $("#comments aside.comment-bar");
+        var load$hide = function(){
+            $commentBar.find("a > i").toggle();
+            loadComment();
+            $commentBar.fadeOut(800);
+        }
+        $commentBar.click(function(){
+            load$hide();
+        })
+        $commentBar.children("a").hover(function(){
+            load$hide();
+        })
+        if (window.location.hash === "#comments") {
+            load$hide();
+        }
+    </script>
+
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/15/技术学习/树莓派/树莓派接人体感应传感器/" title="上一篇: 树莓派接人体感应传感器">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-client-flow/" title="下一篇: alluxio client 主要流程分析">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/bigdata/hadoop/hadoop/">hadoop 命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/linux/linux 常用命令/">linux命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/bigdata/hadoop/Hadoop HA搭建过程/">技术学习/bigdata/hadoop/Hadoop HA搭建过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/go/go/">技术学习/go/go</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/技术学习/bigdata/hadoop/hadoop_safemode/">hdfs safemode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/技术学习/bigdata/hadoop/hdfs-fsimage-replace/">hdfs fsimage replace</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/29/技术学习/bigdata/alluxio/alluxio-worker-startup/">Alluxio worker startup flow</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/26/技术学习/bigdata/alluxio/alluxio-session/">alluxio session</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/16/技术学习/bigdata/alluxio/alluxio-exceptions/">alluxio exception</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/java/unitTest/">java unit test</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/presto/presto/">presto使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/alluxio/alluxio-locations/">alluxio locations分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/hadoop/hadoop-namenode-repicationmonitor-exception/">hadoop namenode repicationmonitor exception</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/技术学习/bigdata/alluxio/alluxio-profile/">alluxio profile</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/技术学习/bigdata/alluxio/alluxio-eviction-strategy/">alluxio eviction strategy</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/技术学习/bigdata/alluxio/alluxio-FAQ/">alluxio faq</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/技术学习/thrift/">rpc</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/28/技术学习/linux/shell脚本/">shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/13/技术学习/bigdata/docker/">docker</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/04/技术学习/java/jstack/">使用jstack分析jvm线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/01/技术学习/python/python/">python 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/01/育儿经/元宝/">元宝</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/30/技术学习/web/netty/">netty</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/29/技术学习/protobuffers/">Proto Buffers</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/使用hexo创建github博客使用yelee主题/">使用hexo创建github博客使用yelee主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/Yilia源码目录结构及构建须知/">Yilia源码目录结构及构建须知</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/github_hexo_travis/">手把手教你使用Travis CI自动部署你的Hexo博客到Github上</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-层次化存储简介/">alluxio 层次化存储简介(转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-protobuffers/">alluxio Proto Buffers</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-rpc-en/">alluxio rpc analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-定位策略/">alluxio 定位策略(转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-rpc/">alluxio rpc 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/技术学习/bigdata/alluxio/alluxio-heartbeat/">alluxio heartbeat分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/saltstack-minion/">saltstack-minion</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/spark/spark/">hive命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/hive/hive/">hive命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/常用端口/">大数据常用端口</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/15/技术学习/树莓派/树莓派接人体感应传感器/">树莓派接人体感应传感器</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/">alluxio介绍与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-client-flow/">alluxio client 主要流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-modules/">Alluxio module introduction</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/01/技术学习/linux/Linux下文件类型及表示颜色/">Linux下文件类型及表示颜色</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/育儿经/健康知识/">健康知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/技术学习/树莓派/ownCloud安装/">树莓派上ownCloud的安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/24/技术学习/web/jquery中attr和prop的区别/">jquery中attr和prop的区别（转）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/工具使用/pycharm/">pycharm</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/工具使用/idea/">idea</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/16/工具使用/maven/">maven</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/树莓派/安装后/">树莓派安装后需要做的几件事</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/树莓派/常用命令/">树莓派常用命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/kafka/">kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/etcd/">etcd</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/nginx/">nginx</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/java/java/">java 远程调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/velocity/">velocity</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/zookeeper/">zookeeper</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/正则表达式/">正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/linux/centos/">CENTOS笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/jenkins/">jenkins</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/scrt/">scrt 破解和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/linux/ubuntu/">ubuntu</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/seafile/">seafile</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/html/">html</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/jquery/">jquery</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/tomcat/">tomcat</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/haproxy/">haproxy</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/hadoop-matrics-intro/">hadoop metrics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/playframework/">playframework</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/springMVC/">springMVC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/velocity/">velocity</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/hadoop_rest/">hadoop_rest</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/xss攻击_跨域攻击/">xss攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mongodb/">mongodb</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mysql 语法/">mysql sql语法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mysql/">mysql</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/vim/">vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/yarn/fair-scheduler/">fair-scheduler</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2017 maobaolong
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题 v3.5">Yelee</a><span> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+             post: ".article-entry a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

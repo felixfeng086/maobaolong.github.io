@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="maobaolong" />
+<meta name="renderer" content="webkit">
+<meta name="google" value="notranslate">
+
+
+
+<meta name="description" content="记录git的常用命令。">
+<meta name="keywords" content="工具使用,git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git">
+<meta property="og:url" content="/2016/11/09/工具使用/git/index.html">
+<meta property="og:site_name" content="maobaolong">
+<meta property="og:description" content="记录git的常用命令。">
+<meta property="og:updated_time" content="2017-05-05T09:11:18.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git">
+<meta name="twitter:description" content="记录git的常用命令。">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternative" href="/atom.xml" title="maobaolong" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/resources/avatar.jpg">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>git | maobaolong</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?a4938c90e05043bd9774ff12368e45aa";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/resources/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">maobaolong</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">神龙</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">留言板</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/maobaolong@139.com" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" href="//weibo.com/maobaolong" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" href="//github.com/maobaolong" title="GitHub"></a>
+                            
+                                <a class="fa QQ" href="/307499405" title="QQ"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/maobaolong" title="CSDN"></a>
+                            
+                                <a class="fa hacpai" href="https://hacpai.com/member/maobaolong" title="hacpai"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Travis-CI/">Travis CI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/alluxio/">alluxio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bigdata/">bigdata</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/en/">en</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-blog/">github_blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/">html</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jquery/">jquery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playframework/">playframework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/protobuffers/">protobuffers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pycharm/">pycharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrt/">scrt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seafile/">seafile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springMVC/">springMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thrift/">thrift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/velocity/">velocity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yarn/">yarn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/元宝/">元宝</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/容器/">容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具使用/">工具使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/幼儿健康/">幼儿健康</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术学习/">技术学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/框架/">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板引擎/">模板引擎</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则表达式/">正则表达式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/育儿经/">育儿经</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动部署/">自动部署</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net/seafile">seafile</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net:9999">home</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.gicp.net:9999">herHome</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net/blog">个人博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/maobaolong">CSDN博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hacpai.com/member/maobaolong">黑客派</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">多学多记&lt;br&gt;&lt;br&gt;多分享&lt;br&gt;谢谢大家</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">maobaolong</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/resources/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">maobaolong</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">神龙</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">留言板</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/maobaolong@139.com" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" target="_blank" href="//weibo.com/maobaolong" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="//github.com/maobaolong" title="GitHub"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/307499405" title="QQ"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/maobaolong" title="CSDN"></a>
+                            
+                                <a class="fa hacpai" target="_blank" href="https://hacpai.com/member/maobaolong" title="hacpai"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-工具使用/git" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/09/工具使用/git/" class="article-date">
+      <time datetime="2016-11-09T15:13:48.000Z" itemprop="datePublished">2016-11-09</time>
+</a>
+
+ 
+    <a href="/2016/11/09/工具使用/git/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+            <span class="ds-thread-count" "></span>
+        
+        
+    </a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/工具使用/">工具使用</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具使用/">工具使用</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+          
+        <h2 id="git-push-origin-master报错"><a href="#git-push-origin-master报错" class="headerlink" title="git push origin master报错"></a>git push origin master报错</h2><p>fatal: could not read Username for ‘<a href="https://github.com" target="_blank" rel="external">https://github.com</a>‘: No such file or directo<br>原因使用https方式的时候 在git remote add origin 的https url 里面没有用户名和密码<br>修改为如下：<br>git remote add origin <a href="https://{username}:{password}@github.com/{username}/project.git" target="_blank" rel="external">https://{username}:{password}@github.com/{username}/project.git</a><br><a href="https://github.com/kemayo/sublime-text-git/issues/176" target="_blank" rel="external">https://github.com/kemayo/sublime-text-git/issues/176</a><br>或者直接修改 .git/config 隐藏文件 为git remote add origin <a href="https://{username}:{password}@github.com/{username}/project.git" target="_blank" rel="external">https://{username}:{password}@github.com/{username}/project.git</a> 格式</p>
+<h2 id="显示当前分支"><a href="#显示当前分支" class="headerlink" title="显示当前分支"></a>显示当前分支</h2><p>git branch</p>
+<h2 id="显示远程信息"><a href="#显示远程信息" class="headerlink" title="显示远程信息"></a>显示远程信息</h2><p>git remote -v</p>
+<h2 id="强制回退到master分支"><a href="#强制回退到master分支" class="headerlink" title="强制回退到master分支"></a>强制回退到master分支</h2><p>取回远程主机某个分支的更新，再与本地的指定分支合并<br>git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;<br>git pull origin master:master -f</p>
+<h2 id="显示git状态"><a href="#显示git状态" class="headerlink" title="显示git状态"></a>显示git状态</h2><p>git status</p>
+<p>git branch * master</p>
+<h2 id="将master分支合并到当前分支"><a href="#将master分支合并到当前分支" class="headerlink" title="将master分支合并到当前分支"></a>将master分支合并到当前分支</h2><p>git merge master</p>
+<h2 id="将远程master的修改合并到本地mbl分支。"><a href="#将远程master的修改合并到本地mbl分支。" class="headerlink" title="将远程master的修改合并到本地mbl分支。"></a>将远程master的修改合并到本地mbl分支。</h2><p>git pull origin master:master -f<br>git add .<br> git commit -m “test”<br>git pull origin master:master -f<br>git branch * master<br>git checkout mbl<br>git pull<br>git merge master<br> git push</p>
+<h2 id="取消commit-和-pull"><a href="#取消commit-和-pull" class="headerlink" title="取消commit 和 pull"></a>取消commit 和 pull</h2><p>git reset –hard <commit_id><br>git push origin HEAD –force</commit_id></p>
+<h2 id="git-更换仓库"><a href="#git-更换仓库" class="headerlink" title="git 更换仓库"></a>git 更换仓库</h2><ol>
+<li>从原地址克隆一份裸版本库，比如原本托管于 GitHub<br>git clone –bare git://github.com/username/project.git</li>
+<li>然后到新的 Git 服务器上创建一个新项目，比如 GitCafe。</li>
+<li><p>以镜像推送的方式上传代码到 GitCafe 服务器上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd project.git</div><div class="line">git push --mirror git@gitcafe.com/username/newproject.git</div></pre></td></tr></table></figure>
+</li>
+<li><p>先查看remote的名字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch -r</div></pre></td></tr></table></figure>
+</li>
+<li><p>假设你的remote是origin，用git remote set_url 更换地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git remote set-url origin remote_git_address</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="提交代码"><a href="#提交代码" class="headerlink" title="提交代码"></a>提交代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git commit -am &quot;提交说明&quot;</div></pre></td></tr></table></figure>
+<h2 id="追踪远端更新"><a href="#追踪远端更新" class="headerlink" title="追踪远端更新"></a>追踪远端更新</h2><ul>
+<li><p>为了将远程的Alluxio源码改动更新到你本地的副本中，你需要创建一个指向远程Alluxio源代码库的源。在刚拷贝的副本的目录下，运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git remote add upstream https://github.com/Alluxio/alluxio.git</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示所有分之，并比较本地和远端分之版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git branch -av</div></pre></td></tr></table></figure>
+</li>
+<li><p>把远端的仓库upstream抓取过来，git remote -v 列表中的远端仓库名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git fetch upstream</div></pre></td></tr></table></figure>
+</li>
+<li><p>合并远程分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git checkout master</div><div class="line">git merge upstream/master</div></pre></td></tr></table></figure>
+</li>
+<li><p>切换到分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git checkout --track remotes/upstream/branch-1.4</div></pre></td></tr></table></figure>
+</li>
+<li><p>revert file,such as pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git checkout -- pom.xml</div><div class="line">git push origin branch-1.4</div></pre></td></tr></table></figure>
+</li>
+<li><p>merge master branch</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">git checkout master</div><div class="line">git merge upstream/master</div><div class="line">git branch -av</div><div class="line">git status</div><div class="line">git push</div></pre></td></tr></table></figure>
+</li>
+<li><p>create a sub branch of an assigned branch</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#切换到分支</span></div><div class="line">git checkout branch1</div><div class="line"></div><div class="line"><span class="comment">#基于该分支创建子分支</span></div><div class="line">git checkout -b branch2_based_on_b1 branch1</div></pre></td></tr></table></figure>
+</li>
+<li><p>为推送当前分支并建立与远程上游的跟踪</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push --set-upstream origin mbl-baseon-JDAlluxio-1.3.0</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>##<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># checkout时和提交时都用已有的换行符，不做替换</span></div><div class="line">$ git config --global core.autocrlf <span class="literal">false</span></div><div class="line"><span class="comment"># checkout时不转换，提交的时候自动转换为LF</span></div><div class="line">$ git config --global core.autocrlf input</div></pre></td></tr></table></figure></p>
+<h2 id="一个项目向多个远程仓库推送"><a href="#一个项目向多个远程仓库推送" class="headerlink" title="一个项目向多个远程仓库推送"></a>一个项目向多个远程仓库推送</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查看当前远程有哪些</span></div><div class="line">git remote -v</div><div class="line"><span class="comment"># 添加远程仓库bitjd</span></div><div class="line">git remote add bitjd http://bit.jd.com/maobaolong/pyjvmtools.git</div><div class="line"><span class="comment"># 把本地仓库推送到bitjd远程仓库中，推送成功后默认远程仓库修改为bitjd，下次git push默认推送到bitjd</span></div><div class="line">git push -u bitjd</div></pre></td></tr></table></figure>
+<h2 id="git-初次使用配置-邮箱-记住密码"><a href="#git-初次使用配置-邮箱-记住密码" class="headerlink" title="git 初次使用配置(邮箱 记住密码)"></a>git 初次使用配置(邮箱 记住密码)</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git config --global user.name maobaolong</div><div class="line">git config --global user.email maobaolong@139.com</div><div class="line">git config --global credential.helper store</div></pre></td></tr></table></figure>
+<h2 id="git-add-和-git-rm-–cached"><a href="#git-add-和-git-rm-–cached" class="headerlink" title="git add 和 git rm –cached"></a>git add 和 git rm –cached</h2><p>git add 增加暂存文件，为git commit准备文件<br>git rm –cached 删除暂存文件但不删除本地文件<br>git status查看要提交的文件</p>
+<h2 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 把当前修改未提交的文件储藏为stash。message便于取回修改</span></div><div class="line">git stash save <span class="string">"message"</span></div><div class="line"><span class="comment"># 列出所有储藏的stash，每一个stash有一个index</span></div><div class="line">git stash list</div><div class="line"><span class="comment"># stash@&#123;0&#125;: On master: test2</span></div><div class="line"><span class="comment"># stash@&#123;1&#125;: WIP on master: ef33200 新建 oschina.txt</span></div><div class="line"><span class="comment"># stash@&#123;2&#125;: On master: test</span></div><div class="line"></div><div class="line"><span class="comment"># 恢复</span></div><div class="line">git stash apply --index stash@&#123;2&#125;</div></pre></td></tr></table></figure>
+<h2 id="常用-gitignore"><a href="#常用-gitignore" class="headerlink" title="常用.gitignore"></a>常用.gitignore</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"> # Android generated</div><div class="line">bin/</div><div class="line">gen/</div><div class="line">classes/</div><div class="line">gen-external-apklibs/</div><div class="line"></div><div class="line"># Ant</div><div class="line">local.properties</div><div class="line"></div><div class="line"># Maven</div><div class="line">target/</div><div class="line">release.properties</div><div class="line"></div><div class="line"># Eclipse</div><div class="line">.classpath</div><div class="line">.project</div><div class="line">.externalToolBuilders/</div><div class="line">.metadata</div><div class="line">.settings</div><div class="line"></div><div class="line"># IntelliJ</div><div class="line">*.iml</div><div class="line">*.ipr</div><div class="line">*.iws</div><div class="line">.idea/</div><div class="line">out/</div><div class="line"></div><div class="line"># Mac</div><div class="line">.DS_Store</div><div class="line"></div><div class="line"># gitignore</div><div class="line">.gitignore</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/09/工具使用/git/">git</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 maobaolong 的个人博客">maobaolong</a></p>
+        <p><span>发布时间:</span>2016-11-09, 15:13</p>
+        <p><span>最后更新:</span>2017-05-05, 09:11</p>
+        
+            <p>
+                <span>更新历史:</span><i class="fa fa-github"></i>
+                <a href="https://github.com/MOxFIVE/Markdown-Archives-Backup/blame/master/_posts/2016-11-09.工具使用/git.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/MOxFIVE/Markdown-Archives-Backup/commits/master/_posts/2016-11-09.工具使用/git.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/MOxFIVE/Markdown-Archives-Backup/master/_posts/2016-11-09.工具使用/git.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+            </p>
+        
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/09/工具使用/git/" title="git">/2016/11/09/工具使用/git/</a>
+            <span class="copy-path" data-clipboard-text="原文: /2016/11/09/工具使用/git/　　作者: maobaolong" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+    
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/11/09/技术学习/etcd/">
+                    etcd
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/09/工具使用/nginx/">
+                    nginx
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+
+
+
+
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git-push-origin-master报错"><span class="toc-number">1.</span> <span class="toc-text">git push origin master报错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示当前分支"><span class="toc-number">2.</span> <span class="toc-text">显示当前分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示远程信息"><span class="toc-number">3.</span> <span class="toc-text">显示远程信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#强制回退到master分支"><span class="toc-number">4.</span> <span class="toc-text">强制回退到master分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示git状态"><span class="toc-number">5.</span> <span class="toc-text">显示git状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将master分支合并到当前分支"><span class="toc-number">6.</span> <span class="toc-text">将master分支合并到当前分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将远程master的修改合并到本地mbl分支。"><span class="toc-number">7.</span> <span class="toc-text">将远程master的修改合并到本地mbl分支。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#取消commit-和-pull"><span class="toc-number">8.</span> <span class="toc-text">取消commit 和 pull</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-更换仓库"><span class="toc-number">9.</span> <span class="toc-text">git 更换仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提交代码"><span class="toc-number">10.</span> <span class="toc-text">提交代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#追踪远端更新"><span class="toc-number">11.</span> <span class="toc-text">追踪远端更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个项目向多个远程仓库推送"><span class="toc-number">12.</span> <span class="toc-text">一个项目向多个远程仓库推送</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-初次使用配置-邮箱-记住密码"><span class="toc-number">13.</span> <span class="toc-text">git 初次使用配置(邮箱 记住密码)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-add-和-git-rm-–cached"><span class="toc-number">14.</span> <span class="toc-text">git add 和 git rm –cached</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#stash"><span class="toc-number">15.</span> <span class="toc-text">stash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用-gitignore"><span class="toc-number">16.</span> <span class="toc-text">常用.gitignore</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+
+
+
+    
+    <div class="share">
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"git　| maobaolong　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    </div>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2016/11/09/工具使用/git/" data-title="git" data-url="/2016/11/09/工具使用/git/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"maobaolong"};
+        function loadComment() {
+            var d = document, s = d.createElement('script');
+            s.src = '//moxfive.xyz/resources/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        $(function() { 
+            var jsonUrl = "http://api.duoshuo.com/threads/counts.jsonp?short_name=maobaolong&threads=2016/11/09/工具使用/git/&callback=?";
+            $.getJSON(jsonUrl, function(result) {
+                $.each(result.response, function(i, field) {
+                    var value = field.comments;
+                    if (value > 0) {
+                        $(".count-comment").text(value);
+                        return;
+                    }
+                })
+
+            })
+        });
+    </script>
+    
+    <aside class="comment-bar">
+        <a href="javascript:void(0);">
+            <i class="fa fa-commenting-o animated infinite pulse"></i>
+            <i class="fa fa-spinner fa-pulse"></i>
+            <span class="count-comment"></span>
+        </a>
+    </aside>
+
+    <script>
+        var $commentBar = $("#comments aside.comment-bar");
+        var load$hide = function(){
+            $commentBar.find("a > i").toggle();
+            loadComment();
+            $commentBar.fadeOut(800);
+        }
+        $commentBar.click(function(){
+            load$hide();
+        })
+        $commentBar.children("a").hover(function(){
+            load$hide();
+        })
+        if (window.location.hash === "#comments") {
+            load$hide();
+        }
+    </script>
+
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/11/09/技术学习/etcd/" title="上一篇: etcd">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/09/工具使用/nginx/" title="下一篇: nginx">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/bigdata/hadoop/hadoop/">hadoop 命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/linux/linux 常用命令/">linux命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/bigdata/hadoop/Hadoop HA搭建过程/">技术学习/bigdata/hadoop/Hadoop HA搭建过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/go/go/">技术学习/go/go</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/技术学习/bigdata/hadoop/hadoop_safemode/">hdfs safemode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/技术学习/bigdata/hadoop/hdfs-fsimage-replace/">hdfs fsimage replace</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/29/技术学习/bigdata/alluxio/alluxio-worker-startup/">Alluxio worker startup flow</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/26/技术学习/bigdata/alluxio/alluxio-session/">alluxio session</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/16/技术学习/bigdata/alluxio/alluxio-exceptions/">alluxio exception</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/java/unitTest/">java unit test</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/presto/presto/">presto使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/alluxio/alluxio-locations/">alluxio locations分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/hadoop/hadoop-namenode-repicationmonitor-exception/">hadoop namenode repicationmonitor exception</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/技术学习/bigdata/alluxio/alluxio-profile/">alluxio profile</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/技术学习/bigdata/alluxio/alluxio-eviction-strategy/">alluxio eviction strategy</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/技术学习/bigdata/alluxio/alluxio-FAQ/">alluxio faq</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/技术学习/thrift/">rpc</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/28/技术学习/linux/shell脚本/">shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/13/技术学习/bigdata/docker/">docker</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/04/技术学习/java/jstack/">使用jstack分析jvm线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/01/技术学习/python/python/">python 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/01/育儿经/元宝/">元宝</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/30/技术学习/web/netty/">netty</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/29/技术学习/protobuffers/">Proto Buffers</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/使用hexo创建github博客使用yelee主题/">使用hexo创建github博客使用yelee主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/Yilia源码目录结构及构建须知/">Yilia源码目录结构及构建须知</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/github_hexo_travis/">手把手教你使用Travis CI自动部署你的Hexo博客到Github上</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-层次化存储简介/">alluxio 层次化存储简介(转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-protobuffers/">alluxio Proto Buffers</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-rpc-en/">alluxio rpc analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-定位策略/">alluxio 定位策略(转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-rpc/">alluxio rpc 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/技术学习/bigdata/alluxio/alluxio-heartbeat/">alluxio heartbeat分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/saltstack-minion/">saltstack-minion</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/spark/spark/">hive命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/hive/hive/">hive命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/常用端口/">大数据常用端口</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/15/技术学习/树莓派/树莓派接人体感应传感器/">树莓派接人体感应传感器</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/">alluxio介绍与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-client-flow/">alluxio client 主要流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-modules/">Alluxio module introduction</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/01/技术学习/linux/Linux下文件类型及表示颜色/">Linux下文件类型及表示颜色</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/育儿经/健康知识/">健康知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/技术学习/树莓派/ownCloud安装/">树莓派上ownCloud的安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/24/技术学习/web/jquery中attr和prop的区别/">jquery中attr和prop的区别（转）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/工具使用/pycharm/">pycharm</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/工具使用/idea/">idea</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/16/工具使用/maven/">maven</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/树莓派/安装后/">树莓派安装后需要做的几件事</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/树莓派/常用命令/">树莓派常用命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/kafka/">kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/etcd/">etcd</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/nginx/">nginx</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/java/java/">java 远程调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/velocity/">velocity</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/zookeeper/">zookeeper</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/正则表达式/">正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/linux/centos/">CENTOS笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/jenkins/">jenkins</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/scrt/">scrt 破解和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/linux/ubuntu/">ubuntu</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/seafile/">seafile</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/html/">html</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/jquery/">jquery</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/tomcat/">tomcat</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/haproxy/">haproxy</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/hadoop-matrics-intro/">hadoop metrics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/playframework/">playframework</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/springMVC/">springMVC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/velocity/">velocity</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/hadoop_rest/">hadoop_rest</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/xss攻击_跨域攻击/">xss攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mongodb/">mongodb</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mysql 语法/">mysql sql语法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mysql/">mysql</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/vim/">vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/yarn/fair-scheduler/">fair-scheduler</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2017 maobaolong
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题 v3.5">Yelee</a><span> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+             post: ".article-entry a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

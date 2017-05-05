@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="maobaolong" />
+<meta name="renderer" content="webkit">
+<meta name="google" value="notranslate">
+
+
+
+<meta name="description" content="介绍使用jstack分析jvm线程">
+<meta name="keywords" content="技术学习,java,jvm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用jstack分析jvm线程">
+<meta property="og:url" content="/2017/02/04/技术学习/java/jstack/index.html">
+<meta property="og:site_name" content="maobaolong">
+<meta property="og:description" content="介绍使用jstack分析jvm线程">
+<meta property="og:image" content="http://images.cnblogs.com/cnblogs_com/zhengyun_ustc/255879/o_clipboard%20-%20%E5%89%AF%E6%9C%AC039.png">
+<meta property="og:updated_time" content="2017-05-05T09:11:18.774Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用jstack分析jvm线程">
+<meta name="twitter:description" content="介绍使用jstack分析jvm线程">
+<meta name="twitter:image" content="http://images.cnblogs.com/cnblogs_com/zhengyun_ustc/255879/o_clipboard%20-%20%E5%89%AF%E6%9C%AC039.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternative" href="/atom.xml" title="maobaolong" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/resources/avatar.jpg">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>使用jstack分析jvm线程 | maobaolong</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?a4938c90e05043bd9774ff12368e45aa";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/resources/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">maobaolong</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">神龙</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">留言板</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/maobaolong@139.com" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" href="//weibo.com/maobaolong" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" href="//github.com/maobaolong" title="GitHub"></a>
+                            
+                                <a class="fa QQ" href="/307499405" title="QQ"></a>
+                            
+                                <a class="fa CSDN" href="http://blog.csdn.net/maobaolong" title="CSDN"></a>
+                            
+                                <a class="fa hacpai" href="https://hacpai.com/member/maobaolong" title="hacpai"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Travis-CI/">Travis CI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/alluxio/">alluxio</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bigdata/">bigdata</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/">centos</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/en/">en</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/etcd/">etcd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-blog/">github_blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haproxy/">haproxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/">html</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jquery/">jquery</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playframework/">playframework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/protobuffers/">protobuffers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pycharm/">pycharm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scrt/">scrt</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/seafile/">seafile</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springMVC/">springMVC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql/">sql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thrift/">thrift</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tomcat/">tomcat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/velocity/">velocity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yarn/">yarn</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/元宝/">元宝</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/分布式/">分布式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/容器/">容器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具使用/">工具使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/幼儿健康/">幼儿健康</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/技术学习/">技术学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/持续集成/">持续集成</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/框架/">框架</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/模板引擎/">模板引擎</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/正则表达式/">正则表达式</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/育儿经/">育儿经</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动部署/">自动部署</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net/seafile">seafile</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net:9999">home</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.gicp.net:9999">herHome</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://maobaolong.f3322.net/blog">个人博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.csdn.net/maobaolong">CSDN博客</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hacpai.com/member/maobaolong">黑客派</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">多学多记&lt;br&gt;&lt;br&gt;多分享&lt;br&gt;谢谢大家</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">maobaolong</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/resources/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">maobaolong</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">神龙</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">留言板</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/maobaolong@139.com" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" target="_blank" href="//weibo.com/maobaolong" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="//github.com/maobaolong" title="GitHub"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/307499405" title="QQ"></a>
+                            
+                                <a class="fa CSDN" target="_blank" href="http://blog.csdn.net/maobaolong" title="CSDN"></a>
+                            
+                                <a class="fa hacpai" target="_blank" href="https://hacpai.com/member/maobaolong" title="hacpai"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-技术学习/java/jstack" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/02/04/技术学习/java/jstack/" class="article-date">
+      <time datetime="2017-02-04T15:53:01.000Z" itemprop="datePublished">2017-02-04</time>
+</a>
+
+ 
+    <a href="/2017/02/04/技术学习/java/jstack/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+            <span class="ds-thread-count" "></span>
+        
+        
+    </a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用jstack分析jvm线程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/技术学习/">技术学习</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jvm/">jvm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术学习/">技术学习</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+          
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>jstack用于打印出给定的java进程ID或core file或远程调试服务的Java堆栈信息，如果是在64位机器上，需要指定选项”-J-d64”，Windows的jstack使用方式只支持以下的这种方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jstack [<span class="_">-l</span>][F] pid</div></pre></td></tr></table></figure>
+<h2 id="jstack-Dump日志文件中的线程状态"><a href="#jstack-Dump日志文件中的线程状态" class="headerlink" title="jstack Dump日志文件中的线程状态"></a>jstack Dump日志文件中的线程状态</h2><ul>
+<li>死锁，Deadlock（重点关注） </li>
+<li>执行中，Runnable   </li>
+<li>等待资源，Waiting on condition（重点关注） </li>
+<li>等待获取监视器，Waiting on monitor entry（重点关注）</li>
+<li>暂停，Suspended</li>
+<li>对象等待中，Object.wait() 或 TIMED_WAITING</li>
+<li>阻塞，Blocked（重点关注）  </li>
+<li>停止，Parked</li>
+</ul>
+<h2 id="Dump文件中的线程状态含义及注意事项"><a href="#Dump文件中的线程状态含义及注意事项" class="headerlink" title="Dump文件中的线程状态含义及注意事项"></a>Dump文件中的线程状态含义及注意事项</h2><p>含义如下所示：</p>
+<ul>
+<li>Deadlock：死锁线程，一般指多个线程调用间，进入相互资源占用，导致一直等待无法释放的情况。</li>
+<li>Runnable：一般指该线程正在执行状态中，该线程占用了资源，正在处理某个请求，有可能正在传递SQL到数据库执行，有可能在对某个文件操作，有可能进行数据类型等转换。</li>
+<li>Waiting on condition：等待资源，或等待某个条件的发生。具体原因需结合 stacktrace来分析。<ul>
+<li>如果堆栈信息明确是应用代码，则证明该线程正在等待资源。一般是大量读取某资源，且该资源采用了资源锁的情况下，线程进入等待状态，等待资源的读取。</li>
+<li>又或者，正在等待其他线程的执行等。</li>
+<li>如果发现有大量的线程都在处在 Wait on condition，从线程 stack看，正等待网络读写，这可能是一个网络瓶颈的征兆。因为网络阻塞导致线程无法执行。<ul>
+<li>一种情况是网络非常忙，几乎消耗了所有的带宽，仍然有大量数据等待网络读写；</li>
+<li>另一种情况也可能是网络空闲，但由于路由等问题，导致包无法正常的到达。</li>
+</ul>
+</li>
+<li>另外一种出现 Wait on condition的常见情况是该线程在 sleep，等待 sleep的时间到了时候，将被唤醒。</li>
+</ul>
+</li>
+<li>Blocked：线程阻塞，是指当前线程执行过程中，所需要的资源长时间等待却一直未能获取到，被容器的线程管理器标识为阻塞状态，可以理解为等待资源超时的线程。</li>
+<li>Waiting for monitor entry 和 in Object.wait()：Monitor是 Java中用以实现线程之间的互斥与协作的主要手段，它可以看成是对象或者<br>Class的锁。每一个对象都有，也仅有一个 monitor。从下图1中可以看出，每个 Monitor在某个时刻，只能被一个线程拥有，该线程就是 “Active Thread”，而其它线程都是 “Waiting Thread”，分别在两个队列 “ Entry Set”和 “Wait Set”里面等候。在 “Entry Set”中等待的线程状态是 “Waiting for monitor entry”，而在 “Wait Set”中等待的线程状态是 “in Object.wait()”。<br><img src="http://images.cnblogs.com/cnblogs_com/zhengyun_ustc/255879/o_clipboard%20-%20%E5%89%AF%E6%9C%AC039.png" alt=""></li>
+</ul>
+<h2 id="thread-dump文件分析"><a href="#thread-dump文件分析" class="headerlink" title="thread dump文件分析"></a>thread dump文件分析</h2><h3 id="Waiting-to-lock-和-Blocked"><a href="#Waiting-to-lock-和-Blocked" class="headerlink" title="Waiting to lock 和 Blocked"></a>Waiting to lock 和 Blocked</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&quot;RMI TCP Connection(267865)-172.16.5.25&quot; daemon prio=10 tid=0x00007fd508371000 nid=0x55ae waiting for monitor entry [0x00007fd4f8684000]</div><div class="line">   java.lang.Thread.State: BLOCKED (on object monitor)</div><div class="line">at org.apache.log4j.Category.callAppenders(Category.java:201)</div><div class="line">- waiting to lock &lt;0x00000000acf4d0c0&gt; (a org.apache.log4j.Logger)</div><div class="line">at org.apache.log4j.Category.forcedLog(Category.java:388)</div><div class="line">at org.apache.log4j.Category.log(Category.java:853)</div><div class="line">at org.apache.commons.logging.impl.Log4JLogger.warn(Log4JLogger.java:234)</div><div class="line">at com.tuan.core.common.lang.cache.remote.SpyMemcachedClient.get(SpyMemcachedClient.java:110)</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>线程状态是 Blocked，阻塞状态。说明线程等待资源超时！</li>
+<li>“ waiting to lock <0x00000000acf4d0c0>”指，线程在等待给这个 0x00000000acf4d0c0 地址上锁（英文可描述为：trying to<br>obtain  0x00000000acf4d0c0 lock）。</0x00000000acf4d0c0></li>
+<li>在 dump 日志里查找字符串 0x00000000acf4d0c0，发现有大量线程都在等待给这个地址上锁。如果能在日志里找到谁获得了这个锁（如locked &lt;<br>0x00000000acf4d0c0 &gt;），就可以顺藤摸瓜了。</li>
+<li>“waiting for monitor entry”说明此线程通过 synchronized(obj) {……} 申请进入了临界区，从而进入了“Entry Set”队列，但该<br>obj 对应的 monitor 被其他线程拥有，所以本线程在 Entry Set 队列中等待。</li>
+<li>第一行里，”RMI TCP Connection(267865)-172.16.5.25”是 Thread Name 。tid指Java Thread<br>id。nid指native线程的id。prio是线程优先级。[0x00007fd4f8684000]是线程栈起始地址。</li>
+</ul>
+<h3 id="Waiting-on-condition-和-TIMED-WAITING"><a href="#Waiting-on-condition-和-TIMED-WAITING" class="headerlink" title="Waiting on condition 和 TIMED_WAITING"></a>Waiting on condition 和 TIMED_WAITING</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&quot;RMI TCP Connection(idle)&quot; daemon prio=10 tid=0x00007fd50834e800 nid=0x56b2 waiting on condition [0x00007fd4f1a59000]</div><div class="line">   java.lang.Thread.State: TIMED_WAITING (parking)</div><div class="line">at sun.misc.Unsafe.park(Native Method)</div><div class="line">- parking to wait for  &lt;0x00000000acd84de8&gt; (a java.util.concurrent.SynchronousQueue$TransferStack)</div><div class="line">at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)</div><div class="line">at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)</div><div class="line">at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)</div><div class="line">at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)</div><div class="line">at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:945)</div><div class="line">at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)</div><div class="line">at java.lang.Thread.run(Thread.java:662)</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>“TIMED_WAITING (parking)”中的 timed_waiting 指等待状态，但这里指定了时间，<br>到达指定的时间后自动退出等待状态；parking指线程处于挂起中。</li>
+<li>“waiting on condition”需要与堆栈中的<br>“parking to wait for  <0x00000000acd84de8> (a java.util.concurrent.SynchronousQueue$TransferStack)”<br>结合来看。首先，本线程肯定是在等待某个条件的发生，来把自己唤醒。其次，SynchronousQueue 并不是一个队列，<br>只是线程之间移交信息的机制，当我们把一个元素放入到 SynchronousQueue 中时必须有另一个线程正在等待接受移交的任务，<br>因此这就是本线程在等待的条件。</0x00000000acd84de8></li>
+</ul>
+<h3 id="in-Obejct-wait-和-TIMED-WAITING"><a href="#in-Obejct-wait-和-TIMED-WAITING" class="headerlink" title="in Obejct.wait() 和 TIMED_WAITING"></a>in Obejct.wait() 和 TIMED_WAITING</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&quot;RMI RenewClean-[172.16.5.19:28475]&quot; daemon prio=10 tid=0x0000000041428800 nid=0xb09 in Object.wait() [0x00007f34f4bd0000]</div><div class="line">   java.lang.Thread.State: TIMED_WAITING (on object monitor)</div><div class="line">at java.lang.Object.wait(Native Method)</div><div class="line">- waiting on &lt;0x00000000aa672478&gt; (a java.lang.ref.ReferenceQueue$Lock)</div><div class="line">at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)</div><div class="line">- locked &lt;0x00000000aa672478&gt; (a java.lang.ref.ReferenceQueue$Lock)</div><div class="line">at sun.rmi.transport.DGCClient$EndpointEntry$RenewCleanThread.run(DGCClient.java:516)</div><div class="line">at java.lang.Thread.run(Thread.java:662)</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><p>“TIMED_WAITING (on object monitor)”，对于本例而言，是因为本线程调用了 java.lang.Object.wait(long timeout) 而进入等待状态。</p>
+</li>
+<li><p>“Wait Set”中等待的线程状态就是“ in Object.wait() ”。当线程获得了 Monitor，进入了临界区之后，如果发现线程继续运行的条件没有满足，它则调用对象（一般就是被<br>synchronized 的对象）的 wait() 方法，放弃了 Monitor，进入 “Wait Set”队列。只有当别的线程在该对象上调用了 notify() 或者 notifyAll() ，“ Wait Set”队列中线程才得到机会去竞争，但是只有一个线程获得对象的 Monitor，恢复到运行态。</p>
+</li>
+<li><p>RMI RenewClean 是 DGCClient 的一部分。DGC 指的是 Distributed GC，即分布式垃圾回收。</p>
+</li>
+<li><p>请注意，是先 locked <0x00000000aa672478>，后 waiting on <0x00000000aa672478>，之所以先锁再等同一个对象，<br>线程的执行中，先用 synchronized 获得了这个对象的 Monitor（对应于  locked <0x00000000aa672478> ）；<br>当执行到 lock.wait(timeout);，线程就放弃了 Monitor 的所有权，进入“Wait Set”队列（对应于  waiting on <0x00000000aa672478> ）。</0x00000000aa672478></0x00000000aa672478></0x00000000aa672478></0x00000000aa672478></p>
+</li>
+<li><p>从堆栈信息看，是正在清理 remote references to remote objects ，引用的租约到了，分布式垃圾回收在逐一清理呢。</p>
+</li>
+</ul>
+<h2 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h2><table>
+<thead>
+<tr>
+<th>state</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NEW</td>
+<td>指线程刚创建, 尚未启动。</td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取cpu 的使用权。</td>
+</tr>
+<tr>
+<td>BLOCKED</td>
+<td>一个线程由于等待监视锁而阻塞的状态。处于这个状态是由于线程进入synchronized块或方法或者调用wait()再次进入synchronized块或方法。</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>这个状态下是指线程拥有了某个锁之后, 调用了他的wait方法, 等待其他线程/锁拥有者调用 notify / notifyAll 一遍该线程可以继续下一步操作, 这里要区分 BLOCKED 和 WATING 的区别, 一个是在临界点外面等待进入, 一个是在理解点里面wait等待别人notify, 线程调用了join方法 join了另外的线程的时候, 也会进入WAITING状态, 等待被他join的线程执行结束</td>
+</tr>
+<tr>
+<td>TIMED_WAITING</td>
+<td>这个状态就是有限的(时间限制)的WAITING, 一般出现在调用wait(long), join(long)等情况下, 另外一个线程sleep后, 也会进入TIMED_WAITING状态</td>
+</tr>
+<tr>
+<td>TERMINATED</td>
+<td>这个状态下表示 该线程的run方法已经执行完毕了, 基本上就等于死亡了(当时如果线程被持久持有, 可能不会被回收)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="状态示例"><a href="#状态示例" class="headerlink" title="状态示例"></a>状态示例</h2><h3 id="RUNNABLE"><a href="#RUNNABLE" class="headerlink" title="RUNNABLE"></a>RUNNABLE</h3><p>执行如下代码，使用<code>jstack -l pid</code>查看thread dump<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">RUNNABLE</span><span class="params">()</span> </span>&#123;</div><div class="line">  Thread t = <span class="keyword">new</span> Thread() &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Integer.MAX_VALUE; i++) &#123;</div><div class="line">        System.out.println(i);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">  t.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>thread dump，其中<code>- locked &lt;0x1b8&gt;</code> 是由于获取了同步块锁<code>synchronized</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&quot;Thread-0@434&quot; prio=5 tid=0xc nid=NA runnable</div><div class="line">  java.lang.Thread.State: RUNNABLE</div><div class="line">	  at java.io.FileOutputStream.writeBytes(FileOutputStream.java:-1)</div><div class="line">	  at java.io.FileOutputStream.write(FileOutputStream.java:326)</div><div class="line">	  at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)</div><div class="line">	  at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)</div><div class="line">	  - locked &lt;0x1b6&gt; (a java.io.BufferedOutputStream)</div><div class="line">	  at java.io.PrintStream.write(PrintStream.java:482)</div><div class="line">	  - locked &lt;0x1b7&gt; (a java.io.PrintStream)</div><div class="line">	  at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)</div><div class="line">	  at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291)</div><div class="line">	  at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104)</div><div class="line">	  - locked &lt;0x1b8&gt; (a java.io.OutputStreamWriter)</div><div class="line">	  at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185)</div><div class="line">	  at java.io.PrintStream.write(PrintStream.java:527)</div><div class="line">	  at java.io.PrintStream.print(PrintStream.java:597)</div><div class="line">	  at java.io.PrintStream.println(PrintStream.java:736)</div><div class="line">	  at net.mbl.demo.App$1.run(App.java:12)</div></pre></td></tr></table></figure></p>
+<h3 id="BLOCKED"><a href="#BLOCKED" class="headerlink" title="BLOCKED"></a>BLOCKED</h3><p>执行如下代码，使用<code>jstack -l pid</code>查看thread dump<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">BLOCKED</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object();</div><div class="line">  Runnable run = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Integer.MAX_VALUE; i++) &#123;</div><div class="line">        <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">          System.out.println(i);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  Thread t1 = <span class="keyword">new</span> Thread(run);</div><div class="line">  t1.setName( <span class="string">"t1"</span>);</div><div class="line">  Thread t2 = <span class="keyword">new</span> Thread(run);</div><div class="line">  t2.setName( <span class="string">"t2"</span>);</div><div class="line"></div><div class="line">  t1.start();</div><div class="line">  t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>thread dump，其中<code>t2</code>的状态为<code>BLOCKED</code>，<code>- waiting to lock &lt;0x00000005a0190188&gt;</code>表示<code>t2</code>等待锁<br><code>0x00000005a0190188</code>,而<code>t1</code>的状态为<code>RUNNABLE</code>,<code>- locked &lt;0x00000005a0190188&gt;</code>表示<code>t1</code>持有锁<br><code>0x00000005a0190188</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&quot;t2&quot; #22 prio=5 os_prio=0 tid=0x00007f6ab4128000 nid=0xc4f waiting for monitor entry [0x00007f6a451d0000]</div><div class="line">   java.lang.Thread.State: BLOCKED (on object monitor)</div><div class="line">	at net.mbl.demo.App$2.run(App.java:23)</div><div class="line">	- waiting to lock &lt;0x00000005a0190188&gt; (a java.lang.Object)</div><div class="line">	at java.lang.Thread.run(Thread.java:745)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">	- None</div><div class="line"></div><div class="line">&quot;t1&quot; #21 prio=5 os_prio=0 tid=0x00007f6ab4126800 nid=0xc4e runnable [0x00007f6a452d1000]</div><div class="line">   java.lang.Thread.State: RUNNABLE</div><div class="line">	at java.io.FileOutputStream.writeBytes(Native Method)</div><div class="line">	at java.io.FileOutputStream.write(FileOutputStream.java:326)</div><div class="line">	at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)</div><div class="line">	at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)</div><div class="line">	- locked &lt;0x00000005a01b4540&gt; (a java.io.BufferedOutputStream)</div><div class="line">	at java.io.PrintStream.write(PrintStream.java:482)</div><div class="line">	- locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream)</div><div class="line">	at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)</div><div class="line">	at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291)</div><div class="line">	at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104)</div><div class="line">	- locked &lt;0x00000005a0198460&gt; (a java.io.OutputStreamWriter)</div><div class="line">	at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185)</div><div class="line">	at java.io.PrintStream.newLine(PrintStream.java:546)</div><div class="line">	- locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream)</div><div class="line">	at java.io.PrintStream.println(PrintStream.java:737)</div><div class="line">	- locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream)</div><div class="line">	at net.mbl.demo.App$2.run(App.java:24)</div><div class="line">	- locked &lt;0x00000005a0190188&gt; (a java.lang.Object)</div><div class="line">	at java.lang.Thread.run(Thread.java:745)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">	- None</div></pre></td></tr></table></figure>
+<h3 id="WAITING"><a href="#WAITING" class="headerlink" title="WAITING"></a>WAITING</h3><p>执行如下代码，使用<code>jstack -l pid</code>查看thread dump<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WAITING</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object();</div><div class="line">  Thread t1 = <span class="keyword">new</span> Thread()&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">      <span class="keyword">while</span>(<span class="keyword">true</span> )&#123;</div><div class="line">        <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">          <span class="keyword">try</span> &#123;</div><div class="line">            lock.wait();</div><div class="line">          &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">          &#125;</div><div class="line">          System. out.println(i++);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  Thread t2 = <span class="keyword">new</span> Thread()&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">while</span>(<span class="keyword">true</span> )&#123;</div><div class="line">        <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">          <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; <span class="number">10000000</span>; i++)&#123;</div><div class="line">            System. out.println(i);</div><div class="line">          &#125;</div><div class="line">          lock.notifyAll();</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  t1.setName( <span class="string">"^^t1^^"</span>);</div><div class="line">  t2.setName( <span class="string">"^^t2^^"</span>);</div><div class="line"></div><div class="line">  t1.start();</div><div class="line">  t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>thread dump, <code>^^t1^^</code>线程进入synchronized块后持有lock<code>0x00000005a65500f8</code>，当执行<code>lock.wait()</code>时,暂时<br>放弃锁,进入WAITING状态，并重新等待lock的notify后收回锁.<code>^^t2^^</code>线程进入synchronized块后持有<br>lock<code>0x00000005a65500f8</code>，直到循环结束后执行<code>lock.notifyAll()</code>时，<code>^^t1^^</code>才恢复执行.</p>
+<p>另外看stack的输出,他叫<code>WAITING(on  object monitor)</code> , 说明括号后面还有其他的情况, 比如sleep, 我们直接把<br><code>^^t2^^</code>的for循环改成<code>sleep</code>,<code>^^t2^^</code>的state则变成了 <code>WAITING (sleeping)</code>.</p>
+<p>另外, join操作也是进入 on object monitor. Concurrent包里的lock()会进入<code>WAITING (parking)</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">&quot;^^t2^^&quot; prio=10 tid=0x00007fc5f4005000 nid=0x3c58 runnable [0x00007fc65ef9b000]</div><div class="line">   java.lang.Thread.State: RUNNABLE</div><div class="line">        at java.io.FileOutputStream.writeBytes(Native Method)</div><div class="line">        at java.io.FileOutputStream.write(FileOutputStream.java:345)</div><div class="line">        at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)</div><div class="line">        at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)</div><div class="line">        - locked &lt;0x00000005a655a9c0&gt; (a java.io.BufferedOutputStream)</div><div class="line">        at java.io.PrintStream.write(PrintStream.java:482)</div><div class="line">        - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream)</div><div class="line">        at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)</div><div class="line">        at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291)</div><div class="line">        at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104)</div><div class="line">        - locked &lt;0x00000005a655aaf0&gt; (a java.io.OutputStreamWriter)</div><div class="line">        at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185)</div><div class="line">        at java.io.PrintStream.newLine(PrintStream.java:546)</div><div class="line">        - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream)</div><div class="line">        at java.io.PrintStream.println(PrintStream.java:737)</div><div class="line">        - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream)</div><div class="line">        at net.mbl.demo.App$4.run(App.java:62)</div><div class="line">        - locked &lt;0x00000005a65500f8&gt; (a java.lang.Object)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">        - None</div><div class="line"></div><div class="line">&quot;^^t1^^&quot; prio=10 tid=0x00007fc5f4003000 nid=0x3c57 in Object.wait() [0x00007fc65f09c000]</div><div class="line">   java.lang.Thread.State: WAITING (on object monitor)</div><div class="line">        at java.lang.Object.wait(Native Method)</div><div class="line">        - waiting on &lt;0x00000005a65500f8&gt; (a java.lang.Object)</div><div class="line">        at java.lang.Object.wait(Object.java:503)</div><div class="line">        at net.mbl.demo.App$3.run(App.java:47)</div><div class="line">        - locked &lt;0x00000005a65500f8&gt; (a java.lang.Object)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">        - None</div></pre></td></tr></table></figure>
+<h3 id="TIMED-WAITING"><a href="#TIMED-WAITING" class="headerlink" title="TIMED_WAITING"></a>TIMED_WAITING</h3><p>这个仅需要在WAITING的基础上, 在wait方法加上一个时间参数进行限制就OK了.</p>
+<h2 id="线程状态转换方法"><a href="#线程状态转换方法" class="headerlink" title="线程状态转换方法"></a>线程状态转换方法</h2><ol>
+<li>sleep()方法</li>
+</ol>
+<p>在指定时间内让当前正在执行的线程暂停执行，但不会释放“锁标志”。不推荐使用。</p>
+<p>sleep()使当前线程进入阻塞状态，在指定时间内不会执行。</p>
+<ol>
+<li>wait()方法</li>
+</ol>
+<p>在其他线程调用对象的notify或notifyAll方法前，导致当前线程等待。线程会释放掉它所占有的“锁标志”，从而使别的线程有机会抢占该锁。<br>当前线程必须拥有当前对象锁。如果当前线程不是此锁的拥有者，会抛出IllegalMonitorStateException异常。<br>唤醒当前对象锁的等待线程使用notify或notifyAll方法，也必须拥有相同的对象锁，否则也会抛出IllegalMonitorStateException异常。<br>wait()和notify()必须在synchronized函数或synchronized block中进行调用。如果在non-synchronized函数或non-synchronized<br>block中进行调用，虽然能编译通过，但在运行时会发生IllegalMonitorStateException的异常。</p>
+<ol>
+<li>yield方法</li>
+</ol>
+<p>yield()方法是停止当前线程，让同等优先权以上的线程运行。如果没有同等优先权的线程，那么Yield()方法将不会起作用。</p>
+<ol>
+<li><p>interrupt方法<br>interrupt()中断线程。需要注意的是，InterruptedException是线程自己从内部抛出的，并不是interrupt()方法抛出的。<br>对某一线程调用interrupt()时，如果该线程正在执行普通的代码，那么该线程根本就不会抛出InterruptedException。<br>但是，一旦该线程进入到wait()/sleep()/join()后，就会立刻抛出InterruptedException。 </p>
+</li>
+<li><p>join方法<br>当前线程等待调用join方法的线程结束再继续执行。</p>
+</li>
+</ol>
+<h2 id="排查线程问题的思路"><a href="#排查线程问题的思路" class="headerlink" title="排查线程问题的思路"></a>排查线程问题的思路</h2><ol>
+<li><p>如何跟踪一个线程?<br>看到上面的stack输出没有, 第一行是内容是 threadName priority tid nid desc<br>更过跟踪tid, nid 都可以唯一找到该线程.</p>
+</li>
+<li><p>发现有线程进入BLOCK, 而且持续好久, 这说明性能瓶颈存在于synchronized块中, 因为他一直block住, 进不去, 说明另一个线程一直没有处理好, 也就这个synchronized块中处理速度比较慢, 然后再深入查看. 当然也有可能同时block的线程太多, 排队太久造成.</p>
+</li>
+<li><p>发现有线程进入WAITING, 而且持续好久, 说明性能瓶颈存在于触发notify的那段逻辑. 当然还有就是同时WAITING的线程过多, 老是等不到释放.</p>
+</li>
+<li><p>线程进入TIME_WAITING 状态且持续好久的, 跟2的排查方式一样.</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/02/04/技术学习/java/jstack/">使用jstack分析jvm线程</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 maobaolong 的个人博客">maobaolong</a></p>
+        <p><span>发布时间:</span>2017-02-04, 15:53</p>
+        <p><span>最后更新:</span>2017-05-05, 09:11</p>
+        
+            <p>
+                <span>更新历史:</span><i class="fa fa-github"></i>
+                <a href="https://github.com/MOxFIVE/Markdown-Archives-Backup/blame/master/_posts/2017-02-04.技术学习/java/jstack.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/MOxFIVE/Markdown-Archives-Backup/commits/master/_posts/2017-02-04.技术学习/java/jstack.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/MOxFIVE/Markdown-Archives-Backup/master/_posts/2017-02-04.技术学习/java/jstack.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+            </p>
+        
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/02/04/技术学习/java/jstack/" title="使用jstack分析jvm线程">/2017/02/04/技术学习/java/jstack/</a>
+            <span class="copy-path" data-clipboard-text="原文: /2017/02/04/技术学习/java/jstack/　　作者: maobaolong" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+    
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/02/13/技术学习/bigdata/docker/">
+                    docker
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/02/01/技术学习/python/python/">
+                    python 笔记
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+
+
+
+
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jstack-Dump日志文件中的线程状态"><span class="toc-number">2.</span> <span class="toc-text">jstack Dump日志文件中的线程状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dump文件中的线程状态含义及注意事项"><span class="toc-number">3.</span> <span class="toc-text">Dump文件中的线程状态含义及注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#thread-dump文件分析"><span class="toc-number">4.</span> <span class="toc-text">thread dump文件分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Waiting-to-lock-和-Blocked"><span class="toc-number">4.1.</span> <span class="toc-text">Waiting to lock 和 Blocked</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Waiting-on-condition-和-TIMED-WAITING"><span class="toc-number">4.2.</span> <span class="toc-text">Waiting on condition 和 TIMED_WAITING</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#in-Obejct-wait-和-TIMED-WAITING"><span class="toc-number">4.3.</span> <span class="toc-text">in Obejct.wait() 和 TIMED_WAITING</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程状态"><span class="toc-number">5.</span> <span class="toc-text">线程状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态示例"><span class="toc-number">6.</span> <span class="toc-text">状态示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RUNNABLE"><span class="toc-number">6.1.</span> <span class="toc-text">RUNNABLE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BLOCKED"><span class="toc-number">6.2.</span> <span class="toc-text">BLOCKED</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WAITING"><span class="toc-number">6.3.</span> <span class="toc-text">WAITING</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TIMED-WAITING"><span class="toc-number">6.4.</span> <span class="toc-text">TIMED_WAITING</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程状态转换方法"><span class="toc-number">7.</span> <span class="toc-text">线程状态转换方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#排查线程问题的思路"><span class="toc-number">8.</span> <span class="toc-text">排查线程问题的思路</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"true"];
+    </script>
+
+
+
+    
+    <div class="share">
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"使用jstack分析jvm线程　| maobaolong　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    </div>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <div id="comment-box" ></div>
+    <div class="ds-thread" id="ds-thread" data-thread-key="2017/02/04/技术学习/java/jstack/" data-title="使用jstack分析jvm线程" data-url="/2017/02/04/技术学习/java/jstack/"></div>
+    <script>
+        var duoshuoQuery = {short_name:"maobaolong"};
+        function loadComment() {
+            var d = document, s = d.createElement('script');
+            s.src = '//moxfive.xyz/resources/embed.js';
+            s.async = true; s.charset = 'UTF-8';
+            (d.head || d.body).appendChild(s);
+        }
+
+        $(function() { 
+            var jsonUrl = "http://api.duoshuo.com/threads/counts.jsonp?short_name=maobaolong&threads=2017/02/04/技术学习/java/jstack/&callback=?";
+            $.getJSON(jsonUrl, function(result) {
+                $.each(result.response, function(i, field) {
+                    var value = field.comments;
+                    if (value > 0) {
+                        $(".count-comment").text(value);
+                        return;
+                    }
+                })
+
+            })
+        });
+    </script>
+    
+    <aside class="comment-bar">
+        <a href="javascript:void(0);">
+            <i class="fa fa-commenting-o animated infinite pulse"></i>
+            <i class="fa fa-spinner fa-pulse"></i>
+            <span class="count-comment"></span>
+        </a>
+    </aside>
+
+    <script>
+        var $commentBar = $("#comments aside.comment-bar");
+        var load$hide = function(){
+            $commentBar.find("a > i").toggle();
+            loadComment();
+            $commentBar.fadeOut(800);
+        }
+        $commentBar.click(function(){
+            load$hide();
+        })
+        $commentBar.children("a").hover(function(){
+            load$hide();
+        })
+        if (window.location.hash === "#comments") {
+            load$hide();
+        }
+    </script>
+
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/02/13/技术学习/bigdata/docker/" title="上一篇: docker">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/02/01/技术学习/python/python/" title="下一篇: python 笔记">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/bigdata/hadoop/hadoop/">hadoop 命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/linux/linux 常用命令/">linux命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/bigdata/hadoop/Hadoop HA搭建过程/">技术学习/bigdata/hadoop/Hadoop HA搭建过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/05/技术学习/go/go/">技术学习/go/go</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/技术学习/bigdata/hadoop/hadoop_safemode/">hdfs safemode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/技术学习/bigdata/hadoop/hdfs-fsimage-replace/">hdfs fsimage replace</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/29/技术学习/bigdata/alluxio/alluxio-worker-startup/">Alluxio worker startup flow</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/26/技术学习/bigdata/alluxio/alluxio-session/">alluxio session</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/16/技术学习/bigdata/alluxio/alluxio-exceptions/">alluxio exception</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/java/unitTest/">java unit test</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/presto/presto/">presto使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/alluxio/alluxio-locations/">alluxio locations分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/08/技术学习/bigdata/hadoop/hadoop-namenode-repicationmonitor-exception/">hadoop namenode repicationmonitor exception</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/技术学习/bigdata/alluxio/alluxio-profile/">alluxio profile</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/06/技术学习/bigdata/alluxio/alluxio-eviction-strategy/">alluxio eviction strategy</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/技术学习/bigdata/alluxio/alluxio-FAQ/">alluxio faq</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/01/技术学习/thrift/">rpc</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/28/技术学习/linux/shell脚本/">shell脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/13/技术学习/bigdata/docker/">docker</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/04/技术学习/java/jstack/">使用jstack分析jvm线程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/01/技术学习/python/python/">python 笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/02/01/育儿经/元宝/">元宝</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/30/技术学习/web/netty/">netty</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/29/技术学习/protobuffers/">Proto Buffers</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/使用hexo创建github博客使用yelee主题/">使用hexo创建github博客使用yelee主题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/Yilia源码目录结构及构建须知/">Yilia源码目录结构及构建须知</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/20/工具使用/github_blog/github_hexo_travis/">手把手教你使用Travis CI自动部署你的Hexo博客到Github上</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-层次化存储简介/">alluxio 层次化存储简介(转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-protobuffers/">alluxio Proto Buffers</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-rpc-en/">alluxio rpc analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-定位策略/">alluxio 定位策略(转)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/18/技术学习/bigdata/alluxio/alluxio-rpc/">alluxio rpc 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/技术学习/bigdata/alluxio/alluxio-heartbeat/">alluxio heartbeat分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/saltstack-minion/">saltstack-minion</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/spark/spark/">hive命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/hive/hive/">hive命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/16/技术学习/bigdata/常用端口/">大数据常用端口</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/15/技术学习/树莓派/树莓派接人体感应传感器/">树莓派接人体感应传感器</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio/">alluxio介绍与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-client-flow/">alluxio client 主要流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/13/技术学习/bigdata/alluxio/alluxio-modules/">Alluxio module introduction</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/01/技术学习/linux/Linux下文件类型及表示颜色/">Linux下文件类型及表示颜色</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/育儿经/健康知识/">健康知识</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/25/技术学习/树莓派/ownCloud安装/">树莓派上ownCloud的安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/24/技术学习/web/jquery中attr和prop的区别/">jquery中attr和prop的区别（转）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/工具使用/pycharm/">pycharm</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/工具使用/idea/">idea</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/16/工具使用/maven/">maven</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/树莓派/安装后/">树莓派安装后需要做的几件事</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/树莓派/常用命令/">树莓派常用命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/kafka/">kafka</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/etcd/">etcd</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/nginx/">nginx</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/java/java/">java 远程调试</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/velocity/">velocity</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/zookeeper/">zookeeper</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/正则表达式/">正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/linux/centos/">CENTOS笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/jenkins/">jenkins</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/scrt/">scrt 破解和使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/linux/ubuntu/">ubuntu</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/seafile/">seafile</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/html/">html</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/jquery/">jquery</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/tomcat/">tomcat</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/haproxy/">haproxy</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/hadoop-matrics-intro/">hadoop metrics</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/playframework/">playframework</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/springMVC/">springMVC</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/velocity/">velocity</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/hadoop_rest/">hadoop_rest</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/web/xss攻击_跨域攻击/">xss攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mongodb/">mongodb</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mysql 语法/">mysql sql语法</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/数据库/mysql/">mysql</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/工具使用/vim/">vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/09/技术学习/bigdata/hadoop/yarn/fair-scheduler/">fair-scheduler</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2017 maobaolong
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题 v3.5">Yelee</a><span> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+    <script src="/js/GithubRepoWidget.js"></script>
+
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+             github: ".github-widget a", 
+            
+             post: ".article-entry a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

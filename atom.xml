@@ -1,0 +1,1285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>maobaolong</title>
+  <subtitle>神龙</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="/"/>
+  <updated>2017-05-05T09:11:18.774Z</updated>
+  <id>/</id>
+  
+  <author>
+    <name>maobaolong</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hadoop 命令</title>
+    <link href="/2017/05/05/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/hadoop/hadoop/"/>
+    <id>/2017/05/05/技术学习/bigdata/hadoop/hadoop/</id>
+    <published>2017-05-05T15:13:48.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="hadoop-cli-命令"><a href="#hadoop-cli-命令" class="headerlink" title="hadoop cli 命令"></a>hadoop cli 命令</h2><ul>
+<li><p>显示log</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hadoop fs -cat /tmp/app-logs/prestotest/logs/application_1460457323828_0044/BJHC-Client-77104.hadoop.jd.local_50086</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hadoop fs -mkdir /user/admin/aaron/newDir</div></pre></td></tr></table></figure>
+</li>
+<li><p>上传文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hadoop fs –put /home/admin/newFile /user/admin/aaron/</div></pre></td></tr></table></figure>
+</li>
+<li><p>下载文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hadoop fs –get /user/admin/aaron/newFile /home/admin/newFile</div></pre></td></tr></table></figure>
+</li>
+<li><p>显示所有job</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ yarn application -list</div><div class="line"><span class="comment"># or</span></div><div class="line">$ hadoop job -list</div></pre></td></tr></table></figure>
+</li>
+<li><p>杀job</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ yarn application -kill job_1487128523266_0493</div><div class="line"><span class="comment"># or</span></div><div class="line">$ hadoop job  -kill job_1487128523266_0493</div><div class="line"></div><div class="line"><span class="comment"># 杀死所有job</span></div><div class="line">$ <span class="keyword">for</span> app <span class="keyword">in</span> `yarn application -list|awk <span class="string">'$4 == "hadp" &#123; print $1 &#125;'</span>`;  <span class="keyword">do</span> yarn application -kill  <span class="string">"<span class="variable">$app</span>"</span>; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>重启namenode</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hadoop-daemon.sh stop namenode</div><div class="line">$ hadoop-daemon.sh start namenode</div></pre></td></tr></table></figure>
+</li>
+<li><p>设置副本数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs dfs -setrep -w 3 /user/maobaolong/2G/<span class="built_in">test</span>000001.txt</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看文件块信息副本信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">$ hdfs fsck /user/maobaolong/2G/<span class="built_in">test</span>000001.txt -files -blocks</div><div class="line">/user/maobaolong/2G/<span class="built_in">test</span>000001.txt 104857600 bytes, 1 block(s):  OK</div><div class="line">0. BP-415593160-192.16.170.121-1479721822537:blk_1081644434_7913748 len=104857600 repl=10</div><div class="line"></div><div class="line">Status: HEALTHY</div><div class="line"> Total size:    104857600 B</div><div class="line"> Total <span class="built_in">dirs</span>:    0</div><div class="line"> Total files:   1</div><div class="line"> Total symlinks:                0</div><div class="line"> Total blocks (validated):      1 (avg. block size 104857600 B)</div><div class="line"> Minimally replicated blocks:   1 (100.0 %)</div><div class="line"> Over-replicated blocks:        0 (0.0 %)</div><div class="line"> Under-replicated blocks:       0 (0.0 %)</div><div class="line"> Mis-replicated blocks:         0 (0.0 %)</div><div class="line"> Default replication factor:    3</div><div class="line"> Average block replication:     10.0</div><div class="line"> Corrupt blocks:                0</div><div class="line"> Missing replicas:              0 (0.0 %)</div><div class="line"> Number of data-nodes:          72</div><div class="line"> Number of racks:               1</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看文件的块所在位置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">$ hdfs fsck /user/maobaolong/2G/<span class="built_in">test</span>000001.txt -files -blocks -locations</div><div class="line">/user/maobaolong/2G/<span class="built_in">test</span>000001.txt 104857600 bytes, 1 block(s):  OK</div><div class="line">0. BP-415593160-192.16.170.121-1479721822537:blk_1081644434_7913748 len=104857600 repl=10 [DatanodeInfoWithStorage[192.16.171.67:50010,DS-c310081e-c802-4816-8039-5a27607e486d,DISK], DatanodeInfoWithStorage[192.16.175.58:50010,DS-8070ae27-dc2f-42d1-ba52<span class="_">-d</span>4326e26855f,DISK], DatanodeInfoWithStorage[192.16.175.56:50010,DS-3825274a-b7ef-4259-8c2b-6244c1931929,DISK], DatanodeInfoWithStorage[192.16.147.128:50010,DS-24d8c298-be68-4c90-8b69-0d27e36949db,DISK], DatanodeInfoWithStorage[192.16.171.65:50010,DS-14026585-34cc-4afb<span class="_">-a</span>01b-92c89cb7daf4,DISK], DatanodeInfoWithStorage[192.16.171.69:50010,DS-168c200e-11f5-4b40-b330-1869631b918e,DISK], DatanodeInfoWithStorage[192.16.150.141:50010,DS<span class="_">-f</span>3061e59<span class="_">-e</span>42e-4e9d-848d-87c0954b44fd,DISK], DatanodeInfoWithStorage[192.16.147.126:50010,DS-5e431e24-be32-4f19-8b96-677b65958c7b,DISK], DatanodeInfoWithStorage[192.16.171.21:50010,DS-8314ca05-b52e-412b-bd20-697d7c4cc39a,DISK], DatanodeInfoWithStorage[192.16.171.47:50010,DS-6f8712cc<span class="_">-a</span>283-4d02-b0c4-87d4028480f4,DISK]]</div><div class="line"></div><div class="line">Status: HEALTHY</div><div class="line"> Total size:    104857600 B</div><div class="line"> Total <span class="built_in">dirs</span>:    0</div><div class="line"> Total files:   1</div><div class="line"> Total symlinks:                0</div><div class="line"> Total blocks (validated):      1 (avg. block size 104857600 B)</div><div class="line"> Minimally replicated blocks:   1 (100.0 %)</div><div class="line"> Over-replicated blocks:        0 (0.0 %)</div><div class="line"> Under-replicated blocks:       0 (0.0 %)</div><div class="line"> Mis-replicated blocks:         0 (0.0 %)</div><div class="line"> Default replication factor:    3</div><div class="line"> Average block replication:     10.0</div><div class="line"> Corrupt blocks:                0</div><div class="line"> Missing replicas:              0 (0.0 %)</div><div class="line"> Number of data-nodes:          72</div><div class="line"> Number of racks:               1</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看文件的块所在机架信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">$ hdfs fsck /user/maobaolong/2G/<span class="built_in">test</span>000001.txt -files -blocks -locations -racks</div><div class="line">/user/maobaolong/2G/<span class="built_in">test</span>000001.txt 104857600 bytes, 1 block(s):  OK</div><div class="line">0. BP-415593160-192.16.170.121-1479721822537:blk_1081644434_7913748 len=104857600 repl=10 [/rack/default/192.16.171.67:50010, /rack/default/192.16.175.58:50010, /rack/default/192.16.175.56:50010, /rack/default/192.16.147.128:50010, /rack/default/192.16.171.65:50010, /rack/default/192.16.171.69:50010, /rack/default/192.16.150.141:50010, /rack/default/192.16.147.126:50010, /rack/default/192.16.171.21:50010, /rack/default/192.16.171.47:50010]</div><div class="line"></div><div class="line">Status: HEALTHY</div><div class="line"> Total size:    104857600 B</div><div class="line"> Total <span class="built_in">dirs</span>:    0</div><div class="line"> Total files:   1</div><div class="line"> Total symlinks:                0</div><div class="line"> Total blocks (validated):      1 (avg. block size 104857600 B)</div><div class="line"> Minimally replicated blocks:   1 (100.0 %)</div><div class="line"> Over-replicated blocks:        0 (0.0 %)</div><div class="line"> Under-replicated blocks:       0 (0.0 %)</div><div class="line"> Mis-replicated blocks:         0 (0.0 %)</div><div class="line"> Default replication factor:    3</div><div class="line"> Average block replication:     10.0</div><div class="line"> Corrupt blocks:                0</div><div class="line"> Missing replicas:              0 (0.0 %)</div><div class="line"> Number of data-nodes:          72</div><div class="line"> Number of racks:               1</div></pre></td></tr></table></figure>
+</li>
+<li><p>检查并打印正在被打开执行写操作的文件（-openforwrite）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs fsck /hivedata/warehouse/liuxiaowen.db/lxw_product_names/ -openforwrite</div></pre></td></tr></table></figure>
+</li>
+<li><p>打印拓扑，即机架与datenode的ip信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs dfsadmin -printTopology</div></pre></td></tr></table></figure>
+</li>
+<li><p>输出报告信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$  hdfs dfsadmin -report</div><div class="line">Name: 192.16.150.100:50010 (hostname_mbl)</div><div class="line">Hostname: hostname_mbl</div><div class="line">Decommission Status : Normal</div><div class="line">Configured Capacity: 0 (0 B)</div><div class="line">DFS Used: 0 (0 B)</div><div class="line">Non DFS Used: 0 (0 B)</div><div class="line">DFS Remaining: 0 (0 B)</div><div class="line">DFS Used%: 100.00%</div><div class="line">DFS Remaining%: 0.00%</div><div class="line">Configured Cache Capacity: 0 (0 B)</div><div class="line">Cache Used: 0 (0 B)</div><div class="line">Cache Remaining: 0 (0 B)</div><div class="line">Cache Used%: 100.00%</div><div class="line">Cache Remaining%: 0.00%</div><div class="line">Xceivers: 0</div></pre></td></tr></table></figure>
+</li>
+<li><p>格式化 journal</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs namenode -initializeSharedEdits</div></pre></td></tr></table></figure>
+</li>
+<li><p>让该结点重新读取配置文件，进行配置</p>
+<figure class="highlight plain"><figcaption><span>bash</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs dfsadmin -reconfig datanode ip:50020 start</div></pre></td></tr></table></figure>
+</li>
+<li><p>切active 的ns命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs haadmin -ns ns1 -failover nn1 nn2</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="hadoop-常用配置说明"><a href="#hadoop-常用配置说明" class="headerlink" title="hadoop 常用配置说明"></a>hadoop 常用配置说明</h2><ul>
+<li>dfs.cluster.administrators<ul>
+<li>配置后，可以在页面<code>ip:50070/logLevel</code>或<code>hadoop daemonlog -getlevel hostname:50070</code>  org.apache.hadoop.hdfs.server.blockmanagement.AvailableSpaceBlockPlacementPolicy获取或修改某个类的log级别</li>
+<li>ACL for the admins, this configuration is used to control who can access the default servlets in the namenode, etc. The value should be a comma separated list of users and groups. The user list comes first and is separated by a space followed by the group list, e.g. “user1,user2 group1,group2”. Both users and groups are optional, so “user1”, “ group1”, “”, “user1 group1”, “user1,user2 group1,group2” are all valid (note the leading space in “ group1”). ‘<em>‘ grants access to all users and groups, e.g. ‘</em>‘, ‘<em> ‘ and ‘ </em>‘ are all valid.</li>
+<li>管理员访问控制，这个配置用来控制谁可以通过默认的servlets访问namenode，特别的*匹配所有用户。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      介绍hadoop 命令
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="hadoop" scheme="/tags/hadoop/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux命令</title>
+    <link href="/2017/05/05/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/linux/linux%20%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>/2017/05/05/技术学习/linux/linux 常用命令/</id>
+    <published>2017-05-05T11:38:41.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<p>#linux 常用命令</p>
+<pre><code>* history |grep scp
+* tail -f log/UGDAP.log
+* 只显示文件名：
+</code></pre><p>ls -l | grep ^[^d] | awk ‘{print $8}’<br>只显示文件夹名：<br>ls -l |grep ^d | awk ‘{print $8}’ 或者是 ls -d */</p>
+<h2 id="恢复rm删除的文件"><a href="#恢复rm删除的文件" class="headerlink" title="恢复rm删除的文件"></a>恢复rm删除的文件</h2><h3 id="显示所删除的文件所在的分区"><a href="#显示所删除的文件所在的分区" class="headerlink" title="显示所删除的文件所在的分区"></a>显示所删除的文件所在的分区</h3><p>df -T /home</p>
+<h3 id="用debugFS查找被删除文件的inode号"><a href="#用debugFS查找被删除文件的inode号" class="headerlink" title="用debugFS查找被删除文件的inode号"></a>用debugFS查找被删除文件的inode号</h3><p>sudo debugfs<br>debugfs&gt;open /dev/sda5<br>debugfs&gt;ls -d /home/mbl/study<br>尖括号中的是inode</p>
+<h3 id="恢复inode"><a href="#恢复inode" class="headerlink" title="恢复inode"></a>恢复inode</h3><p>extundelete ${dev_describer} –restore-inode ${inode}</p>
+<h3 id="如果知道被删除文件的完整的路径，直接恢复"><a href="#如果知道被删除文件的完整的路径，直接恢复" class="headerlink" title="如果知道被删除文件的完整的路径，直接恢复"></a>如果知道被删除文件的完整的路径，直接恢复</h3><p>extundelete ${deb_describer} –restore-file ${path}  </p>
+<h2 id="shell脚本常用变量"><a href="#shell脚本常用变量" class="headerlink" title="shell脚本常用变量"></a>shell脚本常用变量</h2><p>$0: shell或shell脚本的名字<br>$*:以一对双引号给出参数列表<br>$@:将各个参数分别加双引号返回<br>$#:参数的个数<br>$_:代表上一个命令的最后一个参数<br>$$:代表所在命令的PID<br>$!:代表最后执行的后台命令的PID<br>$?:代表上一个命令执行后的退出状态</p>
+<h2 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h2><p>curl -x 172.22.91.78:80 <a href="http://172.16.172.95:19888/ws/v1/history/mapreduce/jobs/job_1470405196301_64273|python" target="_blank" rel="external">http://172.16.172.95:19888/ws/v1/history/mapreduce/jobs/job_1470405196301_64273|python</a> -m json.tool&gt;job_1470405196301_64273.json</p>
+<h2 id="显示当前操作系统信息"><a href="#显示当前操作系统信息" class="headerlink" title="显示当前操作系统信息"></a>显示当前操作系统信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cat /proc/version</div><div class="line">uname <span class="_">-a</span></div><div class="line">cat /etc/*release*</div><div class="line"></div><div class="line">lsb_release <span class="_">-a</span></div></pre></td></tr></table></figure>
+<h2 id="显示ip"><a href="#显示ip" class="headerlink" title="显示ip"></a>显示ip</h2><p>hostname -i<br>ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6 | awk ‘{print $2}’ | tr -d “addr:”<br>ifconfig enp0s25|grep inet|grep -v 127.0.0.1|grep -v inet6 | awk ‘{print $2}’ | tr -d “addr:”</p>
+<h2 id="测试端口是否通"><a href="#测试端口是否通" class="headerlink" title="测试端口是否通"></a>测试端口是否通</h2><p>telnet 172.22.91.34 8087</p>
+<h2 id="查看端口是否被占用"><a href="#查看端口是否被占用" class="headerlink" title="查看端口是否被占用"></a>查看端口是否被占用</h2><p>netstat -tunlp |grep 80<br>lsof -i 80</p>
+<p>/bin/bash^M: 解释器错误: 没有那个文件或目录<br>sed -i ‘s/\r$//‘ check_tool.sh</p>
+<h2 id="后台启动进程，重定向输出到文件"><a href="#后台启动进程，重定向输出到文件" class="headerlink" title="后台启动进程，重定向输出到文件"></a>后台启动进程，重定向输出到文件</h2><p>nohup command &gt; myout.file 2&gt;&amp;1 &amp;</p>
+<h2 id="杀进程"><a href="#杀进程" class="headerlink" title="杀进程"></a>杀进程</h2><p>ps -ef | grep tomcat | awk ‘{print $2}’ | xargs kill -9<br>或<br>kill <code>ps -ef | grep [j]enkins.war | awk &#39;{ print $2 }&#39;</code><br>虽然提示没有找到进程pid，但已经杀掉了</p>
+<h2 id="开机自动挂载分区"><a href="#开机自动挂载分区" class="headerlink" title="开机自动挂载分区"></a>开机自动挂载分区</h2><p>用blkid列出分区uuid和type<br>sudo  blkid<br>接下来修改自动挂载的配置文件：<br>sudo vim /etc/fstab<br>增加一行<br>UUID=11263962-9715-473f-9421-0b604e895aaa /data       ext4    defaults 0     1</p>
+<h2 id="zip解压中文乱码"><a href="#zip解压中文乱码" class="headerlink" title="zip解压中文乱码"></a>zip解压中文乱码</h2><p>ubuntu下  unzip -O CP936  xxx.zip -d exdir</p>
+<h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><p>home目录不能有其它用户写权限<br>/root  </p>
+<p>.ssh 只能是 700</p>
+<p>linux权限<br>777 rwxrwxrwx  （所有者，本组用户，其它用户）rwx=读，写，执行</p>
+<h2 id="ssh-copy-id"><a href="#ssh-copy-id" class="headerlink" title="ssh-copy-id"></a>ssh-copy-id</h2><h2 id="设置root密码"><a href="#设置root密码" class="headerlink" title="设置root密码"></a>设置root密码</h2><p>sudo passwd root</p>
+<h2 id="在任务栏显示网速"><a href="#在任务栏显示网速" class="headerlink" title="在任务栏显示网速"></a>在任务栏显示网速</h2><p>sudo add-apt-repository ppa:nilarimogard/webupd8<br>sudo apt-get update<br>sudo apt-get install indicator-netspeed</p>
+<h2 id="设置显示桌面快捷键"><a href="#设置显示桌面快捷键" class="headerlink" title="设置显示桌面快捷键"></a>设置显示桌面快捷键</h2><p>sudo apt-get install compizconfig-settings-manager<br>ccsm</p>
+<h2 id="KWPlayer-酷我音乐盒"><a href="#KWPlayer-酷我音乐盒" class="headerlink" title="KWPlayer 酷我音乐盒"></a>KWPlayer 酷我音乐盒</h2><h2 id="Iptux-—-局域网聊天工具-飞鸽Linux版"><a href="#Iptux-—-局域网聊天工具-飞鸽Linux版" class="headerlink" title="Iptux — 局域网聊天工具(飞鸽Linux版)"></a>Iptux — 局域网聊天工具(飞鸽Linux版)</h2><p>sudo apt-get install iptux</p>
+<h2 id="System-Load-Indicator-系统状态指示器）"><a href="#System-Load-Indicator-系统状态指示器）" class="headerlink" title="System Load Indicator ( 系统状态指示器）"></a>System Load Indicator ( 系统状态指示器）</h2><p>sudo add-apt-repository ppa:indicator-multiload/stable-daily<br>sudo apt-get update<br>sudo apt-get install indicator-multiload</p>
+<h2 id="XBMC（媒体中心）"><a href="#XBMC（媒体中心）" class="headerlink" title="XBMC（媒体中心）"></a>XBMC（媒体中心）</h2><p>XBMC（媒体中心）<br>sudo add-apt-repository ppa:team-xbmc/ppa<br>sudo apt-get update<br>sudo apt-get install xbmc</p>
+<h2 id="VMware-Workstation"><a href="#VMware-Workstation" class="headerlink" title="VMware Workstation"></a>VMware Workstation</h2><p>安装方法（包含下载、安装、激活、序列号）<br><a href="http://www.kashu.org/1024.html" target="_blank" rel="external">http://www.kashu.org/1024.html</a></p>
+<h2 id="wireshark"><a href="#wireshark" class="headerlink" title="wireshark"></a>wireshark</h2><p><a href="http://ppa.launchpad.net/wireshark-dev/stable/ubuntu/pool/main/w/wireshark/" target="_blank" rel="external">http://ppa.launchpad.net/wireshark-dev/stable/ubuntu/pool/main/w/wireshark/</a><br>ppa:wireshark-dev/stable</p>
+<p>.tar.gz     格式解压为          tar   -zxvf   xx.tar.gz   -C targetDir<br>.tar.bz2   格式解压为          tar   -jxvf    xx.tar.bz2</p>
+<h2 id="查看linux版本"><a href="#查看linux版本" class="headerlink" title="查看linux版本"></a>查看linux版本</h2><p>rpm -qa|grep kernel</p>
+<p>中文Linux 常用的locale是zh_CN.gb2312，zh_CN.gbk，zh_CN.gb18030 和 zh_CN.UTF-8 。通过如下命令可以查询系统的locale：<br><code>echo $LANG</code></p>
+<h2 id="挂载u盘"><a href="#挂载u盘" class="headerlink" title="挂载u盘"></a>挂载u盘</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fdisk -l</div><div class="line"></div><div class="line">mkdir /mnt/usb</div><div class="line">mount命令格式：mount [-参数] [设备名称] [挂载点] [其他参数]</div><div class="line">mount /dev/sdb1 /mnt/usb</div><div class="line">umount /dev/sdb1</div></pre></td></tr></table></figure>
+<h2 id="改变用户组和用户"><a href="#改变用户组和用户" class="headerlink" title="改变用户组和用户"></a>改变用户组和用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">基本语法：</div><div class="line">chown [-R] 账号名称 文件或目录</div><div class="line">chown [-R] 账号名称:用户组名称 文件或目录</div><div class="line">参数：</div><div class="line">-R : 进行递归( recursive )的持续更改，即连同子目录下的所有文件、目录</div><div class="line">都更新成为这个用户组。常常用在更改某一目录的情况。</div><div class="line">示例1：</div><div class="line">[root@localhost home]# touch testfile //由 root 用户创建文件</div><div class="line">[root@localhost home]# ls testfile –l</div></pre></td></tr></table></figure>
+<h2 id="查看文件夹下容量"><a href="#查看文件夹下容量" class="headerlink" title="查看文件夹下容量"></a>查看文件夹下容量</h2><p>du -ah –max-depth=1</p>
+<h2 id="配置ssh-超时空闲时间"><a href="#配置ssh-超时空闲时间" class="headerlink" title="配置ssh 超时空闲时间"></a>配置ssh 超时空闲时间</h2><p>服务器配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/etc/profile 中的配置，增加一个参数TMOUT=6000       //100分钟，应该够用了</div><div class="line">echo &quot;TMOUT=6000 &quot; &gt;&gt;/etc/profile</div><div class="line">source /etc/profile   //立即生效</div></pre></td></tr></table></figure></p>
+<p>客户端配置:<br>方法很简单，只需在客户端电脑上编辑（需要root权限）/etc/ssh/ssh_config，并添加如下一行：<br><code>ServerAliveInterval 60</code></p>
+<p>服务器端设置:</p>
+<p>如果有相应的权限，也可以在服务器端设置，即编辑/etc/ssh/sshd_config，并添加：<br><code>ClientAliveInterval 60</code></p>
+<p>重启SSH服务器后该项设置会生效。每一个连接到此服务器上的客户端都会受其影响。应注意启用该功能后，安全性会有一定下降（比如忘记登出时……）</p>
+<h2 id="Linux常见问题解答–如何修复”tar：由于前一个错误导致于失败状态中退出”"><a href="#Linux常见问题解答–如何修复”tar：由于前一个错误导致于失败状态中退出”" class="headerlink" title="Linux常见问题解答–如何修复”tar：由于前一个错误导致于失败状态中退出”"></a>Linux常见问题解答–如何修复”tar：由于前一个错误导致于失败状态中退出”</h2><p>Exiting with failure status due to previous errors<br>去掉v，只看错误流</p>
+<h2 id="百度网盘公开链接wget下载"><a href="#百度网盘公开链接wget下载" class="headerlink" title="百度网盘公开链接wget下载"></a>百度网盘公开链接wget下载</h2><p>wget -c  –referer=公开链接地址  -O 输出文件名 “直接下载地址”    ，其中-c表示断点续传<br>wget -c –referer=<a href="http://pan.baidu.com/s/1pL0IUxH" target="_blank" rel="external">http://pan.baidu.com/s/1pL0IUxH</a>  -O a.zip “<a href="http://61.179.228.93/d1.baidupcs.com/file/4b43140bd6212b333237b391961932a4?bkt=p3-0000eea78a1d47d0402b131c2736fe70a488&amp;xcode=c0a39d5fa7dcff84c1a1bca47e82ddfb123eeb8f4d2e9e54ded0b7c77404c736&amp;fid=50867796-250528-751846568268583&amp;time=1481855378&amp;sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-mq8GWRwB7zY3FSpQOglOpVoSn8I%3D&amp;to=lc&amp;fm=Qin,B,U,nc&amp;sta_dx=137584648&amp;sta_cs=2496&amp;sta_ft=7z&amp;sta_ct=7&amp;sta_mt=7&amp;fm2=Qingdao,B,U,nc&amp;newver=1&amp;newfm=1&amp;secfm=1&amp;flow_ver=3&amp;pkey=14005e8f94567db20cb9f1c95efbd7a8a7b7c50dcb1a000008336008&amp;sl=75956300&amp;expires=8h&amp;rt=sh&amp;r=739923821&amp;mlogid=8127629174281954396&amp;vuk=-&amp;vbdid=2201694974&amp;fin=FIFA.2002.Green.Edition-ALI213.7z&amp;fn=FIFA.2002.Green.Edition-ALI213.7z&amp;slt=pm&amp;uta=0&amp;rtype=1&amp;iv=0&amp;isw=0&amp;dp-logid=8127629174281954396&amp;dp-callid=0.1.1&amp;csl=600&amp;csign=RJ%2BYoZ6FqCL1OLeGHSbtuImu3ys%3D&amp;wshc_tag=0&amp;wsts_tag=58535192&amp;wsid_tag=6fccf309&amp;wsiphost=ipdbm" target="_blank" rel="external">http://61.179.228.93/d1.baidupcs.com/file/4b43140bd6212b333237b391961932a4?bkt=p3-0000eea78a1d47d0402b131c2736fe70a488&amp;xcode=c0a39d5fa7dcff84c1a1bca47e82ddfb123eeb8f4d2e9e54ded0b7c77404c736&amp;fid=50867796-250528-751846568268583&amp;time=1481855378&amp;sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-mq8GWRwB7zY3FSpQOglOpVoSn8I%3D&amp;to=lc&amp;fm=Qin,B,U,nc&amp;sta_dx=137584648&amp;sta_cs=2496&amp;sta_ft=7z&amp;sta_ct=7&amp;sta_mt=7&amp;fm2=Qingdao,B,U,nc&amp;newver=1&amp;newfm=1&amp;secfm=1&amp;flow_ver=3&amp;pkey=14005e8f94567db20cb9f1c95efbd7a8a7b7c50dcb1a000008336008&amp;sl=75956300&amp;expires=8h&amp;rt=sh&amp;r=739923821&amp;mlogid=8127629174281954396&amp;vuk=-&amp;vbdid=2201694974&amp;fin=FIFA.2002.Green.Edition-ALI213.7z&amp;fn=FIFA.2002.Green.Edition-ALI213.7z&amp;slt=pm&amp;uta=0&amp;rtype=1&amp;iv=0&amp;isw=0&amp;dp-logid=8127629174281954396&amp;dp-callid=0.1.1&amp;csl=600&amp;csign=RJ%2BYoZ6FqCL1OLeGHSbtuImu3ys%3D&amp;wshc_tag=0&amp;wsts_tag=58535192&amp;wsid_tag=6fccf309&amp;wsiphost=ipdbm</a>“</p>
+<h2 id="history"><a href="#history" class="headerlink" title="history"></a>history</h2><p><code>:n</code> copy line n to current input line</p>
+<h2 id="xsel剪切板"><a href="#xsel剪切板" class="headerlink" title="xsel剪切板"></a>xsel剪切板</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#把当前目录放到剪切板</span></div><div class="line"><span class="built_in">pwd</span> | xsel -b</div></pre></td></tr></table></figure>
+<h2 id="获取线程信息"><a href="#获取线程信息" class="headerlink" title="获取线程信息"></a>获取线程信息</h2><p>ps -eLf|grep 线程号</p>
+<h2 id="查找命令"><a href="#查找命令" class="headerlink" title="查找命令"></a>查找命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ find . -name <span class="string">"*"</span> | xargs grep <span class="string">"NullPointerException"</span></div><div class="line">./master.log.35:java.lang.NullPointerException: required <span class="string">'blockId'</span> parameter is missing</div></pre></td></tr></table></figure>
+<h2 id="ssh免密"><a href="#ssh免密" class="headerlink" title="ssh免密"></a>ssh免密</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa</div><div class="line">ssh-copy-id -i ~/.ssh/id_rsa.pub remote</div></pre></td></tr></table></figure>
+<h2 id="查看cpu内核信息"><a href="#查看cpu内核信息" class="headerlink" title="查看cpu内核信息"></a>查看cpu内核信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">cat /proc/cpuinfo</div><div class="line"></div><div class="line">processor	: 0</div><div class="line">vendor_id	: GenuineIntel</div><div class="line">cpu family	: 6</div><div class="line">model		: 61</div><div class="line">model name	: Intel(R) Core(TM) i7-5500U CPU @ 2.40GHz</div><div class="line">stepping	: 4</div><div class="line">microcode	: 0x23</div><div class="line">cpu MHz		: 2489.531</div><div class="line">cache size	: 4096 KB</div><div class="line">physical id	: 0</div><div class="line">siblings	: 4</div><div class="line">core id		: 0</div><div class="line">cpu cores	: 2</div><div class="line">apicid		: 0</div><div class="line">initial apicid	: 0</div><div class="line">fpu		: yes</div><div class="line">fpu_exception	: yes</div><div class="line">cpuid level	: 20</div><div class="line">wp		: yes</div><div class="line">flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb intel_pt tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap xsaveopt dtherm ida arat pln pts</div><div class="line">bugs		:</div><div class="line">bogomips	: 4788.96</div><div class="line">clflush size	: 64</div><div class="line">cache_alignment	: 64</div><div class="line">address sizes	: 39 bits physical, 48 bits virtual</div><div class="line">power management:</div></pre></td></tr></table></figure>
+<h2 id="sshpass"><a href="#sshpass" class="headerlink" title="sshpass"></a>sshpass</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sshpass -p <span class="string">'password'</span> scp maobaolong@1.2.3.4:/home/maobaolong/a.txt ./</div></pre></td></tr></table></figure>
+<h2 id="ssh-执行远程命令"><a href="#ssh-执行远程命令" class="headerlink" title="ssh 执行远程命令"></a>ssh 执行远程命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh <span class="_">-l</span> username hostname <span class="string">"ls /"</span></div><div class="line">ssh hostname <span class="string">"ls /"</span></div></pre></td></tr></table></figure>
+<h2 id="查看端口使用情况"><a href="#查看端口使用情况" class="headerlink" title="查看端口使用情况"></a>查看端口使用情况</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netstat -apn|grep 端口</div></pre></td></tr></table></figure>
+<h2 id="查看操作系统信息"><a href="#查看操作系统信息" class="headerlink" title="查看操作系统信息"></a>查看操作系统信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cat /etc/*release*</div></pre></td></tr></table></figure>
+<h2 id="crontab-定时任务"><a href="#crontab-定时任务" class="headerlink" title="crontab 定时任务"></a>crontab 定时任务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 定时1分钟执行</span></div><div class="line">*/1 * * * * <span class="built_in">cd</span> /data0/NameNode/;<span class="built_in">source</span> ~/.bashrc;nohup /data0/NameNode/sliverun.sh &amp;</div></pre></td></tr></table></figure>
+<h2 id="watch-观察命令"><a href="#watch-观察命令" class="headerlink" title="watch 观察命令"></a>watch 观察命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 1秒观察一次date</span></div><div class="line">$ watch <span class="_">-d</span> -n 1 <span class="string">'date'</span></div></pre></td></tr></table></figure>
+<h2 id="修改mac地址"><a href="#修改mac地址" class="headerlink" title="修改mac地址"></a>修改mac地址</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ifconfig enp0s25 hw ether 50:7b:9d:fb:fb:21</div></pre></td></tr></table></figure>
+<h2 id="查看文件匹配行的后2行中包含at单词的行并排序合并计数"><a href="#查看文件匹配行的后2行中包含at单词的行并排序合并计数" class="headerlink" title="查看文件匹配行的后2行中包含at单词的行并排序合并计数"></a>查看文件匹配行的后2行中包含at单词的行并排序合并计数</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep <span class="string">"on 8020"</span> 44437_0.log -A 2 | grep <span class="string">"at"</span> -w | sort | uniq -c</div></pre></td></tr></table></figure>
+<h2 id="cut命令分割字符串并取得第几项类似split"><a href="#cut命令分割字符串并取得第几项类似split" class="headerlink" title="cut命令分割字符串并取得第几项类似split"></a>cut命令分割字符串并取得第几项类似split</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="string">"a=2"</span>|cut <span class="_">-d</span> <span class="string">'='</span> <span class="_">-f</span> 2</div></pre></td></tr></table></figure>
+<h2 id="获得空白分割后的第n个"><a href="#获得空白分割后的第n个" class="headerlink" title="获得空白分割后的第n个"></a>获得空白分割后的第n个</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> <span class="string">"a b c d"</span>|awk &#123;<span class="string">'print $3'</span>&#125;</div></pre></td></tr></table></figure>
+<h2 id="批量替换某个目录下的所有文件中的指定内容"><a href="#批量替换某个目录下的所有文件中的指定内容" class="headerlink" title="批量替换某个目录下的所有文件中的指定内容"></a>批量替换某个目录下的所有文件中的指定内容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 将当前目录下的所有文件中包含字符串slaves.sh的替换为slavetool.sh</span></div><div class="line">$  grep <span class="string">"slaves.sh"</span> * -R | awk -F: <span class="string">'&#123;print $1&#125;'</span> | sort | uniq | xargs sed -i <span class="string">'s/slaves.sh/slavetool.sh/g'</span></div></pre></td></tr></table></figure>
+<h2 id="列出jar文件的所有内容"><a href="#列出jar文件的所有内容" class="headerlink" title="列出jar文件的所有内容"></a>列出jar文件的所有内容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ jar -vtf hadoop-hdfs-2.7.1.jar</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      介绍linux软件安装，配置
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="linux" scheme="/tags/linux/"/>
+    
+      <category term="centos" scheme="/tags/centos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="/2017/05/05/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/hadoop/Hadoop%20HA%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B/"/>
+    <id>/2017/05/05/技术学习/bigdata/hadoop/Hadoop HA搭建过程/</id>
+    <published>2017-05-05T09:11:18.774Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="hadoop-HA-cluster-build"><a href="#hadoop-HA-cluster-build" class="headerlink" title="hadoop-HA-cluster-build"></a>hadoop-HA-cluster-build</h1><p>目前HBASE和spark还没有搭建</p>
+<h2 id="集群介绍"><a href="#集群介绍" class="headerlink" title="集群介绍"></a>集群介绍</h2><h3 id="Cluster-Name"><a href="#Cluster-Name" class="headerlink" title="Cluster Name"></a>Cluster Name</h3><p>pinball</p>
+<h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p>搭建5个结点的测试集群，为了测试jdk1.8下hadoop的一些新特性</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h3><p>A|192.168.1.156<br>B|192.168.1.157<br>C|192.168.1.158<br>D|192.168.1.159<br>E|192.168.1.160</p>
+<h3 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>版本</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>centos</td>
+<td>7.1.1503</td>
+</tr>
+<tr>
+<td>JDK</td>
+<td>1.8u65以上</td>
+<td></td>
+</tr>
+<tr>
+<td>HADOOP</td>
+<td>2.7.1</td>
+<td></td>
+</tr>
+<tr>
+<td>ZK</td>
+<td>3.4.5</td>
+<td></td>
+</tr>
+<tr>
+<td>SPARK</td>
+<td>2.5.1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="角色分配"><a href="#角色分配" class="headerlink" title="角色分配"></a>角色分配</h3><table>
+<thead>
+<tr>
+<th>代号</th>
+<th>hostname</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>192.168.1.156</td>
+<td>NN1/RM1</td>
+</tr>
+<tr>
+<td>B</td>
+<td>192.168.1.157</td>
+<td>NN2/RM2/sparkhistory/MRJH/Metastore</td>
+</tr>
+<tr>
+<td>C</td>
+<td>192.168.1.158</td>
+<td>DN/NM/ZK/JN/HBASE</td>
+</tr>
+<tr>
+<td>D</td>
+<td>192.168.1.159</td>
+<td>DN/NM/ZK/JN/HBASE</td>
+</tr>
+<tr>
+<td>E</td>
+<td>192.168.1.160</td>
+<td>DN/NM/ZK/JN/HBASE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="角色信息"><a href="#角色信息" class="headerlink" title="角色信息"></a>角色信息</h3><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>用户</th>
+<th>相关位置</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>zk</td>
+<td>hadp</td>
+<td>/data0/logs/zookeeper-logs,/data0/zookeeper-3.4.5</td>
+<td></td>
+</tr>
+<tr>
+<td>NN</td>
+<td>hadp</td>
+<td>/data0/hadoop-logs</td>
+<td>同时启动DFSZKFailoverController进程</td>
+</tr>
+<tr>
+<td>DN</td>
+<td>hadp</td>
+<td>/data0/hadoop-logs</td>
+<td></td>
+</tr>
+<tr>
+<td>NM</td>
+<td>yarn</td>
+<td>/data1/yarn-logs</td>
+<td></td>
+</tr>
+<tr>
+<td>JN</td>
+<td>hadp</td>
+<td>/data0/hadoop-logs</td>
+<td></td>
+</tr>
+<tr>
+<td>RM</td>
+<td>yarn</td>
+<td>/data1/yarn-logs</td>
+<td></td>
+</tr>
+<tr>
+<td>MRJH</td>
+<td>mapred</td>
+<td>/data0/hadoop-logs/</td>
+<td></td>
+</tr>
+<tr>
+<td>ApplicationHistoryServer</td>
+<td>yarn</td>
+<td>/data1/yarn-logs</td>
+<td></td>
+</tr>
+<tr>
+<td>sparkHistory</td>
+<td>mapred</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="挂载硬盘"><a href="#挂载硬盘" class="headerlink" title="挂载硬盘"></a>挂载硬盘</h3><ul>
+<li>创建ext4分区并挂载到/data0和/data1<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查看已有分区和挂载点</span></div><div class="line">df -Th</div><div class="line"><span class="comment"># 查看硬盘设备</span></div><div class="line">ls /dev/sd*</div><div class="line"><span class="comment"># (*)查看未分区使用的硬盘</span></div><div class="line">blkid</div><div class="line"><span class="comment"># (*)格式化分区</span></div><div class="line">mkfs.ext4 -L data0 /dev/sdb</div><div class="line">mkfs.ext4 -L data1 /dev/sdc</div><div class="line"><span class="comment"># (*)查看分区和uuid</span></div><div class="line">blkid</div><div class="line"><span class="comment"># (*)编辑fstab文件</span></div><div class="line">vim /etc/fstab</div><div class="line"><span class="comment"># (*)加入两行</span></div><div class="line">UUID=bc5261d1-27be-4569-90fe-1f67124d3bf6 /data0 ext4 defaults 1 2</div><div class="line">UUID=8f274d7d-09db-4df5-b286-c7a2742aa128 /data1 ext4 defaults 1 2</div><div class="line"><span class="comment"># (*)创建/data0 /data1文件夹</span></div><div class="line">mkdir /data0 /data1</div><div class="line"><span class="comment"># (*)挂载 fstab中的分区</span></div><div class="line">mount <span class="_">-a</span></div><div class="line"><span class="comment"># (*)查看已有分区和挂载点</span></div><div class="line">df -Th</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="修改-etc-hosts"><a href="#修改-etc-hosts" class="headerlink" title="修改/etc/hosts"></a>修改/etc/hosts</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">192.168.1.156  HADOOP-1-156</div><div class="line">192.168.1.157  HADOOP-1-157</div><div class="line">192.168.1.158  HADOOP-1-158</div><div class="line">192.168.1.159  HADOOP-1-159</div><div class="line">192.168.1.160  HADOOP-1-160</div></pre></td></tr></table></figure>
+<h3 id="脚本介绍"><a href="#脚本介绍" class="headerlink" title="脚本介绍"></a>脚本介绍</h3><ul>
+<li>为了方便,先将root用户A到BCDE免密，然后使用工具脚本执行命令<ul>
+<li>slaves.sh 多结点执行命令</li>
+<li>allcli.sh 交互多结点执行命令</li>
+<li>createuser.sh</li>
+</ul>
+</li>
+</ul>
+<h3 id="用户和免密"><a href="#用户和免密" class="headerlink" title="用户和免密"></a>用户和免密</h3><ul>
+<li>root用户A到BCDE免密</li>
+<li><p>创建hadp,yarn,mapred用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ slaves.sh --hosts allnode createuser.sh</div></pre></td></tr></table></figure>
+</li>
+<li><p>hadp@A 和 hadp@B 到C\D\E免密</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ ssh hadp@HADOOP-1-156</div><div class="line">$ ssh-copy-id HADOOP-1-156</div><div class="line">$ ssh-copy-id HADOOP-1-158</div><div class="line">$ ssh-copy-id HADOOP-1-159</div><div class="line">$ ssh-copy-id HADOOP-1-160</div><div class="line">$ ssh hadp@HADOOP-1-157</div><div class="line">$ ssh-copy-id HADOOP-1-157</div><div class="line">$ ssh-copy-id HADOOP-1-158</div><div class="line">$ ssh-copy-id HADOOP-1-159</div><div class="line">$ ssh-copy-id HADOOP-1-160</div></pre></td></tr></table></figure>
+<ul>
+<li>yarn@A 和 yarn@B 到C\D\E免密<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ ssh yarn@HADOOP-1-156</div><div class="line">$ ssh-copy-id HADOOP-1-156</div><div class="line">$ ssh-copy-id HADOOP-1-158</div><div class="line">$ ssh-copy-id HADOOP-1-159</div><div class="line">$ ssh-copy-id HADOOP-1-160</div><div class="line">$ ssh yarn@HADOOP-1-157</div><div class="line">$ ssh-copy-id HADOOP-1-157</div><div class="line">$ ssh-copy-id HADOOP-1-158</div><div class="line">$ ssh-copy-id HADOOP-1-159</div><div class="line">$ ssh-copy-id HADOOP-1-160</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="配置JDK1-8-65"><a href="#配置JDK1-8-65" class="headerlink" title="配置JDK1.8.65"></a>配置JDK1.8.65</h3><h3 id="搭建zookeeper"><a href="#搭建zookeeper" class="headerlink" title="搭建zookeeper"></a>搭建zookeeper</h3><p>在C D E上搭建zookeeper</p>
+<ul>
+<li>分别配置conf/zoo.cfg</li>
+<li>分别生成文件/data0/zookeeper-3.4.5/data/myid，内容在C D E 上分别为1、2、3</li>
+<li>启动(在setup_all.sh脚本中启动)单独启动脚本如下<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./slaves.sh --hosts zknode <span class="string">'su - hadp -c "/software/servers/zookeeper-3.4.5/bin/zkServer.sh start"'</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="搭建HDFS"><a href="#搭建HDFS" class="headerlink" title="搭建HDFS"></a>搭建HDFS</h3><p>在A上以hdfs用户执行<code>hdfs zkfc -formatZK</code>，会在zk中创建结点<code>/pinball-hadoop-ha/ns1</code></p>
+<ul>
+<li>启动jn<br>编辑/etc/hadoop/slaves 换行分割<br><code>sbin/hadoop-daemons.sh --hosts jn_slaves start journalnode</code></li>
+</ul>
+<h3 id="复制需要的jar到对应的目录"><a href="#复制需要的jar到对应的目录" class="headerlink" title="复制需要的jar到对应的目录"></a>复制需要的jar到对应的目录</h3><p>./hadoop/common/lib/hadoop-lzo-0.4.20.jar<br>./hadoop/yarn/spark-1.4.0-SNAPSHOT-yarn-shuffle.jar</p>
+<h3 id="启动所有（zk、hdfs、yarn、目录权限）"><a href="#启动所有（zk、hdfs、yarn、目录权限）" class="headerlink" title="启动所有（zk、hdfs、yarn、目录权限）"></a>启动所有（zk、hdfs、yarn、目录权限）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./setup_all.sh</div></pre></td></tr></table></figure>
+<h3 id="卸载所有-zk、hdfs、yarn、log、data"><a href="#卸载所有-zk、hdfs、yarn、log、data" class="headerlink" title="卸载所有 (zk、hdfs、yarn、log、data)"></a>卸载所有 (zk、hdfs、yarn、log、data)</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./uninstall_all.sh</div></pre></td></tr></table></figure>
+<h3 id="检查是否成功"><a href="#检查是否成功" class="headerlink" title="检查是否成功"></a>检查是否成功</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./check.sh</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;hadoop-HA-cluster-build&quot;&gt;&lt;a href=&quot;#hadoop-HA-cluster-build&quot; class=&quot;headerlink&quot; title=&quot;hadoop-HA-cluster-build&quot;&gt;&lt;/a&gt;hadoop-HA-cluster
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title></title>
+    <link href="/2017/05/05/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/go/go/"/>
+    <id>/2017/05/05/技术学习/go/go/</id>
+    <published>2017-05-05T09:11:18.774Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">go get github.com/astaxie/beego</div></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">package</span> main</div><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">	<span class="string">"github.com/astaxie/beego"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="keyword">type</span> HomeController <span class="keyword">struct</span> &#123;</div><div class="line">	beego.Controller</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(this *HomeController)</span> <span class="title">Get</span><span class="params">()</span></span> &#123;</div><div class="line">	this.Ctx.WriteString(<span class="string">"hello world! 你好，世界！"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</div><div class="line">	beego.Router(<span class="string">"/"</span>, &amp;HomeController&#123;&#125;)</div><div class="line">	beego.Run()</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>hdfs safemode</title>
+    <link href="/2017/04/26/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/hadoop/hadoop_safemode/"/>
+    <id>/2017/04/26/技术学习/bigdata/hadoop/hadoop_safemode/</id>
+    <published>2017-04-26T16:39:42.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="HDFS-安全模式的理解"><a href="#HDFS-安全模式的理解" class="headerlink" title="HDFS 安全模式的理解"></a>HDFS 安全模式的理解</h2><p>安全模式是hadoop的一种保护机制，用于保证集群中的数据块的安全性。</p>
+<p>当集群启动的时候，会首先进入安全模式。当系统处于安全模式时会检查数据块的完整性。假设我们设置的副本数（即参数dfs.replication）是5，那么在datanode上就应该有5个副本存在，假设只存在3个副本，那么比例就是3/5=0.6。在配置文件hdfs-default.xml中定义了一个最小的副本的副本率0.999，如图</p>
+<p><img src="/images/safemode-config.png" width="50%" height="50%" align="center/"></p>
+<p>我们的副本率0.6明显小于0.99，因此系统会自动的复制副本到其他的dataNode,使得副本率不小于0.999.如果系统中有8个副本，超过我们设定的5个副本，那么系统也会删除多余的3个副本。</p>
+<p>这时，不允许客户端进行任何修改文件的操作,包括上传文件，删除文件，重命名，创建文件夹等操作。</p>
+<h2 id="通过命令查看控制安全模式"><a href="#通过命令查看控制安全模式" class="headerlink" title="通过命令查看控制安全模式"></a>通过命令查看控制安全模式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查看安全模式状态</span></div><div class="line">$ hdfs dfsadmin -safemode get </div><div class="line"></div><div class="line"><span class="comment"># 进入安全模式状态</span></div><div class="line">$ hdfs dfsadmin -safemode enter</div><div class="line"></div><div class="line"><span class="comment"># 离开安全模式</span></div><div class="line">$ hdfs dfsadmin -safemode leave</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      介绍hdfs safemode
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="hadoop" scheme="/tags/hadoop/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hdfs fsimage replace</title>
+    <link href="/2017/04/26/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/hadoop/hdfs-fsimage-replace/"/>
+    <id>/2017/04/26/技术学习/bigdata/hadoop/hdfs-fsimage-replace/</id>
+    <published>2017-04-26T02:41:54.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="fsimage-和-editlog"><a href="#fsimage-和-editlog" class="headerlink" title="fsimage 和 editlog"></a>fsimage 和 editlog</h2><p>fsimage保存了最新的元数据检查点。</p>
+<p>edits保存自最新检查点后的命名空间的变化。</p>
+<p>从最新检查点后，hadoop将对每个文件的操作都保存在edits中，为避免edits不断增大，secondary namenode就会周期性合并fsimage和edits成新的fsimage，edits再记录新的变化。</p>
+<p>这种机制有个问题：因edits存放在Namenode中，当Namenode挂掉，edits也会丢失，导致利用secondary namenode恢复Namenode时，会有部分数据丢失。</p>
+<p><img src="/images/fsimage_editlog.jpg" width="50%" height="50%" align="center/"></p>
+<h2 id="替换fsimage"><a href="#替换fsimage" class="headerlink" title="替换fsimage"></a>替换fsimage</h2><ul>
+<li><p>将其他namenode的fsimage复制到目标集群的namenode(active/standby)中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ scp fsimage_xxxxxx fsimage_xxxxxx.md5  hostname:/data0/nn/current/</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改seen_txid</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> xxxxxx+1 &gt;&gt; /data0/nn/current/seen_txid</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="加载fsimage"><a href="#加载fsimage" class="headerlink" title="加载fsimage"></a>加载fsimage</h2><ul>
+<li><p>停止集群namenode</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ su - hadp -c <span class="string">"hadoop-daemons.sh --hosts nns stop namenode"</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>初始化journalnode</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs namenode -initializeSharedEdits</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动namenode</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ su - hadp -c <span class="string">"hadoop-daemons.sh --hosts nns start namenode"</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>启动过程中，在hdfs页面可以看到Startup Progress页中正在Loading fsimage</p>
+<ul>
+<li>离开safe mode<br>离开safemode，否则无法创建文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hdfs  dfsadmin -safemode leave</div></pre></td></tr></table></figure>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      介绍hdfs namenode 替换fsimage
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="hadoop" scheme="/tags/hadoop/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Alluxio worker startup flow</title>
+    <link href="/2017/03/29/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-worker-startup/"/>
+    <id>/2017/03/29/技术学习/bigdata/alluxio/alluxio-worker-startup/</id>
+    <published>2017-03-29T10:51:11.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Worker-java进程-流程"><a href="#Worker-java进程-流程" class="headerlink" title="Worker java进程 流程"></a>Worker java进程 流程</h2><p>首先，可以通过mount手动挂载内存盘。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alluxio fs mount -readonly /ns2 hdfs://ns2/</div></pre></td></tr></table></figure>
+<p>然后，执行<code>alluxio-start.sh</code>脚本启动worker，启动方式有以下几种：</p>
+<ul>
+<li>在worker节点执行<code>alluxio-startup.sh worker NoMount</code> 单独启动worker 而不挂载内存盘</li>
+<li>在master节点执行<code>alluxio-startup.sh workers</code> 只启动<code>conf/workers</code>文件中的worker列表中的worker，<br>前提是master节点到worker节点已经免密</li>
+<li>在master节点执行<code>alluxio-startup.sh all NoMount</code>启动master的同时，启动<code>conf/workers</code>文件中的worker列表中的worker，<br>前提是master节点到worker节点已经免密</li>
+</ul>
+<p>启动成功后，通过<code>ps</code>查看启动是否成功以及启动参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ps -ef|grep alluxio.worker.AlluxioWorker</div><div class="line">/software/softwares/linux/jdks/jdk1.8.0_92/bin/java -cp /software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/::/software/projects/AllIdeaProjects/gits/prestoAlluxio/assembly/target/alluxio-assemblies-1.4.1-SNAPSHOT-jar-with-dependencies.jar -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5601 -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/dev/shm -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.logger.type=WORKER_LOGGER alluxio.worker.AlluxioWorker</div></pre></td></tr></table></figure></p>
+<p>也可以通过<code>jps -mlv</code>查看启动是否成功以及启动参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ jps -mlv|grep alluxio.worker.AlluxioWorker</div><div class="line">alluxio.worker.AlluxioWorker -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5601 -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/prestoAlluxio -Dalluxio.logs.dir=/software/data0/alluxio/log -Dalluxio.worker.tieredstore.level0.dirs.path=/home/mbl/ramdisk -Dalluxio.master.hostname=localhost -Dalluxio.worker.memory.size=100MB -Dlog4j.configuration=file:/software/projects/AllIdeaProjects/gits/prestoAlluxio/conf/log4j.properties -Dorg.apache.jasper.compiler.disablejsr199=true -Djava.net.preferIPv4Stack=true -Dalluxio.home=/software/projects/AllIdeaProjects/gits/`</div></pre></td></tr></table></figure></p>
+<h2 id="alluxio-worker-AlluxioWorker启动初始化过程"><a href="#alluxio-worker-AlluxioWorker启动初始化过程" class="headerlink" title="alluxio.worker.AlluxioWorker启动初始化过程"></a>alluxio.worker.AlluxioWorker启动初始化过程</h2><p>入口类为<code>alluxio.worker.AlluxioWorker</code></p>
+<ul>
+<li>启动时必须不能传参数。</li>
+<li>alluxio.master.hostname必须配置,可以在<code>alluxio-site.properties</code>中指定，或环境变量<code>ALLUXIO_MASTER_HOSTNAME</code>必须配置。<br>也或者配置了<code>alluxio.zookeeper.enabled</code>为true，即启动了HA，并且配置了<code>alluxio.zookeeper.address</code>，则<code>alluxio.master.hostname</code>可以不配置。</li>
+<li>构造服务<code>AlluxioWorkerService</code>，同时启动了<code>data-server-boss-x</code>线程<code>NettyDataServer</code>。用来回应块请求</li>
+<li>启动服务<code>AlluxioWorkerService</code></li>
+</ul>
+<h2 id="AlluxioWorkerService启动过程"><a href="#AlluxioWorkerService启动过程" class="headerlink" title="AlluxioWorkerService启动过程"></a>AlluxioWorkerService启动过程</h2><p>NOTE: 启动不同服务的顺序是敏感的，如果你要修改，小心点。</p>
+<ul>
+<li>启动<strong>Metrics</strong>监控，如果metrics.properties中配置了<code>sink.[console|csv|jmx].class</code>,则启动report线程，同时配置多个，则启动多个report线程。</li>
+<li>将Servlet方式的Metrics加入webServer并启动<strong>webServer</strong>。</li>
+<li>启动<strong>所有worker</strong>，这里的worker是worker里的概念包括（BlockWorker(目前只有DefaultBlockWorker)、FilesystemWorker（目前只有DefaultFileSystemWorker）和AdditionalWorkers），<br>由于目前没有开启keyValue，mAdditionalWorkers没有内容。</li>
+<li>阻塞的启动<strong>Thrift服务</strong><code>mThriftServer.serve()</code>，至此主线程阻塞，所有启动初始化完成。</li>
+</ul>
+<h3 id="启动Metrics过程"><a href="#启动Metrics过程" class="headerlink" title="启动Metrics过程"></a>启动Metrics过程</h3><p>启动report线程，周期性report指标值</p>
+<h3 id="启动WebServer过程"><a href="#启动WebServer过程" class="headerlink" title="启动WebServer过程"></a>启动WebServer过程</h3><p>启动webServer，提供web服务</p>
+<h3 id="DefaultBlockWorker的启动过程"><a href="#DefaultBlockWorker的启动过程" class="headerlink" title="DefaultBlockWorker的启动过程"></a>DefaultBlockWorker的启动过程</h3><ul>
+<li>启动SpaceReserver，如果enable</li>
+<li>启动BlockMasterSync</li>
+<li>启动PinListSync</li>
+<li>启动SessionCleaner</li>
+<li>启动BlockLockWarnReporter，如果enable</li>
+</ul>
+<h4 id="SpaceReserver"><a href="#SpaceReserver" class="headerlink" title="SpaceReserver"></a>SpaceReserver</h4><p>以心跳间隔周期性检查空间是否达到高水位，如果达到，进行freespace，降低到低水位</p>
+<h4 id="BlockMasterSync"><a href="#BlockMasterSync" class="headerlink" title="BlockMasterSync"></a>BlockMasterSync</h4><p>向Master汇报信息。包括当前worker使用的容量，增加的块，删除的块。同时，执行master会回复命令。<br>master回复的命令有Unknown(0),Nothing(1),Register(2),Free(3),Delete(4),Persist(5)</p>
+<h4 id="PinListSync"><a href="#PinListSync" class="headerlink" title="PinListSync"></a>PinListSync</h4><p>周期性的从master同步pinned inodes到worker，用在freespace时排除pinned块</p>
+<h4 id="SessionCleaner"><a href="#SessionCleaner" class="headerlink" title="SessionCleaner"></a>SessionCleaner</h4><p>周期性检查是否有超时的僵尸会话，删除僵尸会话以及关联的数据</p>
+<h4 id="BlockLockWarnReporter"><a href="#BlockLockWarnReporter" class="headerlink" title="BlockLockWarnReporter"></a>BlockLockWarnReporter</h4><p>周期性检查超时的锁，并警告输出。</p>
+<h3 id="DefaultFileSystemWorker的启动过程"><a href="#DefaultFileSystemWorker的启动过程" class="headerlink" title="DefaultFileSystemWorker的启动过程"></a>DefaultFileSystemWorker的启动过程</h3><ul>
+<li>启动FileWorkerMasterSyncExecutor， 周期性向master汇报persisted文件，执行master的同步persisted文件命令</li>
+<li>启动SessionCleaner，负责清理超过超时值的僵尸session</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      Alluxio worker startup flow
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alluxio session</title>
+    <link href="/2017/03/26/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-session/"/>
+    <id>/2017/03/26/技术学习/bigdata/alluxio/alluxio-session/</id>
+    <published>2017-03-26T13:00:16.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<p>Session指不通角色间的RPC通信</p>
+<h2 id="一般session"><a href="#一般session" class="headerlink" title="一般session"></a>一般session</h2><p>一般的sessionId为Long长度的随机非负数数，用以下函数获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">long</span> <span class="title">getRandomNonNegativeLong</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> Math.abs(sRandom.nextLong());</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="特殊session"><a href="#特殊session" class="headerlink" title="特殊session"></a>特殊session</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DATASERVER_SESSION_ID = -<span class="number">1</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CHECKPOINT_SESSION_ID = -<span class="number">2</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIGRATE_DATA_SESSION_ID = -<span class="number">3</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MASTER_COMMAND_SESSION_ID = -<span class="number">4</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> ACCESS_BLOCK_SESSION_ID = -<span class="number">5</span>;</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> KEYVALUE_SESSION_ID = -<span class="number">6</span>;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      alluxio session
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alluxio exception</title>
+    <link href="/2017/03/16/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-exceptions/"/>
+    <id>/2017/03/16/技术学习/bigdata/alluxio/alluxio-exceptions/</id>
+    <published>2017-03-16T18:21:56.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<table>
+<thead>
+<tr>
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AlluxioException</td>
+<td>一般的AlluxioException用在整个系统，它必须能序列化自己到RPC框架再转换回来，没有丢失任何必要的信息</td>
+</tr>
+<tr>
+<td>AccessControlException</td>
+<td>当权限检查失败时候抛出</td>
+</tr>
+<tr>
+<td>BlockAlreadyExistsException</td>
+<td>当一个块已经存在于Alluxio时抛出异常</td>
+</tr>
+<tr>
+<td>BlockDoesNotExistException</td>
+<td>当一个块不存在于Alluxio时抛出异常</td>
+</tr>
+<tr>
+<td>BlockInfoException</td>
+<td>当块出错了，比如一个输出文件不能创建或者块字节大小无效时抛出异常</td>
+</tr>
+<tr>
+<td>ConnectionFailedException</td>
+<td>连接失败异常，当网络连接失败发生时，例如网络连接超时，连接拒绝，主机拒绝</td>
+</tr>
+<tr>
+<td>DependencyDoesNotExistException</td>
+<td>当依赖不存在于Alluxio，抛出异常</td>
+</tr>
+<tr>
+<td>DirectoryNotEmptyException</td>
+<td>文件夹非空，当删除一个非空文件夹没有使用<code>recursive</code>参数时</td>
+</tr>
+<tr>
+<td>FailedToCheckpointException</td>
+<td>文件夹非空，当Alluxio创建检查点失败</td>
+</tr>
+<tr>
+<td>FileAlreadyCompletedException</td>
+<td>文件已经完成异常，当一个文件在Alluxio中已经完成</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    
+    <summary type="html">
+    
+      alluxio exception
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>java unit test</title>
+    <link href="/2017/03/08/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/java/unitTest/"/>
+    <id>/2017/03/08/技术学习/java/unitTest/</id>
+    <published>2017-03-08T15:55:10.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="PowerMockito"><a href="#PowerMockito" class="headerlink" title="PowerMockito"></a>PowerMockito</h2><h3 id="PowerMock简介"><a href="#PowerMock简介" class="headerlink" title="PowerMock简介"></a>PowerMock简介</h3><p>PowerMock是一个扩展了其它如EasyMock等mock框架的、功能更加强大的框架。PowerMock使用一个自定义类加载器和字节码操作来模拟静态方法，构造函数，final类和方法，私有方法，去除静态初始化器等等。通过使用自定义的类加载器，简化采用的IDE或持续集成服务器不需要做任何改变。熟悉PowerMock支持的mock框架的开发人员会发现PowerMock很容易使用，因为对于静态方法和构造器来说，整个的期望API是一样的。PowerMock旨在用少量的方法和注解扩展现有的API来实现额外的功能。目前PowerMock支持EasyMock和Mockito。</p>
+<h3 id="why"><a href="#why" class="headerlink" title="why"></a>why</h3><p>在做单元测试的时候，我们会发现我们要测试的方法会引用很多外部依赖的对象，比如：（发送邮件，网络通讯，远程服务, 文件系统等等）。 而我们没法控制这些外部依赖的对象，为了解决这个问题，我们就需要用到Mock工具来模拟这些外部依赖的对象，来完成单元测试。</p>
+<p>现如今比较流行的Mock工具如jMock 、EasyMock 、Mockito等都有一个共同的缺点：不能mock静态、final、私有方法等。而PowerMock能够完美的弥补以上三个Mock工具的不足。</p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><ul>
+<li>使用PowerMockito测试</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">PowerMockito.mockStatic(ShellUtils.class);</div><div class="line"><span class="comment">// 当测试调用到execCommand方法时，传入参数为username，则返回给定的字符串</span></div><div class="line">String shellResult = <span class="string">"group"</span>;</div><div class="line">PowerMockito.when(</div><div class="line">        ShellUtils.execCommand(Mockito.eq(username)))</div><div class="line">        .thenReturn(shellResult);</div><div class="line"><span class="comment">// getUnixGroups方法会调用到execCommand方法</span></div><div class="line">List&lt;String&gt; groups = CommonUtils.getUnixGroups(userName);</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      介绍java 单元测试
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="java" scheme="/tags/java/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>presto使用</title>
+    <link href="/2017/03/08/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/presto/presto/"/>
+    <id>/2017/03/08/技术学习/bigdata/presto/presto/</id>
+    <published>2017-03-08T13:28:09.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="启动presto客户端"><a href="#启动presto客户端" class="headerlink" title="启动presto客户端"></a>启动presto客户端</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">./presto-cli-0.132-SNAPSHOT-executable.jar --server serverIp:port --catalog jd_ad --schema adw</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      presto使用
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alluxio locations分析</title>
+    <link href="/2017/03/08/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-locations/"/>
+    <id>/2017/03/08/技术学习/bigdata/alluxio/alluxio-locations/</id>
+    <published>2017-03-08T13:28:09.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="负责view-file页面展示的jsp"><a href="#负责view-file页面展示的jsp" class="headerlink" title="负责view-file页面展示的jsp"></a>负责view-file页面展示的jsp</h2><p>从以下代码可以分析到服务端会传参数<code>fileBlocks</code>,类型为<code>(List&lt;UIFileBlockInfo&gt;</code>，把<code>UIFileBlockInfo</code>类中<br>类型为<code>List&lt;String&gt;</code>的属性<code>mLocations</code>显示到table列<code>Locations</code>中。</p>
+<p>问题转向类<code>UIFileBlockInfo</code>如何构造<code>mLocations</code>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;table class="table table-bordered table-striped"&gt;</div><div class="line">          &lt;tr&gt;</div><div class="line">            &lt;th&gt;ID&lt;/th&gt;</div><div class="line">            &lt;th&gt;Size (Byte)&lt;/th&gt;</div><div class="line">            &lt;th&gt;In &lt;%= request.getAttribute("highestTierAlias") %&gt;&lt;/th&gt;</div><div class="line">            &lt;th&gt;Locations&lt;/th&gt;</div><div class="line">          &lt;/tr&gt;</div><div class="line">          &lt;% for (UIFileBlockInfo masterBlockInfo : ((List&lt;UIFileBlockInfo&gt;) request.getAttribute("fileBlocks"))) &#123; %&gt;</div><div class="line">            &lt;tr&gt;</div><div class="line">              &lt;td&gt;&lt;%= masterBlockInfo.getID() %&gt;&lt;/td&gt;</div><div class="line">              &lt;td&gt;&lt;%= masterBlockInfo.getBlockLength() %&gt;&lt;/td&gt;</div><div class="line">              &lt;td&gt;</div><div class="line">                &lt;% if (masterBlockInfo.isInTier((String) request.getAttribute("highestTierAlias"))) &#123; %&gt;</div><div class="line">                  Yes</div><div class="line">                &lt;% &#125; else &#123; %&gt;</div><div class="line">                  No</div><div class="line">                &lt;% &#125; %&gt;</div><div class="line">              &lt;/td&gt;</div><div class="line">              &lt;td&gt;</div><div class="line">                &lt;% Iterator&lt;String&gt; iterator = masterBlockInfo.getLocations().iterator(); %&gt;</div><div class="line">                &lt;% while (iterator.hasNext()) &#123; %&gt;</div><div class="line">                    &lt;% String location = iterator.next(); %&gt;</div><div class="line">                    &lt;%= location %&gt;</div><div class="line">                    &lt;% if(iterator.hasNext()) &#123; %&gt;</div><div class="line">                      ,</div><div class="line">                    &lt;% &#125; %&gt;</div><div class="line">                &lt;% &#125; %&gt;</div><div class="line">              &lt;/td&gt;</div><div class="line">            &lt;/tr&gt;</div><div class="line">          &lt;% &#125; %&gt;</div><div class="line">        &lt;/table&gt;</div></pre></td></tr></table></figure>
+<h2 id="类UIFileBlockInfo如何构造mLocations"><a href="#类UIFileBlockInfo如何构造mLocations" class="headerlink" title="类UIFileBlockInfo如何构造mLocations"></a>类<code>UIFileBlockInfo</code>如何构造<code>mLocations</code></h2><p><code>UIFileBlockInfo</code> 构造函数会调用 <code>addLocations</code>方法，传入参数为<code>FileBlockInfo</code>。</p>
+<p>分析以下代码可知，<code>addLocations</code>方法会把<code>fileBlockInfo</code>的<code>BlockInfo</code>中的<code>mLocations</code>和<code>fileBlockInfo</code>的<br><code>mUfsLocations</code>全部加到<code>Set&lt;String&gt;</code>集合中，返回。由于是集合，所以重复的location会被合并。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addLocations</span><span class="params">(FileBlockInfo fileBlockInfo)</span> </span>&#123;</div><div class="line">  Set&lt;String&gt; locations = <span class="keyword">new</span> HashSet&lt;&gt;();</div><div class="line">  <span class="comment">// add alluxio locations</span></div><div class="line">  <span class="keyword">for</span> (BlockLocation location : fileBlockInfo.getBlockInfo().getLocations()) &#123;</div><div class="line">    locations.add(location.getWorkerAddress().getHost());</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// add underFS locations</span></div><div class="line">  <span class="keyword">for</span> (String location : fileBlockInfo.getUfsLocations()) &#123;</div><div class="line">    locations.add(HostAndPort.fromString(location).getHostText());</div><div class="line">  &#125;</div><div class="line">  mLocations.addAll(locations);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="文件不在内存中和load到内存后，locations信息的变化"><a href="#文件不在内存中和load到内存后，locations信息的变化" class="headerlink" title="文件不在内存中和load到内存后，locations信息的变化"></a>文件不在内存中和load到内存后，locations信息的变化</h2><ul>
+<li><p>不在内存时，<code>fileBlockInfo.getBlockInfo().getLocations()</code>的大小应该为0。fileBlockInfo.getUfsLocations()<br>应该为在ufs中的位置。</p>
+</li>
+<li><p>Load到内存后，<code>addLocations</code>方法会把<code>fileBlockInfo.getBlockInfo().getLocations()</code>的返回结果返回。而<br><code>fileBlockInfo.getUfsLocations()</code>为空。</p>
+</li>
+</ul>
+<p>注：以上提到的<code>FileBlockInfo</code> 来自包<code>alluxio.wire</code>。</p>
+<p>以下代码if分支处，在文件已经在内存中的情况下，<code>fileBlockInfo.getBlockInfo().getLocations()</code>不为空，则<br><code>fileBlockInfo.getBlockInfo().getLocations().isEmpty()</code>不成立，所以<code>ufsLocations</code>不会被赋值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// FileSystemMaster.java</span></div><div class="line"><span class="function"><span class="keyword">private</span> FileBlockInfo <span class="title">generateFileBlockInfo</span><span class="params">(LockedInodePath inodePath, BlockInfo blockInfo)</span></span></div><div class="line">      <span class="keyword">throws</span> InvalidPathException, FileDoesNotExistException &#123;</div><div class="line">    InodeFile file = inodePath.getInodeFile();</div><div class="line">    FileBlockInfo fileBlockInfo = <span class="keyword">new</span> FileBlockInfo();</div><div class="line">    fileBlockInfo.setBlockInfo(blockInfo);</div><div class="line">    fileBlockInfo.setUfsLocations(<span class="keyword">new</span> ArrayList&lt;String&gt;());</div><div class="line"></div><div class="line">    <span class="comment">// The sequence number part of the block id is the block index.</span></div><div class="line">    <span class="keyword">long</span> offset = file.getBlockSizeBytes() * BlockId.getSequenceNumber(blockInfo.getBlockId());</div><div class="line">    fileBlockInfo.setOffset(offset);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (fileBlockInfo.getBlockInfo().getLocations().isEmpty() &amp;&amp; file.isPersisted()) &#123;</div><div class="line">      <span class="comment">// No alluxio locations, but there is a checkpoint in the under storage system. Add the</span></div><div class="line">      <span class="comment">// locations from the under storage system.</span></div><div class="line">      MountTable.Resolution resolution = mMountTable.resolve(inodePath.getUri());</div><div class="line">      String ufsUri = resolution.getUri().toString();</div><div class="line">      UnderFileSystem ufs = resolution.getUfs();</div><div class="line">      List&lt;String&gt; locs;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        locs = ufs.getFileLocations(ufsUri,</div><div class="line">            FileLocationOptions.defaults().setOffset(fileBlockInfo.getOffset()));</div><div class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">        <span class="keyword">return</span> fileBlockInfo;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">if</span> (locs != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">for</span> (String loc : locs) &#123;</div><div class="line">          fileBlockInfo.getUfsLocations().add(loc);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> fileBlockInfo;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>所以得出结论：<em>Load到内存后，<code>locations</code>为block在worker的host，而不再有ufsLocation了.</em></p>
+<h2 id="Load时，如何构造locations"><a href="#Load时，如何构造locations" class="headerlink" title="Load时，如何构造locations"></a>Load时，如何构造locations</h2><p>BlockMaster.commitBlock -&gt;<br>BlockMasterWorkerServiceHandler.commitBlock -&gt;</p>
+<p>RetryHandlingBlockWorkerClient.cacheBlock -&gt;<br>LocalBlockOutStream.<br>mCurrentCacheStream.close -&gt;<br>FileInStream.close -&gt;<br>LoadCommand.runCommand -&gt;</p>
+]]></content>
+    
+    <summary type="html">
+    
+      alluxio locations分析
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hadoop namenode repicationmonitor exception</title>
+    <link href="/2017/03/08/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/hadoop/hadoop-namenode-repicationmonitor-exception/"/>
+    <id>/2017/03/08/技术学习/bigdata/hadoop/hadoop-namenode-repicationmonitor-exception/</id>
+    <published>2017-03-08T13:28:09.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>集群版本从2.4.1升级到2.7.1之后，出现了一个诡异的问题，虽然没有影响到线上正常读写服务，但是潜在的问题还是比较严重</p>
+<p>监控显示UnderReplicatedBlocks和PendingDeletionBlocks持续堆积。</p>
+<p>从NameNode的jstack获得信息ReplicationMonitor线程在长期执行chooseRandom函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&quot;org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationMonitor@254e0df1&quot; daemon prio=10 tid=0x00007f59b4364800 nid=0xa7d9 runnable [0x00007f2baf40b000]</div><div class="line">   java.lang.Thread.State: RUNNABLE</div><div class="line">        at java.util.AbstractCollection.toArray(AbstractCollection.java:195)</div><div class="line">        at java.lang.String.split(String.java:2311)</div><div class="line">        at org.apache.hadoop.net.NetworkTopology$InnerNode.getLoc(NetworkTopology.java:282)</div><div class="line">        at org.apache.hadoop.net.NetworkTopology$InnerNode.getLoc(NetworkTopology.java:292)</div><div class="line">        at org.apache.hadoop.net.NetworkTopology$InnerNode.access$000(NetworkTopology.java:82)</div><div class="line">        at org.apache.hadoop.net.NetworkTopology.getNode(NetworkTopology.java:539)</div><div class="line">        at org.apache.hadoop.net.NetworkTopology.countNumOfAvailableNodes(NetworkTopology.java:775)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseRandom(BlockPlacementPolicyDefault.java:707)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:383)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:432)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:225)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockPlacementPolicyDefault.chooseTarget(BlockPlacementPolicyDefault.java:120)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationWork.chooseTargets(BlockManager.java:3783)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationWork.access$200(BlockManager.java:3748)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.computeReplicationWorkForBlocks(BlockManager.java:1408)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.computeReplicationWork(BlockManager.java:1314)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager.computeDatanodeWork(BlockManager.java:3719)</div><div class="line">        at org.apache.hadoop.hdfs.server.blockmanagement.BlockManager$ReplicationMonitor.run(BlockManager.java:3671)</div><div class="line">        at java.lang.Thread.run(Thread.java:745)</div></pre></td></tr></table></figure>
+<p>异常出现场景：</p>
+<ol>
+<li>坏盘、DataNode Decommision或进程异常退出，但不能稳定复现；</li>
+<li>外部环境无任何变化和异常，正常读写服务期偶发。</li>
+</ol>
+<p>ReplicationMonitor线程运行异常，造成数据块的副本不能及时补充，如果异常长期存在，极有可能出现丢数据的情况，在没有其他信息辅助解决的情况下，唯一的办法就是重启NameNode</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://hexiaoqiao.github.io/blog/2016/09/13/namenode-repicationmonitor-exception-trace/" target="_blank" rel="external">http://hexiaoqiao.github.io/blog/2016/09/13/namenode-repicationmonitor-exception-trace/</a></li>
+<li><a href="https://issues.apache.org/jira/browse/HDFS-10453" target="_blank" rel="external">https://issues.apache.org/jira/browse/HDFS-10453</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      NameNode RepicationMonitor异常
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alluxio profile</title>
+    <link href="/2017/03/06/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-profile/"/>
+    <id>/2017/03/06/技术学习/bigdata/alluxio/alluxio-profile/</id>
+    <published>2017-03-06T11:46:57.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>列出性能瓶颈可能存在的地方，并进行测试验证，最后优化。</p>
+<h2 id="性能瓶颈"><a href="#性能瓶颈" class="headerlink" title="性能瓶颈"></a>性能瓶颈</h2><ul>
+<li>内存替换</li>
+<li></li>
+</ul>
+<h3 id="内存替换"><a href="#内存替换" class="headerlink" title="内存替换"></a>内存替换</h3><p>为了提升Alluxio性能，发现性能瓶颈，测试alluxio worker不满和满时LOAD数据对性能的影响，由于alluxio worker内存满<br>后再有block进入时会申请释放空间，发生内存替换，通过测试，得出内存替换算法是否有优化的必要。</p>
+<p>采用串行测试方式和并行测试方式进行测试。串行测试是一个文件一个文件的加载，测试开始时确保内存为空。而并行测试有两种<br>情况，一种情况内存为空，LOAD 20个100M文件到内存中。另一种情况内存已满，LOAD 20个100M文件到内存中。</p>
+<ul>
+<li>结论<br>内存发生置换并没有造成性能下降。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      alluxio profile
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alluxio eviction strategy</title>
+    <link href="/2017/03/06/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-eviction-strategy/"/>
+    <id>/2017/03/06/技术学习/bigdata/alluxio/alluxio-eviction-strategy/</id>
+    <published>2017-03-06T11:45:11.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Worker内存满时Load文件的过程"><a href="#Worker内存满时Load文件的过程" class="headerlink" title="Worker内存满时Load文件的过程"></a>Worker内存满时Load文件的过程</h2><ul>
+<li>读文件（ReadType.CACHE_PROMOTE）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>call stack</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>(BlockStoreEventListener)LRUEvictor.onRemoveBlockByWorker -&gt;                     |通知listener，包括evictor,blockHeartbeatReporter,BlockMetricsReporter|<br>TieredBlockStore.freeSpaceInternal -&gt;                                            |如果内存满|<br>(BlockStore)TieredBlockStore.createBlockMeta -&gt;                                  |创建临时块失败|<br>(BlockWorker)DefaultBlockWorker.createBlock -&gt;                                   |创建块|<br>BlockWorkerClientServiceHandler.requestBlockLocation-&gt;                           |请求块路径|<br>||<br>client –&gt; thrift –&gt; worker                                                     |进入worker|<br>||<br>(BlockWorkerClientService)RetryHandlingBlockWorkerClient.requestBlockLocation -&gt; ||<br>new LocalBlockOutStream -&gt;                                                       |RemoteBlockOutStream|<br>StreamFactory.createLocalBlockOutStream -&gt;                                       |createRemoteBlockOutStream|<br>AlluxioBlockStore.getOutStream -&gt;                                                ||<br>FileInStream.updateCacheStream -&gt;                                                ||<br>FileInStream.updateStreams -&gt;                                                    ||<br>FileInStream.read -&gt;                                                            |或api|<br>LoadCommand.runCommand -&gt;                                                                   |加载HDFS文件|<br>AlluxioShell -&gt;                                                                  ||</p>
+<table>
+<thead>
+<tr>
+<th>call stack</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>(BlockStoreEventListener)LRUEvictor.onRemoveBlockByWorker -&gt;                     |通知listener，包括evictor,blockHeartbeatReporter,BlockMetricsReporter|<br>TieredBlockStore.freeSpaceInternal -&gt;                                            |如果内存满|<br>(BlockStore)TieredBlockStore.createBlockMeta -&gt;                                  |创建临时块失败|<br>(BlockWorker)DefaultBlockWorker.createBlock -&gt;                                   |创建块|<br>BlockWorkerClientServiceHandler.requestBlockLocation-&gt;                           |请求块路径|<br>||<br>client –&gt; thrift –&gt; worker                                                     |进入worker|<br>||<br>(BlockWorkerClientService)RetryHandlingBlockWorkerClient.requestBlockLocation -&gt; ||<br>new LocalBlockOutStream -&gt;                                                       |RemoteBlockOutStream|<br>StreamFactory.createLocalBlockOutStream -&gt;                                       |createRemoteBlockOutStream|<br>AlluxioBlockStore.getOutStream -&gt;                                                ||<br>FileInStream.updateCacheStream -&gt;                                                ||<br>FileInStream.updateStreams -&gt;                                                ||<br>FileInStream.close -&gt;                                                            |或api|<br>LoadCommand.runCommand -&gt;                                                                   |加载HDFS文件|<br>AlluxioShell -&gt;                                                                  ||</p>
+<table>
+<thead>
+<tr>
+<th>call stack</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>(BlockStoreEventListener)LRUEvictor.onRemoveBlockByWorker||<br>TieredBlockStore.freeSpaceInternal||<br>TieredBlockStore.requestSpace||<br>DefaultBlockWorker.requestSpace||<br>BlockWorkerClientServiceHandler.requestSpace -&gt;                                           ||<br>client –&gt; thrift –&gt; worker ||<br>(BlockWorkerClientService)RetryHandlingBlockWorkerClient.requestSpace -&gt;||<br>LocalBlockOutStream.unBufferedWrite -&gt;                                                ||<br>BufferedBlockOutStream.write -&gt;                                                ||<br>FileInStream.read -&gt;                                                            |或api|<br>LoadCommand -&gt;                                                                   |加载HDFS文件|<br>AlluxioShell -&gt;                                                                  ||</p>
+<h2 id="块是否可剔除的前提取决于，不是Pinned，不是Locked，不是Marked"><a href="#块是否可剔除的前提取决于，不是Pinned，不是Locked，不是Marked" class="headerlink" title="块是否可剔除的前提取决于，不是Pinned，不是Locked，不是Marked"></a>块是否可剔除的前提取决于，不是Pinned，不是Locked，不是Marked</h2><p>isBlockEvictable = (!isBlockPinned(blockId) &amp;&amp; !isBlockLocked(blockId) &amp;&amp; !isBlockMarked(blockId));</p>
+<h2 id="alluxio-有多个-StorageTier，1个StorageTier-有-多个-StorageDir"><a href="#alluxio-有多个-StorageTier，1个StorageTier-有-多个-StorageDir" class="headerlink" title="alluxio 有多个 StorageTier，1个StorageTier 有 多个 StorageDir"></a>alluxio 有多个 StorageTier，1个StorageTier 有 多个 StorageDir</h2><h2 id="BlockMeta结构"><a href="#BlockMeta结构" class="headerlink" title="BlockMeta结构"></a>BlockMeta结构</h2><ul>
+<li>mBlockSize</li>
+<li>mBlockId</li>
+<li>mDir   ：StorageDir </li>
+</ul>
+<h2 id="worker端-requestSpace"><a href="#worker端-requestSpace" class="headerlink" title="worker端 requestSpace"></a>worker端 requestSpace</h2><p>requestSpace 会尝试WORKER_TIERED_STORE_RETRY次，进行freeSpaceInternal<br>在TieredBlockStore的freeSpaceInternal方法中，由mEvictor根据请求空间的大小指定剔除计划，选出候选剔除的块以及移动到下层的块。<br>计划执行，调用在TieredBlockStore的removeBlockInternal方法,</p>
+<h2 id="Load-client端流程"><a href="#Load-client端流程" class="headerlink" title="Load client端流程"></a>Load client端流程</h2><p>master获取该文件的meta数据，包括文件大小，文件包含的块信息，文件在内存中的百分比。</p>
+<p>打开文件，以ReadType.CACHE_PROMOTE方式读取文件所有内容。读过程中，updateStreams写mCurrentCacheStream，<br>mCurrentCacheStream.write，当剩余空间mReservedBytes小于write的len，则向worker请求空间requestSpace。</p>
+<p>根据定位策略mLocationPolicy找到合适的worker。</p>
+<p>初始化，获取确保worker上有USER_FILE_BUFFER_BYTES配置的大小（默认1M），如果没有提前释放空间。</p>
+<p>读文件时，写cache流，如果可用空间不足则通过RPC向worker申请空间，worker如果没有client申请的空间则释放空间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// LoadCommand.java</span></div><div class="line"><span class="comment">// 只允许load不完全在内存中的文件，打开指定文件，并一次8M读取并存到worker中。</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">load</span><span class="params">(AlluxioURI filePath)</span> <span class="keyword">throws</span> AlluxioException, IOException </span>&#123;</div><div class="line">    <span class="comment">// master获取该文件的meta数据，包括文件大小，文件包含的块信息，文件在内存中的百分比。</span></div><div class="line">    URIStatus status = mFileSystem.getStatus(filePath);</div><div class="line">    <span class="keyword">if</span> (status.isFolder()) &#123;</div><div class="line">      List&lt;URIStatus&gt; statuses = mFileSystem.listStatus(filePath);</div><div class="line">      <span class="keyword">for</span> (URIStatus uriStatus : statuses) &#123;</div><div class="line">        AlluxioURI newPath = <span class="keyword">new</span> AlluxioURI(uriStatus.getPath());</div><div class="line">        load(newPath);</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">if</span> (status.getInMemoryPercentage() == <span class="number">100</span>) &#123;</div><div class="line">        <span class="comment">// The file has already been fully loaded into Alluxio memory.</span></div><div class="line">        <span class="keyword">return</span>;</div><div class="line">      &#125;</div><div class="line">      Closer closer = Closer.create();</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        OpenFileOptions options = OpenFileOptions.defaults().setReadType(ReadType.CACHE_PROMOTE);</div><div class="line">        <span class="comment">// 打开文件，以ReadType.CACHE_PROMOTE方式读取文件所有内容。</span></div><div class="line">        FileInStream in = closer.register(mFileSystem.openFile(filePath, options));</div><div class="line">        <span class="comment">// 8M一次读取并缓存文件内容。</span></div><div class="line">        <span class="keyword">byte</span>[] buf = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">8</span> * Constants.MB];</div><div class="line">        <span class="keyword">while</span> (in.read(buf) != -<span class="number">1</span>) &#123;</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">        <span class="keyword">throw</span> closer.rethrow(e);</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        closer.close();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    System.out.println(filePath + <span class="string">" loaded"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">//FileInStream.java</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    Preconditions.checkArgument(b != <span class="keyword">null</span>, PreconditionMessage.ERR_READ_BUFFER_NULL);</div><div class="line">    Preconditions.checkArgument(off &gt;= <span class="number">0</span> &amp;&amp; len &gt;= <span class="number">0</span> &amp;&amp; len + off &lt;= b.length,</div><div class="line">        PreconditionMessage.ERR_BUFFER_STATE.toString(), b.length, off, len);</div><div class="line">    <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (remaining() &lt;= <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> currentOffset = off;</div><div class="line">    <span class="keyword">int</span> bytesLeftToRead = len;</div><div class="line">    <span class="comment">// 一次读取一个block，block大小默认是512M（可配置）</span></div><div class="line">    <span class="keyword">while</span> (bytesLeftToRead &gt; <span class="number">0</span> &amp;&amp; remaining() &gt; <span class="number">0</span>) &#123;</div><div class="line">      <span class="comment">// 更新流updateBlockInStream，和updateCacheStream，根据定位策略定位worker（默认本地优先策略），并准备把块写入对应worker里。</span></div><div class="line">      <span class="comment">// 只有mCurrentCacheStream为null时更新流，也就是同一块的第二次读进入while则不再更新流。也就是不再申请初始大小和块文件路径。</span></div><div class="line">      updateStreams();</div><div class="line">      Preconditions.checkNotNull(mCurrentBlockInStream, PreconditionMessage.ERR_UNEXPECTED_EOF);</div><div class="line">      <span class="keyword">int</span> bytesToRead = (<span class="keyword">int</span>) Math.min(bytesLeftToRead, inStreamRemaining());</div><div class="line">      <span class="comment">// 从UFS读取文件到b</span></div><div class="line">      <span class="keyword">int</span> bytesRead = mCurrentBlockInStream.read(b, currentOffset, bytesToRead);</div><div class="line">      <span class="keyword">if</span> (bytesRead &gt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (mCurrentCacheStream != <span class="keyword">null</span>) &#123;</div><div class="line">          <span class="keyword">try</span> &#123;</div><div class="line">            mCurrentCacheStream.write(b, currentOffset, bytesRead);</div><div class="line">          &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            handleCacheStreamIOException(e);</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">        mPos += bytesRead;</div><div class="line">        bytesLeftToRead -= bytesRead;</div><div class="line">        currentOffset += bytesRead;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (bytesLeftToRead == len &amp;&amp; inStreamRemaining() == <span class="number">0</span>) &#123;</div><div class="line">      <span class="comment">// Nothing was read, and the underlying stream is done.</span></div><div class="line">      <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> len - bytesLeftToRead;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// LocalBlockOutStream.java构造方法</span></div><div class="line"><span class="comment">// 为指定的blockId的块准备输出流</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">LocalBlockOutStream</span><span class="params">(<span class="keyword">long</span> blockId,</span></span></div><div class="line">      <span class="keyword">long</span> blockSize,</div><div class="line">      WorkerNetAddress workerNetAddress,</div><div class="line">      FileSystemContext context,</div><div class="line">      OutStreamOptions options) <span class="keyword">throws</span> IOException &#123;</div><div class="line">    <span class="keyword">super</span>(blockId, blockSize, context);</div><div class="line">    <span class="keyword">if</span> (!NetworkAddressUtils.getLocalHostName().equals(workerNetAddress.getHost())) &#123;</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> IOException(ExceptionMessage.NO_LOCAL_WORKER.getMessage(workerNetAddress));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    mCloser = Closer.create();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      mBlockWorkerClient = mCloser.register(context.createBlockWorkerClient(workerNetAddress));</div><div class="line">      <span class="comment">// 获取配置的初始文件缓冲区大小（默认1M）</span></div><div class="line">      <span class="keyword">long</span> initialSize = Configuration.getBytes(PropertyKey.USER_FILE_BUFFER_BYTES);</div><div class="line">      <span class="comment">// 请求当前块在worker上的路径，worker会判断是否有initialSize大小的空间，如果没有则释放已有块。</span></div><div class="line">      String blockPath = mBlockWorkerClient.requestBlockLocation(mBlockId, initialSize);</div><div class="line">      <span class="comment">// 可用大小为initialSize    （mReservedBytes为初始值0，可以写作=赋值，不需要+=）</span></div><div class="line">      mReservedBytes += initialSize;</div><div class="line">      <span class="comment">// 创建针对blockPath的LocalFileBlockWriter</span></div><div class="line">      mWriter = <span class="keyword">new</span> LocalFileBlockWriter(blockPath);</div><div class="line">      mCloser.register(mWriter);</div><div class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">      mCloser.close();</div><div class="line">      <span class="keyword">throw</span> e;</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>Load文件时的流程:</p>
+<ul>
+<li>Load文件，块大小为默认512M。用户初始文件大小为默认1M<ul>
+<li>从master获取该文件的meta数据，包括文件大小，文件包含的块信息，文件在内存中的百分比。打开文件。<ul>
+<li>以8M一次读取文件(LoadCommand)</li>
+<li>获取该文件的当前偏移量对应的blockId</li>
+<li>通过RPC获取块路径(blockPath),额外地，如果空间不足初始大小1M，则释放块。</li>
+<li>更新可用大小mReservedBytes，以备unBufferedWrite时判断。</li>
+<li>执行从UFS读取8M，并写入worker的内存。如果可用大小mReservedBytes不足，则通过RPC调用requestSpace申请空间</li>
+</ul>
+</li>
+<li>文件读完关闭文件。</li>
+</ul>
+</li>
+</ul>
+<p>以下为特定场景下Load文件流程:</p>
+<ul>
+<li><p>内存满，容量100/100M，存放100个1M文件时,从UFS读取20M大小的文件，块大小为默认512M。用户初始文件大小为默认1M</p>
+<ul>
+<li>从master获取该文件的meta数据，文件大小为20M，包含1个块，完全不在内存。打开文件。<ul>
+<li>以8M一次读取文件(LoadCommand)</li>
+<li>获取该文件的当前偏移量对应的blockId</li>
+<li>通过RPC获取块路径(blockPath),由于空间不足初始大小1M，则发生释放块，释放1M。</li>
+<li>更新可用大小mReservedBytes=1M，以备unBufferedWrite时判断。</li>
+<li>执行从UFS读取8M，并写入worker的内存。由于mReservedBytes为1M&lt;8M，则通过RPC调用requestSpace申请8M空间，<br>又释放出7M空间。mReservedBytes=8M，写入从UFS读取的8M内容到blockPath中。</li>
+</ul>
+</li>
+<li>文件读完关闭文件。</li>
+</ul>
+</li>
+<li><p>内存容量99/100M，存放99个1M文件时,从UFS读取20M大小的文件，块大小为默认512M。用户初始文件大小为默认1M</p>
+<ul>
+<li>从master获取该文件的meta数据，文件大小为20M，包含1个块，完全不在内存。打开文件。<ul>
+<li>以8M一次读取文件(LoadCommand)</li>
+<li>获取该文件的当前偏移量对应的blockId</li>
+<li>通过RPC获取块路径(blockPath),由于空间满足初始大小1M，则不发生释放块。</li>
+<li>更新可用大小mReservedBytes=1M，以备unBufferedWrite时判断。</li>
+<li>执行从UFS读取8M，并写入worker的内存。由于mReservedBytes为1M&lt;8M，则通过RPC调用requestSpace申请8M空间，<br>释放出7M空间。mReservedBytes=8M，写入从UFS读取的8M内容到blockPath中。</li>
+</ul>
+</li>
+<li>文件读完关闭文件。</li>
+</ul>
+</li>
+<li><p>内存容量92/100M，存放92个1M文件时,从UFS读取20M大小的文件，块大小为默认512M。用户初始文件大小为默认1M</p>
+<ul>
+<li>从master获取该文件的meta数据，文件大小为20M，包含1个块，完全不在内存。打开文件。<ul>
+<li>以8M一次读取文件(LoadCommand)</li>
+<li>获取该文件的当前偏移量对应的blockId</li>
+<li>通过RPC获取块路径(blockPath),由于空间满足初始大小1M，则不发生释放块。</li>
+<li>更新可用大小mReservedBytes=1M，以备unBufferedWrite时判断。</li>
+<li>执行从UFS读取8M，并写入worker的内存。由于mReservedBytes为1M&lt;8M，则通过RPC调用requestSpace申请8M空间，<br>worker空间92M，不必释放。mReservedBytes=8M，写入从UFS读取的8M内容到blockPath中。</li>
+</ul>
+</li>
+<li>文件读完关闭文件。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      alluxio逐出策略
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>alluxio faq</title>
+    <link href="/2017/03/01/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/alluxio/alluxio-FAQ/"/>
+    <id>/2017/03/01/技术学习/bigdata/alluxio/alluxio-FAQ/</id>
+    <published>2017-03-01T16:16:13.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题：与Redis，Memcached等分布式in-memory-key-value缓存的的区别："><a href="#问题：与Redis，Memcached等分布式in-memory-key-value缓存的的区别：" class="headerlink" title="问题：与Redis，Memcached等分布式in-memory key-value缓存的的区别："></a>问题：与Redis，Memcached等分布式in-memory key-value缓存的的区别：</h2><ul>
+<li>答：（1） Alluxio可以同时管理多个底层文件系统，将不同的文件系统统一在同一个名称空间下，让上层客户端可以自由访问统一名称空间内的不同路径，不同存储系统的数据。（2）Alluxio提供文件接口，并存储且维护文件的metadata（比如记录文件分成哪几个block， 每一个block在哪台server上）。并提供fault tolerance的metadata服务。而Redis/Memcached为Nosql的key-value分布式缓存，并不提供文件接口。</li>
+</ul>
+<h2 id="问题1：因为在传统计算引擎中，数据存储在同一个JVM中，而基于Alluxio的中间件将数据存到了不同的JVM中，跨JVM读写会不会影响性能？"><a href="#问题1：因为在传统计算引擎中，数据存储在同一个JVM中，而基于Alluxio的中间件将数据存到了不同的JVM中，跨JVM读写会不会影响性能？" class="headerlink" title="问题1：因为在传统计算引擎中，数据存储在同一个JVM中，而基于Alluxio的中间件将数据存到了不同的JVM中，跨JVM读写会不会影响性能？"></a>问题1：因为在传统计算引擎中，数据存储在同一个JVM中，而基于Alluxio的中间件将数据存到了不同的JVM中，跨JVM读写会不会影响性能？</h2><ul>
+<li>答：跨JVM读写会影响性能，在Alluxio中，使用了RamDisk来模拟本地文件系统的方式。</li>
+</ul>
+<h2 id="问题2：如果Alluxio-crash，怎么保证数据安全？"><a href="#问题2：如果Alluxio-crash，怎么保证数据安全？" class="headerlink" title="问题2：如果Alluxio crash，怎么保证数据安全？"></a>问题2：如果Alluxio crash，怎么保证数据安全？</h2><ul>
+<li>答：在Alluxio中，数据不是保存在JVM中，而是保存在RamDisk中，RamDisk为独立的进程，因此可以保证数据安全。</li>
+</ul>
+<h2 id="问题3：Alluxio是否可以支持随机读写？"><a href="#问题3：Alluxio是否可以支持随机读写？" class="headerlink" title="问题3：Alluxio是否可以支持随机读写？"></a>问题3：Alluxio是否可以支持随机读写？</h2><ul>
+<li>答：可以进行随机读，给定一个offset。新创立的文件一旦关闭，就会变成immutable</li>
+</ul>
+<h2 id="问题：HDFS中每个数据块会默认有多个备份，-从而在极端情况下会有更大的读取带宽。-在Alluxio中，由于数据存储在同一份内存中，如何处理多个Job同时读取同一份数据的情况。"><a href="#问题：HDFS中每个数据块会默认有多个备份，-从而在极端情况下会有更大的读取带宽。-在Alluxio中，由于数据存储在同一份内存中，如何处理多个Job同时读取同一份数据的情况。" class="headerlink" title="问题：HDFS中每个数据块会默认有多个备份， 从而在极端情况下会有更大的读取带宽。 在Alluxio中，由于数据存储在同一份内存中，如何处理多个Job同时读取同一份数据的情况。"></a>问题：HDFS中每个数据块会默认有多个备份， 从而在极端情况下会有更大的读取带宽。 在Alluxio中，由于数据存储在同一份内存中，如何处理多个Job同时读取同一份数据的情况。</h2><ul>
+<li>答： Alluxio的数据在内存当中，本身可以提供更大的本地读取带宽。另外Alluxio也允许让用户绕过Alluxio直接从底层的持久化文件系统读取数据。</li>
+</ul>
+<h2 id="当数据大小超过内存容量，如何处理？"><a href="#当数据大小超过内存容量，如何处理？" class="headerlink" title="当数据大小超过内存容量，如何处理？"></a>当数据大小超过内存容量，如何处理？</h2><ul>
+<li>Alluxio不仅仅管理内存，同样可以管理SSD，HDD等系统资源。保证Alluxio可以正常运行。</li>
+</ul>
+<h2 id="Q-百度案例为什么可以提供30x的性能提升？"><a href="#Q-百度案例为什么可以提供30x的性能提升？" class="headerlink" title="Q: 百度案例为什么可以提供30x的性能提升？"></a>Q: 百度案例为什么可以提供30x的性能提升？</h2><ul>
+<li>A: 百度的一项业务采用计算和存储分离的架构：比如计算集群在一个城市，而数据存储集群在另一个城市。数据存储集群计算资源较少，而计算集群没有足够存储资源。百度将Alluxio部署到了计算集群中。从而将数据存储在了Alluxio中，从而使计算集群可以在本地完成读写。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      alluxio faq
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>rpc</title>
+    <link href="/2017/03/01/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/thrift/"/>
+    <id>/2017/03/01/技术学习/thrift/</id>
+    <published>2017-03-01T16:11:24.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="生成thrift"><a href="#生成thrift" class="headerlink" title="生成thrift"></a>生成thrift</h2><ul>
+<li>thrift生成java代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">thrift -r --gen java -out ../main  Hello.thrift</div></pre></td></tr></table></figure>
+<ul>
+<li>生成java代码中的成员设置为私有，生成文件头注解中不要包含日期<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">thrift -r --gen java:private-members,generated_annotations=undated -out ../main  Hello.thrift</div></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      介绍rpc
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="rpc" scheme="/tags/rpc/"/>
+    
+      <category term="thrift" scheme="/tags/thrift/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>shell脚本</title>
+    <link href="/2017/02/28/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/linux/shell%E8%84%9A%E6%9C%AC/"/>
+    <id>/2017/02/28/技术学习/linux/shell脚本/</id>
+    <published>2017-02-28T11:38:56.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="转到脚本目录"><a href="#转到脚本目录" class="headerlink" title="转到脚本目录"></a>转到脚本目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> `dirname <span class="variable">$0</span>`</div></pre></td></tr></table></figure>
+<h2 id="创建多个文件并写入不同内容"><a href="#创建多个文件并写入不同内容" class="headerlink" title="创建多个文件并写入不同内容"></a>创建多个文件并写入不同内容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(seq 3); <span class="keyword">do</span> name=$(<span class="built_in">printf</span> <span class="built_in">test</span>%02d.txt <span class="variable">$i</span>); <span class="built_in">echo</span> <span class="string">"<span class="variable">$name</span>"</span> &gt; <span class="variable">$name</span>; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(seq 120); <span class="keyword">do</span> name=$(<span class="built_in">printf</span> <span class="built_in">test</span>%06d.txt <span class="variable">$i</span>); dd <span class="keyword">if</span>=/dev/zero of=<span class="variable">$name</span> bs=1M count=1; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+<h2 id="两个括号-运行计算"><a href="#两个括号-运行计算" class="headerlink" title="两个括号$(())运行计算"></a>两个括号$(())运行计算</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sum=0;<span class="keyword">for</span> i <span class="keyword">in</span> $(seq 3); <span class="keyword">do</span> sum=$(( <span class="variable">$i</span>+<span class="variable">$sum</span>)) ; <span class="keyword">done</span> ;<span class="built_in">echo</span> <span class="variable">$sum</span></div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      介绍shell命令
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="linux" scheme="/tags/linux/"/>
+    
+      <category term="centos" scheme="/tags/centos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>docker</title>
+    <link href="/2017/02/13/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/bigdata/docker/"/>
+    <id>/2017/02/13/技术学习/bigdata/docker/</id>
+    <published>2017-02-13T13:38:35.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="hello"><a href="#hello" class="headerlink" title="hello"></a>hello</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ docker run ubuntu:15.10 /bin/<span class="built_in">echo</span> <span class="string">"Hello world"</span></div><div class="line"><span class="comment"># 交互式</span></div><div class="line">$ docker run -i -t ubuntu:15.10 /bin/bash</div></pre></td></tr></table></figure>
+<h2 id="拉取docker并安装ssh"><a href="#拉取docker并安装ssh" class="headerlink" title="拉取docker并安装ssh"></a>拉取docker并安装ssh</h2><p><a href="http://www.winseliu.com/blog/2014/09/30/docker-ssh-on-centos/" target="_blank" rel="external">http://www.winseliu.com/blog/2014/09/30/docker-ssh-on-centos/</a></p>
+<h2 id="上传文件"><a href="#上传文件" class="headerlink" title="上传文件"></a>上传文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker cp foo.txt LONG_CONTAINER_ID:/foo.txt</div></pre></td></tr></table></figure>
+<h2 id="获取container-ID-以及端口映射"><a href="#获取container-ID-以及端口映射" class="headerlink" title="获取container ID 以及端口映射"></a>获取container ID 以及端口映射</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## 通过ps获取SHORT_CONTAINER_ID</span></div><div class="line">docker ps</div><div class="line"><span class="comment">## 通过inspect 获取 LONG_CONTAINER_ID</span></div><div class="line">docker inspect <span class="_">-f</span>  <span class="string">'&#123;&#123;.Id&#125;&#125;'</span>  SHORT_CONTAINER_ID</div></pre></td></tr></table></figure>
+<h2 id="结束docker-container"><a href="#结束docker-container" class="headerlink" title="结束docker container"></a>结束docker container</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker stop  SHORT_CONTAINER_ID</div><div class="line">or</div><div class="line">docker stop  CONTAINER_NAME</div></pre></td></tr></table></figure>
+<h2 id="运行docker容器并设置端口映射"><a href="#运行docker容器并设置端口映射" class="headerlink" title="运行docker容器并设置端口映射"></a>运行docker容器并设置端口映射</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -p&lt;主机端口:docker端口&gt;</span></div><div class="line">docker run --name bdpops_ubuntu <span class="_">-d</span> -p 1029:22 -p 80:8080 learn/tutorial /usr/sbin/sshd -D</div></pre></td></tr></table></figure>
+<h2 id="查看端口映射"><a href="#查看端口映射" class="headerlink" title="查看端口映射"></a>查看端口映射</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker port SHORT_CONTAINER_ID 22</div></pre></td></tr></table></figure>
+<h2 id="提交修改"><a href="#提交修改" class="headerlink" title="提交修改"></a>提交修改</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker commit SHORT_CONTAINER_ID learn/tutorial</div><div class="line">or</div><div class="line">docker commit CONTAINER_NAME learn/tutorial</div></pre></td></tr></table></figure>
+<h2 id="容器导出"><a href="#容器导出" class="headerlink" title="容器导出"></a>容器导出</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">docker <span class="built_in">export</span> SHORT_CONTAINER_ID &gt; ubuntu.tar</div><div class="line">or</div><div class="line">docker <span class="built_in">export</span> CONTAINER_NAME &gt; ubuntu.tar</div></pre></td></tr></table></figure>
+<h2 id="容器快照导入"><a href="#容器快照导入" class="headerlink" title="容器快照导入"></a>容器快照导入</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## test/ubuntu:v1.0  test/ubuntu为名称 v1.0为版本不写默认为latest</span></div><div class="line">cat ubuntu.tar | sudo docker import - <span class="built_in">test</span>/ubuntu:v1.0</div></pre></td></tr></table></figure>
+<h2 id="查看docker的images"><a href="#查看docker的images" class="headerlink" title="查看docker的images"></a>查看docker的images</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker images</div></pre></td></tr></table></figure>
+<h2 id="docker修改仓库名"><a href="#docker修改仓库名" class="headerlink" title="docker修改仓库名"></a>docker修改仓库名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker tag imageid name:tag</div></pre></td></tr></table></figure>
+<h2 id="安装私有仓库"><a href="#安装私有仓库" class="headerlink" title="安装私有仓库"></a>安装私有仓库</h2><ul>
+<li><p>ubuntu</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install -y build-essential python-dev libevent-dev python-pip liblzma-dev swig</div><div class="line">sudo pip install docker-registry</div></pre></td></tr></table></figure>
+</li>
+<li><p>centos</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y python-devel libevent-devel python-pip gcc xz-devel swig</div><div class="line">sudo python-pip install docker-registry</div></pre></td></tr></table></figure>
+<ul>
+<li>others<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">sudo apt-get install build-essential python-dev libevent-dev python-pip libssl-dev liblzma-dev libffi-dev</div><div class="line">$ git <span class="built_in">clone</span> https://github.com/docker/docker-registry.git</div><div class="line">$ <span class="built_in">cd</span> docker-registry</div><div class="line">$ sudo python setup.py install</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="将本地映像推送到本地仓库中"><a href="#将本地映像推送到本地仓库中" class="headerlink" title="将本地映像推送到本地仓库中"></a>将本地映像推送到本地仓库中</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">docker tag ba58 192.168.7.26:5000/ubuntu:1024</div><div class="line">docker push localhost:5000/ubuntu:1204</div><div class="line">curl http://localhost:5000/v2/ubuntu/tags/list  </div><div class="line">curl http://192.168.7.26:5000/v1/search</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      docker
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="bigdata" scheme="/tags/bigdata/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用jstack分析jvm线程</title>
+    <link href="/2017/02/04/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/java/jstack/"/>
+    <id>/2017/02/04/技术学习/java/jstack/</id>
+    <published>2017-02-04T15:53:01.000Z</published>
+    <updated>2017-05-05T09:11:18.774Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>jstack用于打印出给定的java进程ID或core file或远程调试服务的Java堆栈信息，如果是在64位机器上，需要指定选项”-J-d64”，Windows的jstack使用方式只支持以下的这种方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jstack [<span class="_">-l</span>][F] pid</div></pre></td></tr></table></figure>
+<h2 id="jstack-Dump日志文件中的线程状态"><a href="#jstack-Dump日志文件中的线程状态" class="headerlink" title="jstack Dump日志文件中的线程状态"></a>jstack Dump日志文件中的线程状态</h2><ul>
+<li>死锁，Deadlock（重点关注） </li>
+<li>执行中，Runnable   </li>
+<li>等待资源，Waiting on condition（重点关注） </li>
+<li>等待获取监视器，Waiting on monitor entry（重点关注）</li>
+<li>暂停，Suspended</li>
+<li>对象等待中，Object.wait() 或 TIMED_WAITING</li>
+<li>阻塞，Blocked（重点关注）  </li>
+<li>停止，Parked</li>
+</ul>
+<h2 id="Dump文件中的线程状态含义及注意事项"><a href="#Dump文件中的线程状态含义及注意事项" class="headerlink" title="Dump文件中的线程状态含义及注意事项"></a>Dump文件中的线程状态含义及注意事项</h2><p>含义如下所示：</p>
+<ul>
+<li>Deadlock：死锁线程，一般指多个线程调用间，进入相互资源占用，导致一直等待无法释放的情况。</li>
+<li>Runnable：一般指该线程正在执行状态中，该线程占用了资源，正在处理某个请求，有可能正在传递SQL到数据库执行，有可能在对某个文件操作，有可能进行数据类型等转换。</li>
+<li>Waiting on condition：等待资源，或等待某个条件的发生。具体原因需结合 stacktrace来分析。<ul>
+<li>如果堆栈信息明确是应用代码，则证明该线程正在等待资源。一般是大量读取某资源，且该资源采用了资源锁的情况下，线程进入等待状态，等待资源的读取。</li>
+<li>又或者，正在等待其他线程的执行等。</li>
+<li>如果发现有大量的线程都在处在 Wait on condition，从线程 stack看，正等待网络读写，这可能是一个网络瓶颈的征兆。因为网络阻塞导致线程无法执行。<ul>
+<li>一种情况是网络非常忙，几乎消耗了所有的带宽，仍然有大量数据等待网络读写；</li>
+<li>另一种情况也可能是网络空闲，但由于路由等问题，导致包无法正常的到达。</li>
+</ul>
+</li>
+<li>另外一种出现 Wait on condition的常见情况是该线程在 sleep，等待 sleep的时间到了时候，将被唤醒。</li>
+</ul>
+</li>
+<li>Blocked：线程阻塞，是指当前线程执行过程中，所需要的资源长时间等待却一直未能获取到，被容器的线程管理器标识为阻塞状态，可以理解为等待资源超时的线程。</li>
+<li>Waiting for monitor entry 和 in Object.wait()：Monitor是 Java中用以实现线程之间的互斥与协作的主要手段，它可以看成是对象或者<br>Class的锁。每一个对象都有，也仅有一个 monitor。从下图1中可以看出，每个 Monitor在某个时刻，只能被一个线程拥有，该线程就是 “Active Thread”，而其它线程都是 “Waiting Thread”，分别在两个队列 “ Entry Set”和 “Wait Set”里面等候。在 “Entry Set”中等待的线程状态是 “Waiting for monitor entry”，而在 “Wait Set”中等待的线程状态是 “in Object.wait()”。<br><img src="http://images.cnblogs.com/cnblogs_com/zhengyun_ustc/255879/o_clipboard%20-%20%E5%89%AF%E6%9C%AC039.png" alt=""></li>
+</ul>
+<h2 id="thread-dump文件分析"><a href="#thread-dump文件分析" class="headerlink" title="thread dump文件分析"></a>thread dump文件分析</h2><h3 id="Waiting-to-lock-和-Blocked"><a href="#Waiting-to-lock-和-Blocked" class="headerlink" title="Waiting to lock 和 Blocked"></a>Waiting to lock 和 Blocked</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&quot;RMI TCP Connection(267865)-172.16.5.25&quot; daemon prio=10 tid=0x00007fd508371000 nid=0x55ae waiting for monitor entry [0x00007fd4f8684000]</div><div class="line">   java.lang.Thread.State: BLOCKED (on object monitor)</div><div class="line">at org.apache.log4j.Category.callAppenders(Category.java:201)</div><div class="line">- waiting to lock &lt;0x00000000acf4d0c0&gt; (a org.apache.log4j.Logger)</div><div class="line">at org.apache.log4j.Category.forcedLog(Category.java:388)</div><div class="line">at org.apache.log4j.Category.log(Category.java:853)</div><div class="line">at org.apache.commons.logging.impl.Log4JLogger.warn(Log4JLogger.java:234)</div><div class="line">at com.tuan.core.common.lang.cache.remote.SpyMemcachedClient.get(SpyMemcachedClient.java:110)</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>线程状态是 Blocked，阻塞状态。说明线程等待资源超时！</li>
+<li>“ waiting to lock <0x00000000acf4d0c0>”指，线程在等待给这个 0x00000000acf4d0c0 地址上锁（英文可描述为：trying to<br>obtain  0x00000000acf4d0c0 lock）。</0x00000000acf4d0c0></li>
+<li>在 dump 日志里查找字符串 0x00000000acf4d0c0，发现有大量线程都在等待给这个地址上锁。如果能在日志里找到谁获得了这个锁（如locked &lt;<br>0x00000000acf4d0c0 &gt;），就可以顺藤摸瓜了。</li>
+<li>“waiting for monitor entry”说明此线程通过 synchronized(obj) {……} 申请进入了临界区，从而进入了“Entry Set”队列，但该<br>obj 对应的 monitor 被其他线程拥有，所以本线程在 Entry Set 队列中等待。</li>
+<li>第一行里，”RMI TCP Connection(267865)-172.16.5.25”是 Thread Name 。tid指Java Thread<br>id。nid指native线程的id。prio是线程优先级。[0x00007fd4f8684000]是线程栈起始地址。</li>
+</ul>
+<h3 id="Waiting-on-condition-和-TIMED-WAITING"><a href="#Waiting-on-condition-和-TIMED-WAITING" class="headerlink" title="Waiting on condition 和 TIMED_WAITING"></a>Waiting on condition 和 TIMED_WAITING</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&quot;RMI TCP Connection(idle)&quot; daemon prio=10 tid=0x00007fd50834e800 nid=0x56b2 waiting on condition [0x00007fd4f1a59000]</div><div class="line">   java.lang.Thread.State: TIMED_WAITING (parking)</div><div class="line">at sun.misc.Unsafe.park(Native Method)</div><div class="line">- parking to wait for  &lt;0x00000000acd84de8&gt; (a java.util.concurrent.SynchronousQueue$TransferStack)</div><div class="line">at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)</div><div class="line">at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)</div><div class="line">at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)</div><div class="line">at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)</div><div class="line">at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:945)</div><div class="line">at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)</div><div class="line">at java.lang.Thread.run(Thread.java:662)</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>“TIMED_WAITING (parking)”中的 timed_waiting 指等待状态，但这里指定了时间，<br>到达指定的时间后自动退出等待状态；parking指线程处于挂起中。</li>
+<li>“waiting on condition”需要与堆栈中的<br>“parking to wait for  <0x00000000acd84de8> (a java.util.concurrent.SynchronousQueue$TransferStack)”<br>结合来看。首先，本线程肯定是在等待某个条件的发生，来把自己唤醒。其次，SynchronousQueue 并不是一个队列，<br>只是线程之间移交信息的机制，当我们把一个元素放入到 SynchronousQueue 中时必须有另一个线程正在等待接受移交的任务，<br>因此这就是本线程在等待的条件。</0x00000000acd84de8></li>
+</ul>
+<h3 id="in-Obejct-wait-和-TIMED-WAITING"><a href="#in-Obejct-wait-和-TIMED-WAITING" class="headerlink" title="in Obejct.wait() 和 TIMED_WAITING"></a>in Obejct.wait() 和 TIMED_WAITING</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&quot;RMI RenewClean-[172.16.5.19:28475]&quot; daemon prio=10 tid=0x0000000041428800 nid=0xb09 in Object.wait() [0x00007f34f4bd0000]</div><div class="line">   java.lang.Thread.State: TIMED_WAITING (on object monitor)</div><div class="line">at java.lang.Object.wait(Native Method)</div><div class="line">- waiting on &lt;0x00000000aa672478&gt; (a java.lang.ref.ReferenceQueue$Lock)</div><div class="line">at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)</div><div class="line">- locked &lt;0x00000000aa672478&gt; (a java.lang.ref.ReferenceQueue$Lock)</div><div class="line">at sun.rmi.transport.DGCClient$EndpointEntry$RenewCleanThread.run(DGCClient.java:516)</div><div class="line">at java.lang.Thread.run(Thread.java:662)</div></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><p>“TIMED_WAITING (on object monitor)”，对于本例而言，是因为本线程调用了 java.lang.Object.wait(long timeout) 而进入等待状态。</p>
+</li>
+<li><p>“Wait Set”中等待的线程状态就是“ in Object.wait() ”。当线程获得了 Monitor，进入了临界区之后，如果发现线程继续运行的条件没有满足，它则调用对象（一般就是被<br>synchronized 的对象）的 wait() 方法，放弃了 Monitor，进入 “Wait Set”队列。只有当别的线程在该对象上调用了 notify() 或者 notifyAll() ，“ Wait Set”队列中线程才得到机会去竞争，但是只有一个线程获得对象的 Monitor，恢复到运行态。</p>
+</li>
+<li><p>RMI RenewClean 是 DGCClient 的一部分。DGC 指的是 Distributed GC，即分布式垃圾回收。</p>
+</li>
+<li><p>请注意，是先 locked <0x00000000aa672478>，后 waiting on <0x00000000aa672478>，之所以先锁再等同一个对象，<br>线程的执行中，先用 synchronized 获得了这个对象的 Monitor（对应于  locked <0x00000000aa672478> ）；<br>当执行到 lock.wait(timeout);，线程就放弃了 Monitor 的所有权，进入“Wait Set”队列（对应于  waiting on <0x00000000aa672478> ）。</0x00000000aa672478></0x00000000aa672478></0x00000000aa672478></0x00000000aa672478></p>
+</li>
+<li><p>从堆栈信息看，是正在清理 remote references to remote objects ，引用的租约到了，分布式垃圾回收在逐一清理呢。</p>
+</li>
+</ul>
+<h2 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h2><table>
+<thead>
+<tr>
+<th>state</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NEW</td>
+<td>指线程刚创建, 尚未启动。</td>
+</tr>
+<tr>
+<td>RUNNABLE</td>
+<td>线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取cpu 的使用权。</td>
+</tr>
+<tr>
+<td>BLOCKED</td>
+<td>一个线程由于等待监视锁而阻塞的状态。处于这个状态是由于线程进入synchronized块或方法或者调用wait()再次进入synchronized块或方法。</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>这个状态下是指线程拥有了某个锁之后, 调用了他的wait方法, 等待其他线程/锁拥有者调用 notify / notifyAll 一遍该线程可以继续下一步操作, 这里要区分 BLOCKED 和 WATING 的区别, 一个是在临界点外面等待进入, 一个是在理解点里面wait等待别人notify, 线程调用了join方法 join了另外的线程的时候, 也会进入WAITING状态, 等待被他join的线程执行结束</td>
+</tr>
+<tr>
+<td>TIMED_WAITING</td>
+<td>这个状态就是有限的(时间限制)的WAITING, 一般出现在调用wait(long), join(long)等情况下, 另外一个线程sleep后, 也会进入TIMED_WAITING状态</td>
+</tr>
+<tr>
+<td>TERMINATED</td>
+<td>这个状态下表示 该线程的run方法已经执行完毕了, 基本上就等于死亡了(当时如果线程被持久持有, 可能不会被回收)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="状态示例"><a href="#状态示例" class="headerlink" title="状态示例"></a>状态示例</h2><h3 id="RUNNABLE"><a href="#RUNNABLE" class="headerlink" title="RUNNABLE"></a>RUNNABLE</h3><p>执行如下代码，使用<code>jstack -l pid</code>查看thread dump<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">RUNNABLE</span><span class="params">()</span> </span>&#123;</div><div class="line">  Thread t = <span class="keyword">new</span> Thread() &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Integer.MAX_VALUE; i++) &#123;</div><div class="line">        System.out.println(i);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">  t.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>thread dump，其中<code>- locked &lt;0x1b8&gt;</code> 是由于获取了同步块锁<code>synchronized</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&quot;Thread-0@434&quot; prio=5 tid=0xc nid=NA runnable</div><div class="line">  java.lang.Thread.State: RUNNABLE</div><div class="line">	  at java.io.FileOutputStream.writeBytes(FileOutputStream.java:-1)</div><div class="line">	  at java.io.FileOutputStream.write(FileOutputStream.java:326)</div><div class="line">	  at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)</div><div class="line">	  at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)</div><div class="line">	  - locked &lt;0x1b6&gt; (a java.io.BufferedOutputStream)</div><div class="line">	  at java.io.PrintStream.write(PrintStream.java:482)</div><div class="line">	  - locked &lt;0x1b7&gt; (a java.io.PrintStream)</div><div class="line">	  at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)</div><div class="line">	  at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291)</div><div class="line">	  at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104)</div><div class="line">	  - locked &lt;0x1b8&gt; (a java.io.OutputStreamWriter)</div><div class="line">	  at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185)</div><div class="line">	  at java.io.PrintStream.write(PrintStream.java:527)</div><div class="line">	  at java.io.PrintStream.print(PrintStream.java:597)</div><div class="line">	  at java.io.PrintStream.println(PrintStream.java:736)</div><div class="line">	  at net.mbl.demo.App$1.run(App.java:12)</div></pre></td></tr></table></figure></p>
+<h3 id="BLOCKED"><a href="#BLOCKED" class="headerlink" title="BLOCKED"></a>BLOCKED</h3><p>执行如下代码，使用<code>jstack -l pid</code>查看thread dump<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">BLOCKED</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object();</div><div class="line">  Runnable run = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Integer.MAX_VALUE; i++) &#123;</div><div class="line">        <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">          System.out.println(i);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  Thread t1 = <span class="keyword">new</span> Thread(run);</div><div class="line">  t1.setName( <span class="string">"t1"</span>);</div><div class="line">  Thread t2 = <span class="keyword">new</span> Thread(run);</div><div class="line">  t2.setName( <span class="string">"t2"</span>);</div><div class="line"></div><div class="line">  t1.start();</div><div class="line">  t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>thread dump，其中<code>t2</code>的状态为<code>BLOCKED</code>，<code>- waiting to lock &lt;0x00000005a0190188&gt;</code>表示<code>t2</code>等待锁<br><code>0x00000005a0190188</code>,而<code>t1</code>的状态为<code>RUNNABLE</code>,<code>- locked &lt;0x00000005a0190188&gt;</code>表示<code>t1</code>持有锁<br><code>0x00000005a0190188</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&quot;t2&quot; #22 prio=5 os_prio=0 tid=0x00007f6ab4128000 nid=0xc4f waiting for monitor entry [0x00007f6a451d0000]</div><div class="line">   java.lang.Thread.State: BLOCKED (on object monitor)</div><div class="line">	at net.mbl.demo.App$2.run(App.java:23)</div><div class="line">	- waiting to lock &lt;0x00000005a0190188&gt; (a java.lang.Object)</div><div class="line">	at java.lang.Thread.run(Thread.java:745)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">	- None</div><div class="line"></div><div class="line">&quot;t1&quot; #21 prio=5 os_prio=0 tid=0x00007f6ab4126800 nid=0xc4e runnable [0x00007f6a452d1000]</div><div class="line">   java.lang.Thread.State: RUNNABLE</div><div class="line">	at java.io.FileOutputStream.writeBytes(Native Method)</div><div class="line">	at java.io.FileOutputStream.write(FileOutputStream.java:326)</div><div class="line">	at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)</div><div class="line">	at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)</div><div class="line">	- locked &lt;0x00000005a01b4540&gt; (a java.io.BufferedOutputStream)</div><div class="line">	at java.io.PrintStream.write(PrintStream.java:482)</div><div class="line">	- locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream)</div><div class="line">	at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)</div><div class="line">	at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291)</div><div class="line">	at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104)</div><div class="line">	- locked &lt;0x00000005a0198460&gt; (a java.io.OutputStreamWriter)</div><div class="line">	at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185)</div><div class="line">	at java.io.PrintStream.newLine(PrintStream.java:546)</div><div class="line">	- locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream)</div><div class="line">	at java.io.PrintStream.println(PrintStream.java:737)</div><div class="line">	- locked &lt;0x00000005a0190198&gt; (a java.io.PrintStream)</div><div class="line">	at net.mbl.demo.App$2.run(App.java:24)</div><div class="line">	- locked &lt;0x00000005a0190188&gt; (a java.lang.Object)</div><div class="line">	at java.lang.Thread.run(Thread.java:745)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">	- None</div></pre></td></tr></table></figure>
+<h3 id="WAITING"><a href="#WAITING" class="headerlink" title="WAITING"></a>WAITING</h3><p>执行如下代码，使用<code>jstack -l pid</code>查看thread dump<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WAITING</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">final</span> Object lock = <span class="keyword">new</span> Object();</div><div class="line">  Thread t1 = <span class="keyword">new</span> Thread()&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">int</span> i = <span class="number">0</span>;</div><div class="line">      <span class="keyword">while</span>(<span class="keyword">true</span> )&#123;</div><div class="line">        <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">          <span class="keyword">try</span> &#123;</div><div class="line">            lock.wait();</div><div class="line">          &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">          &#125;</div><div class="line">          System. out.println(i++);</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  Thread t2 = <span class="keyword">new</span> Thread()&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">while</span>(<span class="keyword">true</span> )&#123;</div><div class="line">        <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">          <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; <span class="number">10000000</span>; i++)&#123;</div><div class="line">            System. out.println(i);</div><div class="line">          &#125;</div><div class="line">          lock.notifyAll();</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  t1.setName( <span class="string">"^^t1^^"</span>);</div><div class="line">  t2.setName( <span class="string">"^^t2^^"</span>);</div><div class="line"></div><div class="line">  t1.start();</div><div class="line">  t2.start();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>thread dump, <code>^^t1^^</code>线程进入synchronized块后持有lock<code>0x00000005a65500f8</code>，当执行<code>lock.wait()</code>时,暂时<br>放弃锁,进入WAITING状态，并重新等待lock的notify后收回锁.<code>^^t2^^</code>线程进入synchronized块后持有<br>lock<code>0x00000005a65500f8</code>，直到循环结束后执行<code>lock.notifyAll()</code>时，<code>^^t1^^</code>才恢复执行.</p>
+<p>另外看stack的输出,他叫<code>WAITING(on  object monitor)</code> , 说明括号后面还有其他的情况, 比如sleep, 我们直接把<br><code>^^t2^^</code>的for循环改成<code>sleep</code>,<code>^^t2^^</code>的state则变成了 <code>WAITING (sleeping)</code>.</p>
+<p>另外, join操作也是进入 on object monitor. Concurrent包里的lock()会进入<code>WAITING (parking)</code>.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">&quot;^^t2^^&quot; prio=10 tid=0x00007fc5f4005000 nid=0x3c58 runnable [0x00007fc65ef9b000]</div><div class="line">   java.lang.Thread.State: RUNNABLE</div><div class="line">        at java.io.FileOutputStream.writeBytes(Native Method)</div><div class="line">        at java.io.FileOutputStream.write(FileOutputStream.java:345)</div><div class="line">        at java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)</div><div class="line">        at java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)</div><div class="line">        - locked &lt;0x00000005a655a9c0&gt; (a java.io.BufferedOutputStream)</div><div class="line">        at java.io.PrintStream.write(PrintStream.java:482)</div><div class="line">        - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream)</div><div class="line">        at sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:221)</div><div class="line">        at sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:291)</div><div class="line">        at sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:104)</div><div class="line">        - locked &lt;0x00000005a655aaf0&gt; (a java.io.OutputStreamWriter)</div><div class="line">        at java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:185)</div><div class="line">        at java.io.PrintStream.newLine(PrintStream.java:546)</div><div class="line">        - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream)</div><div class="line">        at java.io.PrintStream.println(PrintStream.java:737)</div><div class="line">        - locked &lt;0x00000005a655a9a0&gt; (a java.io.PrintStream)</div><div class="line">        at net.mbl.demo.App$4.run(App.java:62)</div><div class="line">        - locked &lt;0x00000005a65500f8&gt; (a java.lang.Object)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">        - None</div><div class="line"></div><div class="line">&quot;^^t1^^&quot; prio=10 tid=0x00007fc5f4003000 nid=0x3c57 in Object.wait() [0x00007fc65f09c000]</div><div class="line">   java.lang.Thread.State: WAITING (on object monitor)</div><div class="line">        at java.lang.Object.wait(Native Method)</div><div class="line">        - waiting on &lt;0x00000005a65500f8&gt; (a java.lang.Object)</div><div class="line">        at java.lang.Object.wait(Object.java:503)</div><div class="line">        at net.mbl.demo.App$3.run(App.java:47)</div><div class="line">        - locked &lt;0x00000005a65500f8&gt; (a java.lang.Object)</div><div class="line"></div><div class="line">   Locked ownable synchronizers:</div><div class="line">        - None</div></pre></td></tr></table></figure>
+<h3 id="TIMED-WAITING"><a href="#TIMED-WAITING" class="headerlink" title="TIMED_WAITING"></a>TIMED_WAITING</h3><p>这个仅需要在WAITING的基础上, 在wait方法加上一个时间参数进行限制就OK了.</p>
+<h2 id="线程状态转换方法"><a href="#线程状态转换方法" class="headerlink" title="线程状态转换方法"></a>线程状态转换方法</h2><ol>
+<li>sleep()方法</li>
+</ol>
+<p>在指定时间内让当前正在执行的线程暂停执行，但不会释放“锁标志”。不推荐使用。</p>
+<p>sleep()使当前线程进入阻塞状态，在指定时间内不会执行。</p>
+<ol>
+<li>wait()方法</li>
+</ol>
+<p>在其他线程调用对象的notify或notifyAll方法前，导致当前线程等待。线程会释放掉它所占有的“锁标志”，从而使别的线程有机会抢占该锁。<br>当前线程必须拥有当前对象锁。如果当前线程不是此锁的拥有者，会抛出IllegalMonitorStateException异常。<br>唤醒当前对象锁的等待线程使用notify或notifyAll方法，也必须拥有相同的对象锁，否则也会抛出IllegalMonitorStateException异常。<br>wait()和notify()必须在synchronized函数或synchronized block中进行调用。如果在non-synchronized函数或non-synchronized<br>block中进行调用，虽然能编译通过，但在运行时会发生IllegalMonitorStateException的异常。</p>
+<ol>
+<li>yield方法</li>
+</ol>
+<p>yield()方法是停止当前线程，让同等优先权以上的线程运行。如果没有同等优先权的线程，那么Yield()方法将不会起作用。</p>
+<ol>
+<li><p>interrupt方法<br>interrupt()中断线程。需要注意的是，InterruptedException是线程自己从内部抛出的，并不是interrupt()方法抛出的。<br>对某一线程调用interrupt()时，如果该线程正在执行普通的代码，那么该线程根本就不会抛出InterruptedException。<br>但是，一旦该线程进入到wait()/sleep()/join()后，就会立刻抛出InterruptedException。 </p>
+</li>
+<li><p>join方法<br>当前线程等待调用join方法的线程结束再继续执行。</p>
+</li>
+</ol>
+<h2 id="排查线程问题的思路"><a href="#排查线程问题的思路" class="headerlink" title="排查线程问题的思路"></a>排查线程问题的思路</h2><ol>
+<li><p>如何跟踪一个线程?<br>看到上面的stack输出没有, 第一行是内容是 threadName priority tid nid desc<br>更过跟踪tid, nid 都可以唯一找到该线程.</p>
+</li>
+<li><p>发现有线程进入BLOCK, 而且持续好久, 这说明性能瓶颈存在于synchronized块中, 因为他一直block住, 进不去, 说明另一个线程一直没有处理好, 也就这个synchronized块中处理速度比较慢, 然后再深入查看. 当然也有可能同时block的线程太多, 排队太久造成.</p>
+</li>
+<li><p>发现有线程进入WAITING, 而且持续好久, 说明性能瓶颈存在于触发notify的那段逻辑. 当然还有就是同时WAITING的线程过多, 老是等不到释放.</p>
+</li>
+<li><p>线程进入TIME_WAITING 状态且持续好久的, 跟2的排查方式一样.</p>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      介绍使用jstack分析jvm线程
+    
+    </summary>
+    
+      <category term="技术学习" scheme="/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="技术学习" scheme="/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="java" scheme="/tags/java/"/>
+    
+      <category term="jvm" scheme="/tags/jvm/"/>
+    
+  </entry>
+  
+</feed>
